@@ -1,22 +1,18 @@
-import {React, Fragment} from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {React} from 'react';
+import { BrowserRouter as Router } from "react-router-dom";
 
-import BaseLayout from "./containers/BaseLayout";
-
+import DashboardLayout from './containers/Layout';
 
 import BaseRouter from "./routes";
 
-function App() {
+function App(props) {
   return (
-    
 	<div className="App">
-		<div className="container">
-		<BaseLayout> 
-			
+		<Router>
+		<DashboardLayout {...props}> 
 			<BaseRouter />
-		</BaseLayout>
-
-		</div>
+		</DashboardLayout>
+		</Router>
 	</div>
 	
   );

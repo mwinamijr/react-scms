@@ -1,19 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router,Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Dashboard from './containers/Dashboard';
-import ClassicFormPage from './containers/Register';
+import Login from './containers/Login';
 
 
 const BaseRouter = () => {
 	return (
     <div>
-      <Router>
         <Routes>
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/login/" component={ClassicFormPage} />
+          <Route path="/login/" component={Login} />
         </Routes>
-      </Router>
     </div>
 		)
 }
