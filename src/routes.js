@@ -9,8 +9,8 @@ const BaseRouter = () => {
 	return (
     <div>
         <Routes>
-          <Route exact path="/" component={Dashboard} />
-          <Route path="/login/" component={Login} />
+          <Route exact path="/" element={<Dashboard />} />
+          <Route path="/login/" element={<Login />} />
         </Routes>
     </div>
 		)
