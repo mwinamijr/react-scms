@@ -1,5 +1,17 @@
 import React, {useState} from 'react'
-import { Breadcrumb, Table, Tabs, Tab } from 'react-bootstrap';
+import { Breadcrumb, Card, Col, Row, Table, Tabs, Tab } from 'react-bootstrap';
+import {
+  Form,
+  Input,
+  Button,
+  Radio,
+  Select,
+  Cascader,
+  DatePicker,
+  InputNumber,
+  TreeSelect,
+  Switch,
+} from 'antd';
 
 function Receipts() {
   const [key, setKey] = useState('receipts')
@@ -46,10 +58,19 @@ function Receipts() {
                     <td>Jacob</td>
                     <td>Thornton</td>
                     <td>@fat</td>
+                    <td>@fat</td>
                   </tr>
                   <tr>
                     <td>3</td>
-                    <td colSpan="2">Larry the Bird</td>
+                    <td>Larry the Bird</td>
+                    <td>Bird</td>
+                    <td>@twitter</td>
+                    <td>@twitter</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Larry the Bird</td>
+                    <td>Bird</td>
                     <td>@twitter</td>
                     <td>@twitter</td>
                   </tr>
@@ -66,7 +87,61 @@ function Receipts() {
               </Table>
             </Tab>
             <Tab eventKey="new" title="New">
-              New receipt
+              <Card>
+                <Card.Header className="text-center">
+                  <div className="receipt-bg">
+                    <h3>
+                    Hayatul Islamiya Secondary <br />
+                    P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523 <br />
+                    A/C Number:- NMB:          , NBC:  <br />
+                    </h3>
+                  </div>
+                </Card.Header>
+                <Card.Body>
+                  <Card.Title>PAYMENT RECEIPT</Card.Title>
+                  <Card.Text>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col className="text-left col-md-8">
+                      <Form>
+                        <Row>
+                          <Col>
+                            <Form.Item label="Date">
+                              <DatePicker />
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="Receipt Number">
+                              <InputNumber />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        
+                        <Form.Item label="Received From">
+                          <Input />
+                        </Form.Item>
+                        <Form.Item label="Amount">
+                          <InputNumber />
+                        </Form.Item>
+                        <Form.Item label="Paid for">
+                          <Select>
+                            <Select.Option value="School Fees">School Fees</Select.Option>
+                            <Select.Option value="Exam Fees">Exam Fees</Select.Option>
+                            <Select.Option value="Allowances">Allowances</Select.Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item label="Received By">
+                          <Input />
+                        </Form.Item>
+                        <Form.Item>
+                          <Button className='primary'>Submit Payment</Button>
+                        </Form.Item>
+                      </Form>
+                      
+                    </Col>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
             </Tab>
           </Tabs>
         </div>

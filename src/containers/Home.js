@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 function Home() {
   return (
@@ -14,7 +15,7 @@ function Home() {
         <p className="fs-5 text-center">Quickly and easily get started with Bootstrap's compiled, production-ready files with this barebones example featuring some basic HTML and helpful links. Download all our examples to get started.</p>
 
         <div className="mb-5">
-          <a href="/login/" rel="noreferrer" className="btn btn-primary btn-lg px-4">Login</a>
+          <Link to="/login" className="btn btn-primary btn-lg px-4">Login</Link>
         </div>
 
         <hr className="col-3 col-md-2 mb-5" />
