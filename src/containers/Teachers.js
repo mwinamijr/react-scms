@@ -4,13 +4,17 @@ import {
   Form,
   Input,
   Button,
+  Radio,
   Select,
+  Cascader,
   DatePicker,
   InputNumber,
+  TreeSelect,
+  Switch,
 } from 'antd';
 
-function Receipts() {
-  const [key, setKey] = useState('receipts')
+function Teachers() {
+  const [key, setKey] = useState('teachers')
     return (
       <div>
         <Breadcrumb>
@@ -23,14 +27,14 @@ function Receipts() {
       <div>
       <div>
         <div className="text-center">
-          <h1>Receipts</h1>
+          <h1>Teachers</h1>
           <Tabs
             id="controlled-tab-example"
             activeKey={key}
             onSelect={(k) => setKey(k)}
             className="mb-3"
           >
-            <Tab eventKey="receipts" title="Receipts">
+            <Tab eventKey="teachers" title="Teachers">
               <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -71,15 +75,6 @@ function Receipts() {
                     <td>@twitter</td>
                   </tr>
                 </tbody>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Username</th>
-                  </tr>
-                </thead>
               </Table>
             </Tab>
             <Tab eventKey="new" title="New">
@@ -87,14 +82,12 @@ function Receipts() {
                 <Card.Header className="text-center">
                   <div className="receipt-bg">
                     <h3>
-                    Hayatul Islamiya Secondary <br />
-                    P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523 <br />
-                    A/C Number:- NMB:          , NBC:  <br />
+                    New Teacher
                     </h3>
                   </div>
                 </Card.Header>
                 <Card.Body className="text-left col-md-5">
-                  <Card.Title className='pb-3'>PAYMENT RECEIPT</Card.Title>
+                  <Card.Title className='pb-3'>N</Card.Title>
                   <Card.Text>
                     <Col>
                       <Form>
@@ -145,4 +138,4 @@ function Receipts() {
     )
 }
 
-export default Receipts
+export default Teachers

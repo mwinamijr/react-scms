@@ -36,7 +36,7 @@ class DashboardLayout extends React.Component {
               Option 2
             </Menu.Item>
             <SubMenu key="sub1" icon={<UserOutlined />} title="Users">
-              <Menu.Item key="3">Teachers</Menu.Item>
+              <Menu.Item key="3"><Link to="/teachers">Teachers</Link></Menu.Item>
               <Menu.Item key="4">Accountants</Menu.Item>
               <Menu.Item key="5">Alex</Menu.Item>
             </SubMenu>

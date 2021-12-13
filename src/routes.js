@@ -5,6 +5,7 @@ import Dashboard from './containers/Dashboard';
 import Payments from './containers/Payments';
 import Receipts from './containers/Receipts';
 import Reports from './containers/Reports';
+import Teachers from './containers/Teachers';
 
 
 const BaseRouter = () => {
@@ -15,6 +16,7 @@ const BaseRouter = () => {
           <Route path="/receipts/" element={<Receipts />} />
           <Route path="/payments/" element={<Payments />} />
           <Route path="/reports/" element={<Reports />} />
+          <Route path="/teachers/" element={<Teachers />} />
         </Routes>
     </div>
 		)
