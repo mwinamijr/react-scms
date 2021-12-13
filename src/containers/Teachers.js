@@ -4,13 +4,8 @@ import {
   Form,
   Input,
   Button,
-  Radio,
   Select,
-  Cascader,
-  DatePicker,
   InputNumber,
-  TreeSelect,
-  Switch,
 } from 'antd';
 
 function Teachers() {
@@ -38,9 +33,9 @@ function Teachers() {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>Receipt No</th>
-                    <th>Allocation</th>
-                    <th>Paid for</th>
+                    <th>Number</th>
+                    <th>Full Name</th>
+                    <th>Teaching Subjects</th>
                     <th>Amonunt</th>
                     <th>Received by</th>
                   </tr>
@@ -86,42 +81,38 @@ function Teachers() {
                     </h3>
                   </div>
                 </Card.Header>
-                <Card.Body className="text-left col-md-5">
-                  <Card.Title className='pb-3'>N</Card.Title>
+                <Card.Body className="text-left col-md-8">
+                  <Card.Title className='pb-3'>Full information</Card.Title>
                   <Card.Text>
                     <Col>
                       <Form>
                         <Row>
-                          <Col>
-                            <Form.Item label="Date">
-                              <DatePicker />
-                            </Form.Item>
-                          </Col>
-                          <Col>
-                            <Form.Item label="Receipt Number">
-                              <InputNumber />
-                            </Form.Item>
-                          </Col>
+                            <Col>
+                              <Form.Item label="First Name">
+                                <Input />
+                              </Form.Item>
+                            </Col>
+                            <Col>
+                              <Form.Item label="Last Name">
+                                <Input /> 
+                              </Form.Item>
+                            </Col>
                         </Row>
-                        
-                        <Form.Item label="Received From">
-                          <Input />
+                        <Form.Item label="Email">
+                          <Input type={'email'} />
                         </Form.Item>
-                        <Form.Item label="Amount">
-                          <InputNumber />
-                        </Form.Item>
-                        <Form.Item label="Paid for">
+                        <Form.Item label="Teaching Subject">
                           <Select>
-                            <Select.Option value="School Fees">School Fees</Select.Option>
-                            <Select.Option value="Exam Fees">Exam Fees</Select.Option>
-                            <Select.Option value="Allowances">Allowances</Select.Option>
+                            <Select.Option value="Maths">Maths</Select.Option>
+                            <Select.Option value="Chemistry">Chemistry</Select.Option>
+                            <Select.Option value="History">History</Select.Option>
                           </Select>
                         </Form.Item>
-                        <Form.Item label="Received By">
-                          <Input />
+                        <Form.Item label="Salary">
+                          <InputNumber />
                         </Form.Item>
                         <Form.Item>
-                          <Button className='primary'>Submit Payment</Button>
+                          <Button className='primary'>Add teacher</Button>
                         </Form.Item>
                       </Form>
                       
