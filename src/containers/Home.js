@@ -25,7 +25,7 @@ function Home() {
             <h2>Starter projects</h2>
             <p>Ready to beyond the starter template? Check out these open source projects that you can quickly duplicate to a new GitHub repository.</p>
             <ul className="icon-list">
-              <li><a href="https://github.com/twbs/bootstrap-npm-starter" rel="noopener" target="_blank">Bootstrap npm starter</a></li>
+              <li><Link to="https://github.com/twbs/bootstrap-npm-starter">Bootstrap npm starter</Link></li>
               <li className="text-muted">Bootstrap Parcel starter (coming soon!)</li>
             </ul>
           </div>
