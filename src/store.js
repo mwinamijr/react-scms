@@ -12,6 +12,10 @@ import {
     userUpdateReducer,
 } from './reducers/userReducers'
 
+import {
+    assignmentListReducer,
+} from './reducers/assignmentReducers'
+
 const reducer = combineReducers({
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
@@ -20,14 +24,20 @@ const reducer = combineReducers({
     userList: userListReducer,
     userDelete: userDeleteReducer,
     userUpdate: userUpdateReducer,
+
+    assignment: assignmentListReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ?
     JSON.parse(localStorage.getItem('userInfo')) : null
 
+const assignmentsFromStorage = localStorage.getItem('assgnments') ?
+    JSON.parse(localStorage.getItem('assgnments')) : null
+
 
 const initialState = {
     userLogin: { userInfo: userInfoFromStorage },
+    assignments: { assignments: assignmentsFromStorage },
 }
 
 const middleware = [thunk]
