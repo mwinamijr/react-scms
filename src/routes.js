@@ -12,7 +12,7 @@ const BaseRouter = () => {
 	return (
     <div>
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/receipts/" element={<Receipts />} />
           <Route path="/payments/" element={<Payments />} />
           <Route path="/reports/" element={<Reports />} />

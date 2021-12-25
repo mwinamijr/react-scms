@@ -49,7 +49,7 @@ class DashboardLayout extends React.Component {
               Files
             </Menu.Item>
             <Menu.Item key="10" icon={<FileOutlined />}>
-              <Link to="/logout">Logout</Link>
+              <Link to={'/logout'}>Logout</Link>
             </Menu.Item>
           </Menu>
         </Sider>
