@@ -1,33 +1,68 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { Form, Button, Row, Col } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import Loader from '../components/Loader'
+import Message from '../components/Message'
+import FormContainer from '../components/FormContainer'
+import { login } from '../actions/userActions'
 
-function Login() {
+function LoginScreen({ location, history}) {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const dispatch = useDispatch()
+    const redirect =  '/'
+
+    const userLogin = useSelector(state => state.userLogin)
+    const { error, loading, userInfo } = userLogin
+
+    useEffect(() => {
+        if (userInfo) {
+        }
+    }, [history, userInfo, redirect])
+
+    const submitHandler = (e) => {
+        e.preventDefault()
+        dispatch(login(email, password))
+    }
+
     return (
-      <div className="text-center">
-        <nav className="form-signin">
-          <form>
-            <img className="mb-4" src="./assets/hayatul-logo.svg" alt="" width="72" height="57" />
-            <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
+        <FormContainer>
+            <h1>Sign In</h1>
+            {error && <Message variant='danger'>{error}</Message>}
+            {loading && <Loader />}
+            <Form onSubmit={submitHandler}>
 
-            <div className="form-floating">
-              <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-              <label for="floatingInput">Email address</label>
-            </div>
-            <div className="form-floating">
-              <input type="password" className="form-control" id="floatingPassword" placeholder="Password" />
-              <label for="floatingPassword">Password</label>
-            </div>
+                <Form.Group controlId='email'>
+                    <Form.Label>Email Address</Form.Label>
+                    <Form.Control
+                        type='email'
+                        placeholder='Enter Email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    >
+                    </Form.Control>
+                </Form.Group>
 
-            <div className="checkbox mb-3">
-              <label>
-                <input type="checkbox" value="remember-me" /> Remember me
-              </label>
-            </div>
-            <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-            <p className="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-          </form>
-        </nav>
-      </div>
+
+                <Form.Group controlId='password'>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        type='password'
+                        placeholder='Enter Password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    >
+                    </Form.Control>
+                </Form.Group>
+
+                <Button type='submit' variant='primary'>
+                    Sign In
+                </Button>
+            </Form>
+
+        </FormContainer>
     )
 }
 
-export default Login
+export default LoginScreen
