@@ -45,6 +45,11 @@ class DashboardLayout extends React.Component {
               <Menu.Item key="8"><Link to="/payments">Payments</Link></Menu.Item>
               <Menu.Item key="11"><Link to="/reports">Reports</Link></Menu.Item>
             </SubMenu>
+            <SubMenu key="sub3" icon={<TeamOutlined />} title="Learn">
+              <Menu.Item key="12"><Link to="/learn/assignments">Assignment</Link></Menu.Item>
+              <Menu.Item key="13"><Link to="/exams">Exams</Link></Menu.Item>
+              <Menu.Item key="14"><Link to="/results">Results</Link></Menu.Item>
+            </SubMenu>
             <Menu.Item key="9" icon={<FileOutlined />}>
               Files
             </Menu.Item>
