@@ -33,27 +33,32 @@ class DashboardLayout extends React.Component {
               <Link to="/dashboard">Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="2" icon={<DesktopOutlined />}>
-              Option 2
+              Admission
             </Menu.Item>
-            <SubMenu key="sub1" icon={<UserOutlined />} title="Users">
+            <SubMenu key="sub1" icon={<UserOutlined />} title="Employees">
               <Menu.Item key="3"><Link to="/teachers">Teachers</Link></Menu.Item>
               <Menu.Item key="4">Accountants</Menu.Item>
               <Menu.Item key="5">Alex</Menu.Item>
             </SubMenu>
-            <SubMenu key="sub2" icon={<TeamOutlined />} title="Finance">
-              <Menu.Item key="6"><Link to="/receipts">Receipts</Link></Menu.Item>
-              <Menu.Item key="8"><Link to="/payments">Payments</Link></Menu.Item>
+            <SubMenu key="sub2" icon={<TeamOutlined />} title="Students">
+              <Menu.Item key="6"><Link to="/sis/students">Students</Link></Menu.Item>
+              <Menu.Item key="7"><Link to="/exams">Exams</Link></Menu.Item>
+              <Menu.Item key="8"><Link to="/results">Results</Link></Menu.Item>
+            </SubMenu>
+            <SubMenu key="sub3" icon={<TeamOutlined />} title="Finance">
+              <Menu.Item key="9"><Link to="/receipts">Receipts</Link></Menu.Item>
+              <Menu.Item key="10"><Link to="/payments">Payments</Link></Menu.Item>
               <Menu.Item key="11"><Link to="/reports">Reports</Link></Menu.Item>
             </SubMenu>
-            <SubMenu key="sub3" icon={<TeamOutlined />} title="Learn">
+            <SubMenu key="sub4" icon={<TeamOutlined />} title="Learn">
               <Menu.Item key="12"><Link to="/learn/assignments">Assignment</Link></Menu.Item>
               <Menu.Item key="13"><Link to="/exams">Exams</Link></Menu.Item>
               <Menu.Item key="14"><Link to="/results">Results</Link></Menu.Item>
             </SubMenu>
-            <Menu.Item key="9" icon={<FileOutlined />}>
+            <Menu.Item key="15" icon={<FileOutlined />}>
               Files
             </Menu.Item>
-            <Menu.Item key="10" icon={<FileOutlined />}>
+            <Menu.Item key="16" icon={<FileOutlined />}>
               <Link to={'/logout'}>Logout</Link>
             </Menu.Item>
           </Menu>
