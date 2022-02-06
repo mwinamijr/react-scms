@@ -29,7 +29,7 @@ const reducer = combineReducers({
     userDelete: userDeleteReducer,
     userUpdate: userUpdateReducer,
 
-    assignment: assignmentListReducer,
+    assignmentList: assignmentListReducer,
     studentList: studentListReducer,
 })
 

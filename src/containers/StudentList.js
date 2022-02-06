@@ -9,8 +9,6 @@ import {
   InputNumber,
 } from 'antd';
 import { listStudents } from './../actions/studentActions';
-;
-
 
 function Students() {
   const [key, setKey] = useState('students')
