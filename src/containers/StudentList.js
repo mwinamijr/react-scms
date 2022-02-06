@@ -7,9 +7,19 @@ import {
   Select,
   InputNumber,
 } from 'antd';
+import { listStudents } from './../actions/studentActions';
+;
+
 
 function Students() {
   const [key, setKey] = useState('students')
+  
+  const dispatch = useDispatch()
+
+  const studentList = useSelector(state => state.studentList)
+  const { loading, error, students } = studentList
+
+  console.log(students)
     return (
       <div>
         <Breadcrumb>
