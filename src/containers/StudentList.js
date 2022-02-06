@@ -7,6 +7,7 @@ import {
   Button,
   Select,
   InputNumber,
+  DatePicker,
 } from 'antd';
 import { listStudents } from './../actions/studentActions';
 
@@ -93,26 +94,97 @@ function Students() {
                               </Form.Item>
                             </Col>
                             <Col>
+                              <Form.Item label="Middle Name">
+                                <Input /> 
+                              </Form.Item>
+                            </Col>
+                            <Col>
                               <Form.Item label="Last Name">
                                 <Input /> 
                               </Form.Item>
                             </Col>
                         </Row>
-                        <Form.Item label="Email">
-                          <Input type={'email'} />
+                        <Row>
+                          <Col>
+                            <Form.Item label="Addmission Number">
+                              <Input type={'number'} /> 
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="Grade Level">
+                              <Select>
+                                <Select.Option value="O-Level">O Level</Select.Option>
+                                <Select.Option value="A-Level">A Level</Select.Option>
+                              </Select>
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="Class Level">
+                              <Select>
+                                <Select.Option value="Form One">Form One</Select.Option>
+                                <Select.Option value="Form Two">Form Two</Select.Option>
+                                <Select.Option value="Form Three">Form Three</Select.Option>
+                                <Select.Option value="Form Four">Form Four</Select.Option>
+                              </Select>
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <Form.Item label="Birthday">
+                              <DatePicker />
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="Grad Date">
+                              <DatePicker />
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="Graduating Class">
+                              <Select>
+                                <Select.Option value="2023">Class of 2023</Select.Option>
+                                <Select.Option value="2024">Class of 2024</Select.Option>
+                                <Select.Option value="2025">Class of 2025</Select.Option>
+                              </Select>
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <Form.Item label="Region">
+                              <Input />
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="City">
+                              <Input /> 
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="Street">
+                              <Input /> 
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <Form.Item label="STD VII NUMBER">
+                              <Input />
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <Form.Item label="PREMS NUMBER">
+                              <Input /> 
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <Form.Item label="Emergency Phone">
+                          <Input />
                         </Form.Item>
-                        <Form.Item label="Teaching Subject">
-                          <Select>
-                            <Select.Option value="Maths">Maths</Select.Option>
-                            <Select.Option value="Chemistry">Chemistry</Select.Option>
-                            <Select.Option value="History">History</Select.Option>
-                          </Select>
-                        </Form.Item>
-                        <Form.Item label="Salary">
-                          <InputNumber />
-                        </Form.Item>
+                        
                         <Form.Item>
-                          <Button className='primary'>Add teacher</Button>
+                          <Button className='primary'>Add student</Button>
                         </Form.Item>
                       </Form>
                       
