@@ -12,38 +12,42 @@ function Home() {
 
       <main className="text-center">
         <h1>Hayatul Islamiya School Management System</h1>
-        <p className="fs-5 text-center">Quickly and easily get started with Bootstrap's compiled, production-ready files with this barebones example featuring some basic HTML and helpful links. Download all our examples to get started.</p>
+        <p className="fs-5 text-center">
+          Huu ni mfumo wa uendeshaji na utoaji wa taarifa mbalimbali zinazohusu shule na uendeshaji. Mfumo huu unatumika na walimu wa shule hii kupata na kuhifadhi taarifa za maendeleo ya shule na wanafunzi.
+           Pia ni kiunganisha kati ya shule na wazazi katika kutoa na kupata taarifa za maendeleo ya wanafunzi moja kwa moja.
+        </p>
 
         <div className="mb-5">
-          <Link to="/login" className="btn btn-primary btn-lg px-4">Login</Link>
+          <Link to="/login" className="btn btn-primary btn-lg px-4">Ingia</Link>
         </div>
 
         <hr className="col-3 col-md-2 mb-5" />
 
         <div className="row g-5">
           <div className="col-md-6">
-            <h2>Starter projects</h2>
-            <p>Ready to beyond the starter template? Check out these open source projects that you can quickly duplicate to a new GitHub repository.</p>
+            <h2>Developers</h2>
+            <p>
+              All developers are welcome to join in on this open Source project, This projects gives opportunity to all developers who can contribute anything, so all developers with JavaScript, React and Redux are wecome to join in and help on this project.
+            </p>
             <ul className="icon-list">
-              <li><Link to="https://github.com/twbs/bootstrap-npm-starter">Bootstrap npm starter</Link></li>
-              <li className="text-muted">Bootstrap Parcel starter (coming soon!)</li>
+              <li><Link to="https://github.com/mwinamijr/react-scms">React School Management System</Link></li>
             </ul>
           </div>
 
           <div className="col-md-6">
-            <h2>Guides</h2>
-            <p>Read more detailed instructions and documentation on using or contributing to Bootstrap.</p>
+            <h2>Namna ya kutumia mfumo huu</h2>
+            <p>Soma maelekezo ya kutumia mfumo huu kulingana na aina ya mtumiaji.</p>
             <ul className="icon-list">
-              <li><a href="../getting-started/introduction/">Bootstrap quick start guide</a></li>
-              <li><a href="../getting-started/webpack/">Bootstrap Webpack guide</a></li>
-              <li><a href="../getting-started/parcel/">Bootstrap Parcel guide</a></li>
-              <li><a href="../getting-started/build-tools/">Contributing to Bootstrap</a></li>
+              <li><a href="../getting-started/introduction/">Walimu</a></li>
+              <li><a href="../getting-started/webpack/">Wazazi</a></li>
+              <li><a href="../getting-started/parcel/">Wanafunzi</a></li>
+              <li><a href="../getting-started/build-tools/">Developers</a></li>
             </ul>
           </div>
         </div>
       </main>
-      <footer className="pt-5 my-5 text-muted border-top">
-        Created by the Bootstrap team &middot; &copy; 2021
+      <footer className="pt-5 my-5 text-center text-muted border-top pb-3">
+        Created by the Techdometz team &middot; &copy; 2022
       </footer>
     </div>
 

@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Card, Col, Row, Table, Tabs, Tab } from 'react-bootstrap';
 import {
   Form,
@@ -20,6 +21,12 @@ function Students() {
   const { loading, error, students } = studentList
 
   console.log(students)
+
+  useEffect(() => {
+    dispatch(listStudents())
+    
+}, [dispatch])
+
     return (
       <div>
         <Breadcrumb>
