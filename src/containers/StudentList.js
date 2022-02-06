@@ -25,6 +25,7 @@ function Students() {
     
 }, [dispatch,])
 
+
     return (
       <div>
         <Breadcrumb>
@@ -47,43 +48,27 @@ function Students() {
             <Tab eventKey="students" title="Students">
               <Table striped bordered hover>
                 <thead>
+                  
                   <tr>
-                    <th>Number</th>
-                    <th>Full Name</th>
-                    <th>Teaching Subjects</th>
-                    <th>Amonunt</th>
-                    <th>Received by</th>
+                    <th>Adm No:</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Class</th>
+                    <th>Birthday</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Larry the Bird</td>
-                    <td>Bird</td>
-                    <td>@twitter</td>
-                    <td>@twitter</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Larry the Bird</td>
-                    <td>Bird</td>
-                    <td>@twitter</td>
-                    <td>@twitter</td>
-                  </tr>
+
+                  { students.map(student => (
+                    <tr key={student.addmission_number}>
+                      <td>{student.addmission_number}</td>
+                      <td>{student.first_name}</td>
+                      <td>{student.last_name}</td>
+                      <td>{student.class_level}</td>
+                      <td>{student.birthday}</td>
+                    </tr>
+                  ))}
+
                 </tbody>
               </Table>
             </Tab>
