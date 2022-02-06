@@ -25,7 +25,7 @@ function Students() {
   useEffect(() => {
     dispatch(listStudents())
     
-}, [dispatch])
+}, [dispatch,])
 
     return (
       <div>

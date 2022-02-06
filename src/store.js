@@ -16,6 +16,10 @@ import {
     assignmentListReducer,
 } from './reducers/assignmentReducers'
 
+import { studentListReducer } from './reducers/studentReducers';
+;
+
+
 const reducer = combineReducers({
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
@@ -26,6 +30,7 @@ const reducer = combineReducers({
     userUpdate: userUpdateReducer,
 
     assignment: assignmentListReducer,
+    studentList: studentListReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ?

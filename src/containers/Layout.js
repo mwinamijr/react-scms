@@ -70,7 +70,7 @@ class DashboardLayout extends React.Component {
             { this.props.children }
             </div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>Hayatul Islamiya ©{Date.getFullYear()} Created by Techdometz</Footer>
+          <Footer style={{ textAlign: 'center' }}>Hayatul Islamiya ©2022 Created by Techdometz</Footer>
         </Layout>
       </Layout>
     );
