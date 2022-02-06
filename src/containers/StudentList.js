@@ -18,8 +18,6 @@ function Students() {
   const studentList = useSelector(state => state.studentList)
   const { loading, error, students } = studentList
 
-  console.log(students)
-
   useEffect(() => {
     dispatch(listStudents())
     
@@ -53,6 +51,7 @@ function Students() {
                     <th>Adm No:</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Sex</th>
                     <th>Class</th>
                     <th>Birthday</th>
                   </tr>
@@ -64,6 +63,7 @@ function Students() {
                       <td>{student.addmission_number}</td>
                       <td>{student.first_name}</td>
                       <td>{student.last_name}</td>
+                      <td>{student.sex}</td>
                       <td>{student.class_level}</td>
                       <td>{student.birthday}</td>
                     </tr>
