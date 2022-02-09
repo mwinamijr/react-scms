@@ -1,14 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Card, Col, Row, Table, Tabs, Tab } from 'react-bootstrap';
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  InputNumber,
-  DatePicker,
-} from 'antd';
+import { Form, Input, Button, Select, DatePicker, } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+
 import { listStudents } from './../actions/studentActions';
 
 function Students() {
@@ -32,7 +28,7 @@ function Students() {
           <Breadcrumb.Item href="#">
             Library
           </Breadcrumb.Item>
-          <Breadcrumb.Item active>Data</Breadcrumb.Item>
+          <Breadcrumb.Item active>Students</Breadcrumb.Item>
         </Breadcrumb>
       <div>
       <div>
@@ -55,10 +51,11 @@ function Students() {
                     <th>Sex</th>
                     <th>Class</th>
                     <th>Birthday</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-
+                  
                   { students.map(student => (
                     <tr key={student.addmission_number}>
                       <td>{student.addmission_number}</td>
@@ -67,6 +64,7 @@ function Students() {
                       <td>{student.sex}</td>
                       <td>{student.class_level}</td>
                       <td>{student.birthday}</td>
+                      <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
                     </tr>
                   ))}
 

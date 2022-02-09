@@ -12,8 +12,9 @@ function StudentDetailsScreen() {
     const { loading, error, student } = studentDetails
     const { id } = useParams()
     
-    console.log(student)
-
+    useEffect(() => {
+      dispatch(studentsDetails(id))
+    }, [dispatch, ]) 
 
     return (
         <div>
@@ -27,7 +28,7 @@ function StudentDetailsScreen() {
                       <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
                         <div className="col-md-10 px-0">
                           <h1 className="display-4 fst-italic">student details</h1>
-                          
+                          <span>{student.addmission_number}: {student.first_name} {student.last_name} </span>
                         </div>
                       </div>
                       )}

@@ -4,45 +4,33 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 
 import {
     userLoginReducer,
-    userRegisterReducer,
-    userDetailsReducer,
-    userUpdateProfileReducer,
-    userListReducer,
-    userDeleteReducer,
-    userUpdateReducer,
 } from './reducers/userReducers'
 
 import {
     assignmentListReducer,
 } from './reducers/assignmentReducers'
 
-import { studentListReducer } from './reducers/studentReducers';
+import { studentDetailsReducer, studentListReducer } from './reducers/studentReducers';
 ;
 
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
-    userRegister: userRegisterReducer,
-    userDetails: userDetailsReducer,
-    userUpdateProfile: userUpdateProfileReducer,
-    userList: userListReducer,
-    userDelete: userDeleteReducer,
-    userUpdate: userUpdateReducer,
 
     assignmentList: assignmentListReducer,
     studentList: studentListReducer,
+    studentDetails: studentDetailsReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ?
     JSON.parse(localStorage.getItem('userInfo')) : null
 
-const assignmentsFromStorage = localStorage.getItem('assgnments') ?
-    JSON.parse(localStorage.getItem('assgnments')) : null
+const assignmentsFromStorage = localStorage.getItem('assignments') ?
+    JSON.parse(localStorage.getItem('assignments')) : null
 
 
 const initialState = {
     userLogin: { userInfo: userInfoFromStorage },
-    assignments: { assignments: assignmentsFromStorage },
 }
 
 const middleware = [thunk]
