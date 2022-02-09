@@ -6,6 +6,8 @@ import { Form, Input, Button, Select, DatePicker, } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
 import { listStudents } from './../actions/studentActions';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 function Students() {
   const [key, setKey] = useState('students')
@@ -54,21 +56,29 @@ function Students() {
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody>
-                  
-                  { students.map(student => (
-                    <tr key={student.addmission_number}>
-                      <td>{student.addmission_number}</td>
-                      <td>{student.first_name}</td>
-                      <td>{student.last_name}</td>
-                      <td>{student.sex}</td>
-                      <td>{student.class_level}</td>
-                      <td>{student.birthday}</td>
-                      <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
-                    </tr>
-                  ))}
+                  { loading ? <Loader /> :
+                    error ? <Message variant="danger">{error}</Message> :
+                    (
+                      
+                      <tbody>
 
-                </tbody>
+                        { students.map(student => (
+                          <tr key={student.addmission_number}>
+                            <td>{student.addmission_number}</td>
+                            <td>{student.first_name}</td>
+                            <td>{student.last_name}</td>
+                            <td>{student.sex}</td>
+                            <td>{student.class_level}</td>
+                            <td>{student.birthday}</td>
+                            <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
+                          </tr>
+                        ))}
+                      
+                      </tbody>
+                    )
+                  
+                }
+
               </Table>
             </Tab>
             <Tab eventKey="new" title="New">
