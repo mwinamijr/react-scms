@@ -8,20 +8,26 @@ import Receipts from './containers/Receipts';
 import Reports from './containers/Reports';
 import Teachers from './containers/Teachers';
 import StudentList from './containers/StudentList';
+import StudentDetailsScreen from './containers/StudentDetails';
 
 
 const BaseRouter = () => {
 	return (
     <div>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/receipts/" element={<Receipts />} />
-          <Route path="/sis/students/" element={<StudentList />} />
-          <Route path="/payments/" element={<Payments />} />
-          <Route path="/reports/" element={<Reports />} />
-          <Route path="/teachers/" element={<Teachers />} />
-          <Route path="/learn/assignments/" element={<Assignment />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/receipts/" element={<Receipts />} />
+        
+        <Route path="sis/" >
+          <Route path="students/" element={<StudentList />} />
+          <Route path="students/:id" element={<StudentDetailsScreen />} />
+        </Route>
+        
+        <Route path="/payments/" element={<Payments />} />
+        <Route path="/reports/" element={<Reports />} />
+        <Route path="/teachers/" element={<Teachers />} />
+        <Route path="/learn/assignments/" element={<Assignment />} />
+      </Routes>
     </div>
 		)
 }
