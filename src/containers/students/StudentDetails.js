@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import Loader from '../components/Loader'
-import Message from '../components/Message'
-import { studentsDetails } from './../actions/studentActions'
+import Loader from './../../components/Loader'
+import Message from './../../components/Message'
+import { studentsDetails } from '../../actions/studentActions'
 
 
 function StudentDetailsScreen() {
@@ -14,7 +14,7 @@ function StudentDetailsScreen() {
     
     useEffect(() => {
       dispatch(studentsDetails(id))
-    }, [dispatch, ]) 
+    }, [dispatch, id ]) 
 
     return (
         <div>
