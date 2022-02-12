@@ -1,129 +1,128 @@
+import { DatePicker } from 'antd'
 import React, { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import Loader from './../../components/Loader'
-import Message from './../../components/Message'
-import { studentsDetails } from '../../actions/studentActions'
+import { Card, Col, Row, Form, Button } from 'react-bootstrap'
 
 function AddStudent() {
   return (
     <div>
       <Card>
-        <Card.Header className="text-center">
-          <div className="receipt-bg">
-            <h3>
-            New Student
-            </h3>
-          </div>
-        </Card.Header>
-        <Card.Body className="text-left col-md-8">
-          <Card.Title className='pb-3'>Full information</Card.Title>
-          <Card.Text>
-            <Col>
-              <Form>
-                <Row>
-                    <Col>
-                      <Form.Item label="First Name">
-                        <Input />
-                      </Form.Item>
-                    </Col>
-                    <Col>
-                      <Form.Item label="Middle Name">
-                        <Input /> 
-                      </Form.Item>
-                    </Col>
-                    <Col>
-                      <Form.Item label="Last Name">
-                        <Input /> 
-                      </Form.Item>
-                    </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Item label="Addmission Number">
-                      <Input type={'number'} /> 
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="Grade Level">
-                      <Select>
-                        <Select.Option value="O-Level">O Level</Select.Option>
-                        <Select.Option value="A-Level">A Level</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="Class Level">
-                      <Select>
-                        <Select.Option value="Form One">Form One</Select.Option>
-                        <Select.Option value="Form Two">Form Two</Select.Option>
-                        <Select.Option value="Form Three">Form Three</Select.Option>
-                        <Select.Option value="Form Four">Form Four</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Item label="Birthday">
-                      <DatePicker />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="Grad Date">
-                      <DatePicker />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="Graduating Class">
-                      <Select>
-                        <Select.Option value="2023">Class of 2023</Select.Option>
-                        <Select.Option value="2024">Class of 2024</Select.Option>
-                        <Select.Option value="2025">Class of 2025</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Item label="Region">
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="City">
-                      <Input /> 
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="Street">
-                      <Input /> 
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Item label="STD VII NUMBER">
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="PREMS NUMBER">
-                      <Input /> 
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Form.Item label="Emergency Phone">
-                  <Input />
-                </Form.Item>
-                
-                <Form.Item>
-                  <Button className='primary'>Add student</Button>
-                </Form.Item>
-              </Form>
-              
-            </Col>
-          </Card.Text>
+        <Card.Title>Add new student</Card.Title>
+        <Card.Body>
+            <Form>
+              <Row>
+                <Col>
+                <Form.Group>
+                  <Form.Label htmlFor="First Name">First Name</Form.Label>
+                  <Form.Control id="firstName" placeholder="First Name" />
+                </Form.Group>
+                </Col>
+                <Col>
+                <Form.Group>
+                  <Form.Label htmlFor="Middle Name">Middle Name</Form.Label>
+                  <Form.Control id="middleName" placeholder="Middle Name" />
+                </Form.Group>
+                </Col>
+                <Col>
+                <Form.Group>
+                  <Form.Label htmlFor="Last Name">Last Name</Form.Label>
+                  <Form.Control id="lastName" placeholder="Last Name" />
+                </Form.Group>
+                </Col>
+              </Row>
+              <br />
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Control id="admissionNumber" type='number' placeholder="Addmission Number" />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Select label="Grade Level">
+                    <option>Grade Level</option>
+                    <option value="O-Level">O Level</option>
+                    <option value="A-Level">A Level</option>
+                  </Form.Select>
+                </Col>
+                <Col>
+                  <Form.Select label="Class Level">
+                    <option>Class Level</option>
+                    <option value="Form One">Form One</option>
+                    <option value="Form Two">Form Two</option>
+                    <option value="Form Three">Form Three</option>
+                    <option value="Form Four">Form Four</option>
+                  </Form.Select>
+                </Col>
+              </Row>
+              <br />
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label htmlFor="birthday">Birthday</Form.Label>
+                    <DatePicker />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group label="Grad Date">
+                    <Form.Label htmlFor="gradDate">Grad Date</Form.Label>
+                    <DatePicker />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Select label="Graduating Class">
+                    <option>Graduating Class</option>
+                    <option value="2023">Class of 2023</option>
+                    <option value="2024">Class of 2024</option>
+                    <option value="2025">Class of 2025</option>
+                  </Form.Select>
+                </Col>
+              </Row>
+              <br/>
+              <Row>
+                <Col>
+                  <Form.Group>
+                  <Form.Label htmlFor="region">Region</Form.Label>
+                  <Form.Control id="region" placeholder="Region" />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                  <Form.Label htmlFor="city">City</Form.Label>
+                  <Form.Control id="city" placeholder="City" />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                  <Form.Label htmlFor="street">Street</Form.Label>
+                  <Form.Control id="street" placeholder="Street" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <br/>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label htmlFor="stdViiNumber">STD VII NUMBER</Form.Label>
+                    <Form.Control id="stdViiNumber" placeholder="STD VII NUMBER" />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                  <Form.Label htmlFor="Prems Number">Prems Number</Form.Label>
+                    <Form.Control id="premsNumber" placeholder="Prems Number" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <br/>
+              <Form.Group>
+                <Form.Label htmlFor="Emergency Phone">Emergency Phone</Form.Label>
+                <Form.Control id="emergencyPhone" placeholder="Emergency Phone" />
+              </Form.Group>
+              <br/>
+              <Form.Group>
+                <Button className='primary'>Add student</Button>
+              </Form.Group>
+            </Form>
+
         </Card.Body>
       </Card>
     </div>
