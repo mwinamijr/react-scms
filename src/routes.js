@@ -7,8 +7,9 @@ import Payments from './containers/Payments';
 import Receipts from './containers/Receipts';
 import Reports from './containers/Reports';
 import Teachers from './containers/Teachers';
-import StudentList from './containers/StudentList';
-import StudentDetailsScreen from './containers/StudentDetails';
+import StudentList from './containers/students/StudentList';
+import StudentDetailsScreen from './containers/students/StudentDetails';
+import AddStudent from './containers/students/AddStudent';
 
 
 const BaseRouter = () => {
@@ -21,6 +22,7 @@ const BaseRouter = () => {
         <Route path="sis/" >
           <Route path="students/" element={<StudentList />} />
           <Route path="students/:id" element={<StudentDetailsScreen />} />
+          <Route path="students/add" element={<AddStudent />} />
         </Route>
         
         <Route path="/payments/" element={<Payments />} />

@@ -1,10 +1,12 @@
 import { DatePicker } from 'antd'
 import React, { useEffect } from 'react'
 import { Card, Col, Row, Form, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 function AddStudent() {
   return (
     <div>
+      <Link to="/sis/students/" className='btn btn-light my-3'>Go Back</Link>
       <Card>
         <Card.Title>Add new student</Card.Title>
         <Card.Body>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { Breadcrumb, Table, } from 'react-bootstrap';
+import { Breadcrumb, Table, Button } from 'react-bootstrap';
 import { EditOutlined } from '@ant-design/icons';
 
 import { listStudents } from './../../actions/studentActions';
@@ -32,8 +32,10 @@ function Students() {
         </Breadcrumb>
       <div>
       <div>
-        <div className="text-center">
-          <h1>Students</h1>
+        <div>
+          <h1 className="text-center">Students</h1>
+          
+            <Link to="/sis/students/add" className='btn btn-light my-3'>Add Student</Link>
           <Table striped bordered hover>
             <thead>
               

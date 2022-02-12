@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Button, Row, Col } from 'react-bootstrap'
+import { Form, Button, } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import FormContainer from '../components/FormContainer'
 import { login } from '../actions/userActions'
 
-function LoginScreen({ location, history}) {
+function LoginScreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
-    const redirect =  '/'
 
     const userLogin = useSelector(state => state.userLogin)
     const { error, loading, userInfo } = userLogin
@@ -19,7 +18,7 @@ function LoginScreen({ location, history}) {
     useEffect(() => {
         if (userInfo) {
         }
-    }, [history, userInfo, redirect])
+    }, [userInfo])
 
     const submitHandler = (e) => {
         e.preventDefault()

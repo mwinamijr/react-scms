@@ -1,5 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import { List } from 'antd/lib/form/Form';
+import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Loader from '../../components/Loader';
+import Message from '../../components/Message';
 import { listAssignments } from './../../actions/assignmentsActions';
 
 function Assignment() {
@@ -14,13 +17,25 @@ function Assignment() {
   useEffect(() => {
     dispatch(listAssignments())
     
-}, [dispatch,])
+  }, [dispatch,])
 
-    return (
-        <div>
-            Assignment
-        </div>
-    )
+  return (
+    <div>
+      {loading ? <Loader /> :
+          error ? <Message>{error}</Message>:
+          (
+          <div>
+            <List
+              header={<div>Assignments</div>}
+              bordered
+              dataSource={assignments}
+              renderItem={item => <List.Item>{item}</List.Item> }
+            
+            />
+          </div>
+      )}
+    </div>
+  )
 }
 
 export default Assignment
