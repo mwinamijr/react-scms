@@ -1,9 +1,21 @@
 import { DatePicker } from 'antd'
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card, Col, Row, Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
+import { createStudent } from './../../actions/studentActions'
+
 function AddStudent() {
+  const dispatch = useDispatch()
+
+  const studentCreate = useSelector(state => state.studentCreate)
+  const { loading: loadingCreate, error: errorCreate, success: successCreate, student: createdStudent } = studentCreate
+
+  const createStudentHandler = () => {
+    dispatch(createStudent())
+  }
+
   return (
     <div>
       <Link to="/sis/students/" className='btn btn-light my-3'>Go Back</Link>
@@ -121,7 +133,7 @@ function AddStudent() {
               </Form.Group>
               <br/>
               <Form.Group>
-                <Button className='primary'>Add student</Button>
+                <Button className='primary' type='submit' onClick={createStudentHandler}>Add student</Button>
               </Form.Group>
             </Form>
 

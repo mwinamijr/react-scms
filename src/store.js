@@ -10,7 +10,7 @@ import {
     assignmentListReducer,
 } from './reducers/assignmentReducers'
 
-import { studentDetailsReducer, studentListReducer } from './reducers/studentReducers';
+import { studentDetailsReducer, studentListReducer, studentCreateReducer } from './reducers/studentReducers';
 ;
 
 
@@ -20,6 +20,7 @@ const reducer = combineReducers({
     assignmentList: assignmentListReducer,
     studentList: studentListReducer,
     studentDetails: studentDetailsReducer,
+    studentCreate: studentCreateReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ?
