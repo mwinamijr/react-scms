@@ -7,6 +7,9 @@ import DashboardLayout from './containers/Layout';
 
 // import { logout } from './actions/userActions'
 import BaseRouter from "./routes";
+import Parents from './containers/gettingStarted/Parents';
+import Developers from './containers/gettingStarted/Developers';
+import Teachers from './containers/gettingStarted/Teachers';
 
 function App() {
   const userLogin = useSelector(state => state.userLogin)
@@ -23,6 +26,9 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Home /> } />
         <Route path="/login/" element={<Login />} />
+        <Route path="/getting-started/developers/" element={<Developers />} />
+        <Route path="/getting-started/teachers/" element={<Teachers />} />
+        <Route path="/getting-started/parents/" element={<Parents />} />
 			</Routes>
 			}
 			
