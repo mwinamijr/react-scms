@@ -36,43 +36,41 @@ function Students() {
           <h1 className="text-center">Students</h1>
           
             <Link to="/sis/students/add" className='btn btn-light my-3'>Add Student</Link>
-          <Table striped bordered hover>
-            <thead>
+            { loading ? <Loader /> :
+              error ? <Message variant="danger">{error}</Message> :
               
-              <tr>
-                <th>Adm No:</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Sex</th>
-                <th>Class</th>
-                <th>Birthday</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-              { loading ? <Loader /> :
-                error ? <Message variant="danger">{error}</Message> :
-                (
+              <Table striped bordered hover>
+                <thead>
                   
-                  <tbody>
-
-                    { students.map(student => (
-                      <tr key={student.addmission_number}>
-                        <td>{student.addmission_number}</td>
-                        <td>{student.first_name}</td>
-                        <td>{student.last_name}</td>
-                        <td>{student.sex}</td>
-                        <td>{student.class_level}</td>
-                        <td>{student.birthday}</td>
-                        <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
-                      </tr>
-                    ))}
+                  <tr>
+                    <th>Adm No:</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Sex</th>
+                    <th>Class</th>
+                    <th>Birthday</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
                   
-                  </tbody>
-                )
-              
+                
+                <tbody>
+                    
+                  { students.map(student => (
+                    <tr key={student.addmission_number}>
+                      <td>{student.addmission_number}</td>
+                      <td>{student.first_name}</td>
+                      <td>{student.last_name}</td>
+                      <td>{student.sex}</td>
+                      <td>{student.class_level}</td>
+                      <td>{student.birthday}</td>
+                      <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
+                    </tr>
+                  ))}
+                
+                </tbody>
+              </Table>
             }
-
-          </Table>
         </div>
       </div>
       </div>

@@ -21,7 +21,6 @@ function DashLayout(props) {
 
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
-  console.log("isTeacher:",userInfo.user_type.isAccountant)
   const dispatch = useDispatch()
 
   const onCollapse = collapsed => {
@@ -55,7 +54,7 @@ function DashLayout(props) {
               <Menu.Item key="15" icon={<FileOutlined />}>
                 Files
               </Menu.Item>
-              <Menu.Item key="16" icon={<FileOutlined />}>
+              <Menu.Item key="16" icon={<UserOutlined />}>
                 <Link onClick={logoutHandler} to='/'>Logout</Link>
               </Menu.Item>
             </Menu>
@@ -80,7 +79,7 @@ function DashLayout(props) {
               <Menu.Item key="15" icon={<FileOutlined />}>
                 Files
               </Menu.Item>
-              <Menu.Item key="16" icon={<FileOutlined />}>
+              <Menu.Item key="16" icon={<UserOutlined />}>
                 <Link onClick={logoutHandler} to='/'>Logout</Link>
               </Menu.Item>
             </Menu>
@@ -92,7 +91,7 @@ function DashLayout(props) {
               <Menu.Item key="2" icon={<DesktopOutlined />}>
                 Admission
               </Menu.Item>
-              <SubMenu key="sub1" icon={<UserOutlined />} title="Employees">
+              <SubMenu key="sub1" icon={<TeamOutlined />} title="Employees">
                 <Menu.Item key="3"><Link to="/teachers">Teachers</Link></Menu.Item>
                 <Menu.Item key="4">Accountants</Menu.Item>
                 <Menu.Item key="5">Alex</Menu.Item>
@@ -115,7 +114,7 @@ function DashLayout(props) {
               <Menu.Item key="15" icon={<FileOutlined />}>
                 Files
               </Menu.Item>
-              <Menu.Item key="16" icon={<FileOutlined />}>
+              <Menu.Item key="16" icon={<UserOutlined />}>
                 <Link onClick={logoutHandler} to='/'>Logout</Link>
               </Menu.Item>
             </Menu>
