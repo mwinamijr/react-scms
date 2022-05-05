@@ -1,6 +1,6 @@
 import {React} from 'react';
 import { useSelector } from 'react-redux'
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from './containers/Home';
 import Login from './containers/Login';
 import DashboardLayout from './containers/Layout';
@@ -22,6 +22,7 @@ function App() {
 				<DashboardLayout> 
 					<BaseRouter />
 				</DashboardLayout>
+				
 			:
 			<Routes>
 				<Route path="/" element={<Home /> } />

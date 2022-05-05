@@ -13,7 +13,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 
-function Layout2(props) {
+function DashLayout(props) {
   const [collapsed, setCollapsed] = useState(false)
 
   const onCollapse = collapsed => {
@@ -74,4 +74,4 @@ function Layout2(props) {
   )
 }
 
-export default Layout2
+export default DashLayout
