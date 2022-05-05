@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector} from 'react-redux'
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
@@ -9,6 +10,8 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 
+import { logout } from './../actions/userActions'
+
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -16,10 +19,19 @@ const { SubMenu } = Menu;
 function DashLayout(props) {
   const [collapsed, setCollapsed] = useState(false)
 
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
+
+  const dispatch = useDispatch()
+
   const onCollapse = collapsed => {
     console.log(collapsed);
     setCollapsed(!collapsed);
   };
+
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -57,7 +69,7 @@ function DashLayout(props) {
               Files
             </Menu.Item>
             <Menu.Item key="16" icon={<FileOutlined />}>
-              <Link to={'/logout'}>Logout</Link>
+              <Link onClick={logoutHandler} to='/'>Logout</Link>
             </Menu.Item>
           </Menu>
         </Sider>

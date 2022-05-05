@@ -5,7 +5,6 @@ import Home from './containers/Home';
 import Login from './containers/Login';
 import DashboardLayout from './containers/Layout';
 
-// import { logout } from './actions/userActions'
 import BaseRouter from "./routes";
 import Parents from './containers/gettingStarted/Parents';
 import Developers from './containers/gettingStarted/Developers';
