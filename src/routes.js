@@ -3,9 +3,9 @@ import { Routes, Route } from "react-router-dom";
 
 import Dashboard from './containers/Dashboard';
 import Assignment from './containers/learn/Assignment';
-import Payments from './containers/Payments';
-import Receipts from './containers/Receipts';
-import Reports from './containers/Reports';
+import Payments from './containers/finance/Payments';
+import Receipts from './containers/finance/Receipts';
+import Reports from './containers/finance/Reports';
 import Teachers from './containers/Teachers';
 import StudentList from './containers/students/StudentList';
 import StudentDetailsScreen from './containers/students/StudentDetails';
