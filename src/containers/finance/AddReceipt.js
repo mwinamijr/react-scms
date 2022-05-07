@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
 import {
   Form,
   Input,
@@ -11,19 +12,20 @@ import {
 
 function AddReceipt() {
   return (
-    <Card>
-      <Card.Header className="text-center">
-        <div className="receipt-bg">
-          <h3>
-          Hayatul Islamiya Secondary <br />
-          P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523 <br />
-          A/C Number:- NMB:          , NBC:  <br />
-          </h3>
-        </div>
-      </Card.Header>
-      <Card.Body className="text-left col-md-8">
-        <Card.Title className='pb-3'>PAYMENT RECEIPT</Card.Title>
-        <Card.Text>
+    <div>
+      <Link to="/receipts/" className='btn btn-light my-3'>Go Back</Link>
+      <Card>
+        <Card.Header className="text-center">
+          <div className="receipt-bg">
+            <h3>
+            Hayatul Islamiya Secondary <br />
+            P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523 <br />
+            A/C Number:- NMB:          , NBC:  <br />
+            </h3>
+          </div>
+        </Card.Header>
+        <Card.Body className="text-left col-md-8">
+          <Card.Title className='pb-3'>PAYMENT RECEIPT</Card.Title>
           <Col>
             <Form>
               <Row>
@@ -61,9 +63,9 @@ function AddReceipt() {
             </Form>
             
           </Col>
-        </Card.Text>
-      </Card.Body>
-    </Card>
+        </Card.Body>
+      </Card>
+    </div>
   )
 }
 
