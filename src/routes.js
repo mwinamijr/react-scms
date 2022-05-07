@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
+import { useSelector } from 'react-redux'
 
 import Dashboard from './containers/Dashboard';
 import Assignment from './containers/learn/Assignment';
@@ -14,13 +15,18 @@ import AddReceipt from './containers/finance/AddReceipt';
 
 
 const BaseRouter = () => {
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 	return (
     <div>
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        
         <Route path='receipts/'>
           <Route path="" element={<Receipts />} />
           <Route path="add/" element={<AddReceipt />} />
+          <Route path="payments/" element={<Payments />} />
+          <Route path="reports/" element={<Reports />} />
         </Route>
         
         <Route path="sis/" >
@@ -29,8 +35,6 @@ const BaseRouter = () => {
           <Route path="students/add" element={<AddStudent />} />
         </Route>
         
-        <Route path="/payments/" element={<Payments />} />
-        <Route path="/reports/" element={<Reports />} />
         <Route path="/teachers/" element={<Teachers />} />
         <Route path="/learn/assignments/" element={<Assignment />} />
       </Routes>
