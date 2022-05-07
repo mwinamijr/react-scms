@@ -10,6 +10,7 @@ import Teachers from './containers/Teachers';
 import StudentList from './containers/students/StudentList';
 import StudentDetailsScreen from './containers/students/StudentDetails';
 import AddStudent from './containers/students/AddStudent';
+import AddReceipt from './containers/finance/AddReceipt';
 
 
 const BaseRouter = () => {
@@ -17,7 +18,10 @@ const BaseRouter = () => {
     <div>
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/receipts/" element={<Receipts />} />
+        <Route path='receipts/'>
+          <Route path="" element={<Receipts />} />
+          <Route path="add/" element={<AddReceipt />} />
+        </Route>
         
         <Route path="sis/" >
           <Route path="students/" element={<StudentList />} />
