@@ -25,6 +25,16 @@ function Home() {
 
         <div className="row g-5">
           <div className="col-md-6">
+            <h2>Namna ya kutumia mfumo huu</h2>
+            <p>Soma maelekezo ya kutumia mfumo huu kulingana na aina ya mtumiaji.</p>
+            <ul className="icon-list">
+              <li><Link to="/getting-started/teachers">Walimu</Link></li>
+              <li><Link to="/getting-started/parents">Wazazi</Link></li>
+              <li><Link to="/getting-started/developers">Developers</Link></li>
+            </ul>
+          </div>
+
+          <div className="col-md-6">
             <h2>Developers</h2>
             <p>
               All developers are welcome to join in on this open Source project, This projects gives opportunity to all developers who can contribute anything, so all developers with JavaScript, React and Redux are wecome to join in and help on this project.
@@ -34,16 +44,6 @@ function Home() {
               <li className=''>
                 For instructions on how to contribute to this project check out the developers manual<Link to="/getting-started/developers"> here</Link>
               </li>
-            </ul>
-          </div>
-
-          <div className="col-md-6">
-            <h2>Namna ya kutumia mfumo huu</h2>
-            <p>Soma maelekezo ya kutumia mfumo huu kulingana na aina ya mtumiaji.</p>
-            <ul className="icon-list">
-              <li><Link to="/getting-started/teachers">Walimu</Link></li>
-              <li><Link to="/getting-started/parents">Wazazi</Link></li>
-              <li><Link to="/getting-started/developers">Developers</Link></li>
             </ul>
           </div>
         </div>

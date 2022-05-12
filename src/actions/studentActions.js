@@ -70,6 +70,7 @@ export const createStudent = () => async (dispatch, getState) => {
         const { data } = await axios.post(
             'http://127.0.0.1:8000/api/sis/students/'
         )
+        console.log(data)
         dispatch({
             type: STUDENT_CREATE_SUCCESS,
             payload: data,

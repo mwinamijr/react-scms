@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { Breadcrumb, Table, Button } from 'react-bootstrap';
+import { Breadcrumb, Table } from 'react-bootstrap';
 import { EditOutlined } from '@ant-design/icons';
 
 import { listStudents } from './../../actions/studentActions';
@@ -44,8 +44,7 @@ function Students() {
                   
                   <tr>
                     <th>Adm No:</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Full Name</th>
                     <th>Sex</th>
                     <th>Class</th>
                     <th>Birthday</th>
@@ -59,8 +58,7 @@ function Students() {
                   { students.map(student => (
                     <tr key={student.addmission_number}>
                       <td>{student.addmission_number}</td>
-                      <td>{student.first_name}</td>
-                      <td>{student.last_name}</td>
+                      <td>{student.first_name} {student.middle_name} {student.last_name}</td>
                       <td>{student.sex}</td>
                       <td>{student.class_level}</td>
                       <td>{student.birthday}</td>
