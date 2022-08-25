@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Card, Col, Row, Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-import { createStudent } from './../../actions/studentActions'
+import { createStudent } from '../../redux/actions/studentActions'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 

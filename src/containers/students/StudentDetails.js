@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from './../../components/Loader'
 import Message from './../../components/Message'
-import { studentsDetails } from '../../actions/studentActions'
+import { studentsDetails } from '../../redux/actions/studentActions'
 
 
 function StudentDetailsScreen() {

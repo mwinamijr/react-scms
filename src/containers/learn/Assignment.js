@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/Loader';
 import Message from '../../components/Message';
-import { listAssignments } from './../../actions/assignmentsActions';
+import { listAssignments } from '../../redux/actions/assignmentsActions';
 
 function Assignment() {
 

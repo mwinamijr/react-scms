@@ -10,7 +10,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 
-import { logout } from './../actions/userActions'
+import { logout } from '../redux/actions/userActions'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;

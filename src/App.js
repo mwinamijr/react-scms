@@ -20,15 +20,14 @@ function App() {
 			{ userInfo ? 
 				<DashboardLayout> 
 					<BaseRouter />
-				</DashboardLayout>
-				
+				</DashboardLayout>	
 			:
 			<Routes>
 				<Route path="/" element={<Home /> } />
-        <Route path="/login/" element={<Login />} />
-        <Route path="/getting-started/developers/" element={<Developers />} />
-        <Route path="/getting-started/teachers/" element={<Teachers />} />
-        <Route path="/getting-started/parents/" element={<Parents />} />
+				<Route path="/login/" element={<Login />} />
+				<Route path="/getting-started/developers/" element={<Developers />} />
+				<Route path="/getting-started/teachers/" element={<Teachers />} />
+				<Route path="/getting-started/parents/" element={<Parents />} />
 			</Routes>
 			}
 			
