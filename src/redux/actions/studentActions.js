@@ -8,11 +8,22 @@ import {
     STUDENT_DELETE_REQUEST, STUDENT_DELETE_SUCCESS, STUDENT_DELETE_FAIL*/
 } from '../constants/studentConstants'
 
-export const listStudents = () => async (dispatch) => {
+export const listStudents = () => async (dispatch, getState) => {
     try {
         dispatch({ type: STUDENT_LIST_REQUEST })
+        
+        const {
+            userLogin: { userInfo},
+        } = getState()
 
-        const { data } = await axios.get('http://127.0.0.1:8000/api/sis/students/')
+        const config = {
+            headers : {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.get('http://127.0.0.1:8000/api/sis/students/', config)
 
         dispatch({
             type: STUDENT_LIST_SUCCESS,
@@ -29,11 +40,22 @@ export const listStudents = () => async (dispatch) => {
     }
 }
 
-export const studentsDetails = (id) => async (dispatch) => {
+export const studentsDetails = (id) => async (dispatch, getState) => {
     try {
         dispatch({ type: STUDENT_DETAILS_REQUEST })
 
-        const { data } = await axios.get(`http://127.0.0.1:8000/api/sis/students/${id}`)
+        const {
+            userLogin: { userInfo},
+        } = getState()
+
+        const config = {
+            headers : {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.get(`http://127.0.0.1:8000/api/sis/students/${id}`, config)
 
         dispatch({
             type: STUDENT_DETAILS_SUCCESS,
