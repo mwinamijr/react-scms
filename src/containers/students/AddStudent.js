@@ -15,6 +15,7 @@ function AddStudent() {
   const [admissionNumber, setAdmissionNumber] = useState(0)
   const [gradeLevel, setGradeLevel] = useState('')
   const [classLevel, setClassLevel] = useState('')
+  const [sex, setSex] = useState('')
   const [birthday, setBirthday] = useState(new Date())
   const [gradDate, setGradDate] = useState(new Date())
   const [region, setRegion] = useState('')
@@ -36,7 +37,7 @@ function AddStudent() {
     e.preventDefault()
 
     dispatch(createStudent(
-      firstName, middleName, lastName, admissionNumber, gradeLevel, classLevel, birthday, gradDate, region, city, street,
+      firstName, middleName, lastName, admissionNumber, gradeLevel, classLevel, sex, birthday, gradDate, region, city, street,
       stdViiNumber, premsNumber
     ))
   }
@@ -156,11 +157,14 @@ function AddStudent() {
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Select label="Graduating Class">
-                  <option>Graduating Class</option>
-                  <option value="2023">Class of 2023</option>
-                  <option value="2024">Class of 2024</option>
-                  <option value="2025">Class of 2025</option>
+                <Form.Select label="Sex"
+                  type='text'
+                  value={sex}
+                  onChange={(e) => setSex(e.target.value)}
+                >
+                  <option>Sex</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
                 </Form.Select>
               </Col>
             </Row>

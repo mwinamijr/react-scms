@@ -72,7 +72,8 @@ export const studentsDetails = (id) => async (dispatch, getState) => {
     }
 }
 
-export const createStudent = () => async (dispatch, getState) => {
+export const createStudent = (firstName, middleName, lastName, admissionNumber, gradeLevel, classLevel, birthday, gradDate, region, city, street,
+    sex, stdViiNumber, premsNumber) => async (dispatch, getState) => {
     try {
         dispatch({
             type: STUDENT_CREATE_REQUEST
@@ -90,7 +91,22 @@ export const createStudent = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/sis/students/'
+        'http://127.0.0.1:8000/api/sis/students/',{
+        "first_name": firstName, 
+        "middle_name": middleName, 
+        "last_name":lastName, 
+        "admission_number":admissionNumber, 
+        "grade_level": gradeLevel, 
+        "class_level" :classLevel, 
+        "sex": sex,
+        "birthday":birthday, 
+        "grad_date":gradDate, 
+        "region":region,
+        "city": city,
+        "street": street,
+        "std_vii_number": stdViiNumber,
+        "prems_number": premsNumber},
+        config
         )
         console.log(data)
         dispatch({
