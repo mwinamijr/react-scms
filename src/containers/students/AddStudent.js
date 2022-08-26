@@ -1,4 +1,4 @@
-import { DatePicker } from 'antd'
+import DatePicker from 'react-datepicker'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Card, Col, Row, Form, Button } from 'react-bootstrap'
@@ -15,8 +15,8 @@ function AddStudent() {
   const [admissionNumber, setAdmissionNumber] = useState(0)
   const [gradeLevel, setGradeLevel] = useState('')
   const [classLevel, setClassLevel] = useState('')
-  const [birthday, setBirthday] = useState({ bday:new Date()})
-  const [gradDate, setGradDate] = useState({gday:new Date()})
+  const [birthday, setBirthday] = useState(new Date())
+  const [gradDate, setGradDate] = useState(new Date())
   const [region, setRegion] = useState('')
   const [city, setCity] = useState('')
   const [street, setStreet] = useState('')
@@ -139,6 +139,9 @@ function AddStudent() {
                 <Form.Group>
                   <Form.Label htmlFor="birthday">Birthday</Form.Label>
                     <DatePicker
+                      selected={birthday}
+                      value={birthday}
+                      onChange={(date) => setBirthday(date)}
                     />
                 </Form.Group>
               </Col>
@@ -146,6 +149,9 @@ function AddStudent() {
                 <Form.Group>
                   <Form.Label htmlFor="gradDate">Grad Date</Form.Label>
                   <DatePicker
+                    selected={gradDate}
+                    value={gradDate}
+                    onChange={(date) => setGradDate(date)}
                   />
                 </Form.Group>
               </Col>

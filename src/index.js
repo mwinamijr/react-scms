@@ -2,6 +2,7 @@ import React from 'react';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
+import 'react-datepicker/dist/react-datepicker.css'
 import App from './App';
 import { Provider } from 'react-redux'
 import store from './store'
