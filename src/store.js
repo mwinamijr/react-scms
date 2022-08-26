@@ -4,13 +4,13 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 
 import {
     userLoginReducer,
-} from './reducers/userReducers'
+} from './redux/reducers/userReducers'
 
 import {
     assignmentListReducer,
-} from './reducers/assignmentReducers'
+} from './redux/reducers/assignmentReducers'
 
-import { studentDetailsReducer, studentListReducer, studentCreateReducer } from './reducers/studentReducers';
+import { studentDetailsReducer, studentListReducer, studentCreateReducer } from './redux/reducers/studentReducers';
 ;
 
 

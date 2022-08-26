@@ -23,18 +23,13 @@ function DashLayout(props) {
   const { userInfo } = userLogin
   const dispatch = useDispatch()
 
-  const onCollapse = collapsed => {
-    console.log(collapsed);
-    setCollapsed(!collapsed);
-  };
-
   const logoutHandler = () => {
     dispatch(logout())
   }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
           <div className="logo" />
           { userInfo.user_type.isTeacher ?
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
