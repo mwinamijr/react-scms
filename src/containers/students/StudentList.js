@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { Breadcrumb, Table } from 'react-bootstrap';
+import { Breadcrumb, Table, Row, Col } from 'react-bootstrap';
 import { EditOutlined } from '@ant-design/icons';
 
 import { listStudents } from '../../redux/actions/studentActions';
@@ -34,8 +34,10 @@ function Students() {
       <div>
         <div>
           <h1 className="text-center">Students</h1>
-          
-            <Link to="/sis/students/add" className='btn btn-light my-3'>Add Student</Link>
+          <Row>
+            <Col><Link to="/sis/students/add" className='btn btn-light my-3'>Add Student</Link></Col>
+            <Col><Link to="/sis/students/upload" className='btn btn-light my-3'>Bulk Upload Students</Link></Col>
+          </Row>
             { loading ? <Loader /> :
               error ? <Message variant="danger">{error}</Message> :
               
