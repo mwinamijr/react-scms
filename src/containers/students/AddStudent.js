@@ -15,7 +15,6 @@ function AddStudent() {
   const [admissionNumber, setAdmissionNumber] = useState(0)
   const [gradeLevel, setGradeLevel] = useState('')
   const [classLevel, setClassLevel] = useState('')
-  const [sex, setSex] = useState('')
   const [birthday, setBirthday] = useState(new Date())
   const [gradDate, setGradDate] = useState(new Date())
   const [region, setRegion] = useState('')
@@ -23,22 +22,22 @@ function AddStudent() {
   const [street, setStreet] = useState('')
   const [stdViiNumber, setStdViiNumber] = useState('')
   const [premsNumber, setPremsNumber] = useState('')
+  const [sex, setSex] = useState('')
 
   const dispatch = useDispatch()
 
   const studentCreate = useSelector(state => state.studentCreate)
   const { loading: loadingCreate, error: errorCreate, success: successCreate, student: createdStudent } = studentCreate
 
-  useEffect(()=>{
-
-  },[dispatch, ])
-
   const submitHandler = (e) => {
     e.preventDefault()
 
     dispatch(createStudent(
-      firstName, middleName, lastName, admissionNumber, gradeLevel, classLevel, sex, birthday, gradDate, region, city, street,
-      stdViiNumber, premsNumber
+      firstName, middleName, lastName, 
+      admissionNumber, gradeLevel, classLevel, 
+      birthday, gradDate,  
+      region, city, street,
+      stdViiNumber, premsNumber, sex
     ))
   }
 
@@ -116,8 +115,8 @@ function AddStudent() {
                 
                 >
                   <option>Grade Level</option>
-                  <option value="O-Level">O Level</option>
-                  <option value="A-Level">A Level</option>
+                  <option value="1">O Level</option>
+                  <option value="2">A Level</option>
                 </Form.Select>
               </Col>
               <Col>
@@ -127,10 +126,10 @@ function AddStudent() {
                   onChange={(e) => setClassLevel(e.target.value)}
                 >
                   <option>Class Level</option>
-                  <option value="Form One">Form One</option>
-                  <option value="Form Two">Form Two</option>
-                  <option value="Form Three">Form Three</option>
-                  <option value="Form Four">Form Four</option>
+                  <option value="1">Form One</option>
+                  <option value="2">Form Two</option>
+                  <option value="3">Form Three</option>
+                  <option value="4">Form Four</option>
                 </Form.Select>
               </Col>
             </Row>
@@ -140,6 +139,7 @@ function AddStudent() {
                 <Form.Group>
                   <Form.Label htmlFor="birthday">Birthday</Form.Label>
                     <DatePicker
+                      format='yyyy/MM/dd'
                       selected={birthday}
                       value={birthday}
                       onChange={(date) => setBirthday(date)}
