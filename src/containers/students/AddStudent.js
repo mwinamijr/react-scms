@@ -35,7 +35,6 @@ function AddStudent() {
     dispatch(createStudent(
       firstName, middleName, lastName, 
       admissionNumber, gradeLevel, classLevel, 
-      birthday, gradDate,  
       region, city, street,
       stdViiNumber, premsNumber, sex
     ))
@@ -56,7 +55,7 @@ function AddStudent() {
             <Row>
               <Col>
               <Form.Group>
-                <Form.Label htmlFor="firstName">First Name</Form.Label>
+                <Form.Label>First Name</Form.Label>
                 <Form.Control 
                   id="firstName" 
                   placeholder="First Name" 
@@ -69,7 +68,7 @@ function AddStudent() {
               </Col>
               <Col>
               <Form.Group>
-                <Form.Label htmlFor="middleName">Middle Name</Form.Label>
+                <Form.Label>Middle Name</Form.Label>
                 <Form.Control 
                   id="middleName" 
                   placeholder="Middle Name" 
@@ -81,7 +80,7 @@ function AddStudent() {
               </Col>
               <Col>
               <Form.Group>
-                <Form.Label htmlFor="lastName">Last Name</Form.Label>
+                <Form.Label>Last Name</Form.Label>
                 <Form.Control 
                   id="lastName" 
                   placeholder="First Name" 
@@ -97,6 +96,7 @@ function AddStudent() {
             <Row>
               <Col>
                 <Form.Group>
+                  <Form.Label>Admission Number</Form.Label>
                   <Form.Control 
                     id="admissionNumber" 
                     type='number' 
@@ -109,19 +109,21 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Select label="Grade Level" 
-                  type='text'
+                  id='gradeLevel'
+                  type='number'
                   value={gradeLevel}
                   onChange={(e) => setGradeLevel(e.target.value)}
                 
                 >
                   <option>Grade Level</option>
-                  <option value="1">O Level</option>
-                  <option value="2">A Level</option>
+                  <option value="2">O Level</option>
+                  <option value="3">A Level</option>
                 </Form.Select>
               </Col>
               <Col>
                 <Form.Select label="Class Level"
-                  type='text'
+                  id='classLevel'
+                  type='number'
                   value={classLevel}
                   onChange={(e) => setClassLevel(e.target.value)}
                 >
@@ -137,8 +139,9 @@ function AddStudent() {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label htmlFor="birthday">Birthday</Form.Label>
+                  <Form.Label>Birthday</Form.Label>
                     <DatePicker
+                      id="birthday"
                       format='yyyy/MM/dd'
                       selected={birthday}
                       value={birthday}
@@ -148,8 +151,9 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Group>
-                  <Form.Label htmlFor="gradDate">Grad Date</Form.Label>
+                  <Form.Label>Grad Date</Form.Label>
                   <DatePicker
+                    id="gradDate"
                     selected={gradDate}
                     value={gradDate}
                     onChange={(date) => setGradDate(date)}
@@ -158,6 +162,7 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Select label="Sex"
+                  id='sex'
                   type='text'
                   value={sex}
                   onChange={(e) => setSex(e.target.value)}
@@ -172,7 +177,7 @@ function AddStudent() {
             <Row>
               <Col>
                 <Form.Group>
-                <Form.Label htmlFor="region">Region</Form.Label>
+                <Form.Label>Region</Form.Label>
                 <Form.Control 
                   id="region" 
                   placeholder="Region" 
@@ -183,7 +188,7 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Group>
-                <Form.Label htmlFor="city">City</Form.Label>
+                <Form.Label>City</Form.Label>
                 <Form.Control 
                   id="city" 
                   placeholder="City" 
@@ -194,7 +199,7 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Group>
-                <Form.Label htmlFor="street">Street</Form.Label>
+                <Form.Label>Street</Form.Label>
                 <Form.Control 
                   id="street" 
                   placeholder="Street" 
@@ -208,7 +213,7 @@ function AddStudent() {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label htmlFor="stdViiNumber">STD VII NUMBER</Form.Label>
+                  <Form.Label>STD VII NUMBER</Form.Label>
                   <Form.Control 
                     id="stdViiNumber" 
                     placeholder="STD VII NUMBER" 
@@ -220,7 +225,7 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Group>
-                <Form.Label htmlFor="Prems Number">Prems Number</Form.Label>
+                <Form.Label>Prems Number</Form.Label>
                   <Form.Control 
                     id="premsNumber" 
                     placeholder="Prems Number" 
@@ -233,7 +238,7 @@ function AddStudent() {
             </Row>
             <br/>
             <Form.Group>
-              <Form.Label htmlFor="Emergency Phone">Emergency Phone</Form.Label>
+              <Form.Label>Emergency Phone</Form.Label>
               <Form.Control id="emergencyPhone" placeholder="Emergency Phone" />
             </Form.Group>
             <br/>
