@@ -130,7 +130,7 @@ export const createStudent = (
     }
 }
 
-export const bulkCreateStudents = () => async (dispatch, getState) => {
+export const bulkCreateStudents = (file) => async (dispatch, getState) => {
     try {
         dispatch({
             type: STUDENT_BULK_CREATE_REQUEST
@@ -148,10 +148,10 @@ export const bulkCreateStudents = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/sis/upload/:filename/',{},
+        'http://127.0.0.1:8000/api/sis/upload/:filename/',{file},
         config
         )
-        console.log(data)
+
         dispatch({
             type: STUDENT_BULK_CREATE_SUCCESS,
             payload: data,
