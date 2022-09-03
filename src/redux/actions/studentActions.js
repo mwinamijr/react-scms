@@ -130,7 +130,7 @@ export const createStudent = (
     }
 }
 
-export const bulkCreateStudents = (file) => async (dispatch, getState) => {
+export const bulkCreateStudents = (filename) => async (dispatch, getState) => {
     try {
         dispatch({
             type: STUDENT_BULK_CREATE_REQUEST
@@ -142,13 +142,12 @@ export const bulkCreateStudents = (file) => async (dispatch, getState) => {
 
         const config = {
             headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${userInfo.token}`
+                'Content-type': 'multipart/form-data'
             }
         }
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/sis/upload/:filename/',{file},
+        `http://127.0.0.1:8000/api/sis/upload/:${filename}/`,
         config
         )
 

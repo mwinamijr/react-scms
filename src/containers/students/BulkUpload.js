@@ -8,7 +8,7 @@ import Message from '../../components/Message'
 import { bulkCreateStudents } from '../../redux/actions/studentActions'
 
 function BulkUpload() {
-  const [file, setFile] = useState('')
+  const [filename, setFilename] = useState()
 
   const dispatch = useDispatch()
 
@@ -19,7 +19,7 @@ function BulkUpload() {
     e.preventDefault()
 
     dispatch(bulkCreateStudents(
-      file
+      filename
     ))
   }
 
@@ -38,8 +38,7 @@ function BulkUpload() {
               <Form.Label>Choose excel file to upload</Form.Label>
               <Form.Control 
                 type='file'
-                value={file}
-                onChange={(e) => setFile(e.value.target)}
+                onChange={(e) => setFilename(e.target.value)}
               />
             </Form.Group>
             <br />
