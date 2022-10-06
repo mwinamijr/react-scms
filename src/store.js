@@ -11,8 +11,10 @@ import {
 } from './redux/reducers/assignmentReducers'
 
 import { studentDetailsReducer, studentListReducer, studentCreateReducer, studentsBulkCreateReducer } from './redux/reducers/studentReducers';
-;
 
+import {
+    receiptListReducer, receiptDetailsReducer
+} from './redux/reducers/financeReducers'
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
@@ -21,7 +23,10 @@ const reducer = combineReducers({
     studentList: studentListReducer,
     studentDetails: studentDetailsReducer,
     studentCreate: studentCreateReducer,
-    studentsBulkCreate: studentsBulkCreateReducer
+    studentsBulkCreate: studentsBulkCreateReducer,
+
+    receiptList: receiptListReducer,
+    receiptDetails: receiptDetailsReducer
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ?
