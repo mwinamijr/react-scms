@@ -23,9 +23,9 @@ const BaseRouter = () => {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         
-        <Route path='receipts/'>
-          <Route path="" element={<Receipts />} />
-          <Route path="add/" element={<AddReceipt />} />
+        <Route path='finance/'>
+          <Route path="receipts/" element={<Receipts />} />
+          <Route path="receipts/add/" element={<AddReceipt />} />
           <Route path="payments/" element={<Payments />} />
           <Route path="reports/" element={<Reports />} />
         </Route>

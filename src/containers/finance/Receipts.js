@@ -23,7 +23,7 @@ console.log(userInfo.isAdmin)
         { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
           <div>
             <h1 className="text-center">Receipts</h1>
-            <Link to="/receipts/add" className='btn btn-light my-3'>Add Receipt</Link>
+            <Link to="/finance/receipts/add" className='btn btn-light my-3'>Add Receipt</Link>
             <Table striped bordered hover>
               <thead>
                 <tr>
