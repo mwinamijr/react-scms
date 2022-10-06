@@ -21,3 +21,19 @@ export const receiptListReducer = (state = { receipts: [] }, action) => {
             return state
     }
 }
+
+export const receiptDetailsReducer = (state = { receipt: [] }, action) => {
+    switch (action.type) {
+        case RECEIPT_DETAILS_REQUEST:
+            return { loading: true, ...state }
+
+        case RECEIPT_DETAILS_SUCCESS:
+            return { loading: false, receipt: action.payload }
+
+        case RECEIPT_DETAILS_FAIL:
+            return { loading: false, error: action.payload }
+
+        default:
+            return state
+    }
+}
