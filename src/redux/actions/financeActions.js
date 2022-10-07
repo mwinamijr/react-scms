@@ -36,7 +36,7 @@ export const listReceipts = () => async (dispatch, getState) => {
     }
 }
 
-export const ReceiptsDetails = (id) => async (dispatch, getState) => {
+export const ReceiptDetails = (id) => async (dispatch, getState) => {
     try {
         dispatch({ type: RECEIPT_DETAILS_REQUEST })
 

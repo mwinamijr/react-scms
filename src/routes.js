@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import Dashboard from './containers/Dashboard';
 import Assignment from './containers/learn/Assignment';
 import Payments from './containers/finance/Payments';
-import Receipts from './containers/finance/Receipts';
+import Receipts from './containers/finance/ReceiptList';
 import Reports from './containers/finance/Reports';
 import Teachers from './containers/Teachers';
 import StudentList from './containers/students/StudentList';
@@ -13,6 +13,7 @@ import StudentDetailsScreen from './containers/students/StudentDetails';
 import AddStudent from './containers/students/AddStudent';
 import AddReceipt from './containers/finance/AddReceipt';
 import BulkUpload from './containers/students/BulkUpload';
+import ReceiptsDetails from './containers/finance/ReceiptsDetails';
 
 
 const BaseRouter = () => {
@@ -25,6 +26,7 @@ const BaseRouter = () => {
         
         <Route path='finance/'>
           <Route path="receipts/" element={<Receipts />} />
+          <Route path="receipts/:id" element={<ReceiptsDetails />} />
           <Route path="receipts/add/" element={<AddReceipt />} />
           <Route path="payments/" element={<Payments />} />
           <Route path="reports/" element={<Reports />} />
