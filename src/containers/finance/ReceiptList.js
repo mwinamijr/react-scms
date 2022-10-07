@@ -5,8 +5,8 @@ import { Breadcrumb, Table } from 'react-bootstrap';
 import { EditOutlined } from '@ant-design/icons';
 
 import { listReceipts } from '../../redux/actions/financeActions';
-import Loader from './../../components/Loader';
-import Message from './../../components/Message';
+import Loader from '../../components/Loader';
+import Message from '../../components/Message';
 
 function Receipts() {
   const dispatch = useDispatch()
@@ -60,7 +60,7 @@ function Receipts() {
                     <td>{receipt.student}</td>
                     <td>{receipt.amount}</td>
                     <td>{receipt.received_by}</td>
-                    <td><Link to={`/sis/students/${receipt.addmission_number}`}><EditOutlined /></Link></td>
+                    <td><Link to={`/finance/receipts/${receipt.id}`}><EditOutlined /></Link></td>
                   </tr>
                   ))}
                 </tbody>
