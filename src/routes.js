@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import Dashboard from './containers/Dashboard';
 import Assignment from './containers/learn/Assignment';
-import Payments from './containers/finance/Payments';
+import Payments from './containers/finance/PaymentList';
 import Receipts from './containers/finance/ReceiptList';
 import Reports from './containers/finance/Reports';
 import Teachers from './containers/Teachers';
