@@ -17,7 +17,7 @@ function AddReceipt() {
   const { userInfo } = userLogin
   return (
     <div>
-      <Link to="/receipts/" className='btn btn-light my-3'>Go Back</Link>
+      <Link to="/finance/receipts/" className='btn btn-light my-3'>Go Back</Link>
       { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
         <Card>
           <Card.Header className="text-center">
@@ -31,43 +31,40 @@ function AddReceipt() {
           </Card.Header>
           <Card.Body className="text-left col-md-8">
             <Card.Title className='pb-3'>PAYMENT RECEIPT</Card.Title>
-            <Col>
-              <Form>
-                <Row>
-                  <Col>
-                    <Form.Item label="Date">
-                      <DatePicker />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item label="Receipt Number">
-                      <InputNumber />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                
-                <Form.Item label="Received From">
-                  <Input />
-                </Form.Item>
-                <Form.Item label="Amount">
-                  <InputNumber />
-                </Form.Item>
-                <Form.Item label="Paid for">
-                  <Select>
-                    <Select.Option value="School Fees">School Fees</Select.Option>
-                    <Select.Option value="Exam Fees">Exam Fees</Select.Option>
-                    <Select.Option value="Allowances">Allowances</Select.Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item label="Received By">
-                  <Input />
-                </Form.Item>
-                <Form.Item>
-                  <Button className='primary'>Submit Payment</Button>
-                </Form.Item>
-              </Form>
+            <Form>
+              <Row>
+                <Col>
+                  <Form.Item label="Date">
+                    <DatePicker />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item label="Receipt Number">
+                    <InputNumber />
+                  </Form.Item>
+                </Col>
+              </Row>
               
-            </Col>
+              <Form.Item label="Received From">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Amount">
+                <InputNumber />
+              </Form.Item>
+              <Form.Item label="Paid for">
+                <Select>
+                  <Select.Option value="School Fees">School Fees</Select.Option>
+                  <Select.Option value="Exam Fees">Exam Fees</Select.Option>
+                  <Select.Option value="Allowances">Allowances</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="Received By">
+                <Input />
+              </Form.Item>
+              <Form.Item>
+                <Button className='primary'>Submit Payment</Button>
+              </Form.Item>
+            </Form>
           </Card.Body>
         </Card>
         :
