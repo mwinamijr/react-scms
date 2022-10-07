@@ -13,7 +13,7 @@ import {
 import { studentDetailsReducer, studentListReducer, studentCreateReducer, studentsBulkCreateReducer } from './redux/reducers/studentReducers';
 
 import {
-    receiptListReducer, receiptDetailsReducer, paymentListReducer
+    receiptListReducer, receiptDetailsReducer, paymentListReducer, paymentDetailsReducer
 } from './redux/reducers/financeReducers'
 
 const reducer = combineReducers({
@@ -28,7 +28,8 @@ const reducer = combineReducers({
     receiptList: receiptListReducer,
     receiptDetails: receiptDetailsReducer,
 
-    paymentList: paymentListReducer
+    paymentList: paymentListReducer,
+    paymentDetails: paymentDetailsReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ?

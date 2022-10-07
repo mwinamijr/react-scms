@@ -24,11 +24,10 @@ function Payments() {
     return (
       <div>
         <Breadcrumb>
-          <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
           <Breadcrumb.Item href="#">
-            Library
+            <Link to="/">Home</Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item active>Data</Breadcrumb.Item>
+          <Breadcrumb.Item active>Payments</Breadcrumb.Item>
         </Breadcrumb>
       <div>
       <div>

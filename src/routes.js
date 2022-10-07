@@ -14,6 +14,7 @@ import AddStudent from './containers/students/AddStudent';
 import AddReceipt from './containers/finance/AddReceipt';
 import BulkUpload from './containers/students/BulkUpload';
 import ReceiptsDetails from './containers/finance/ReceiptsDetails';
+import PaymentDetails from './containers/finance/PaymentDetails';
 
 
 const BaseRouter = () => {
@@ -29,6 +30,7 @@ const BaseRouter = () => {
           <Route path="receipts/:id" element={<ReceiptsDetails />} />
           <Route path="receipts/add/" element={<AddReceipt />} />
           <Route path="payments/" element={<Payments />} />
+          <Route path="payments/:id" element={<PaymentDetails />} />
           <Route path="reports/" element={<Reports />} />
         </Route>
         
