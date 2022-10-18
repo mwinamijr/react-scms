@@ -13,7 +13,8 @@ import {
 import { studentDetailsReducer, studentListReducer, studentCreateReducer, studentsBulkCreateReducer } from './redux/reducers/studentReducers';
 
 import {
-    receiptListReducer, receiptDetailsReducer, paymentListReducer, paymentDetailsReducer
+    receiptListReducer, receiptDetailsReducer, paymentListReducer, paymentDetailsReducer,
+    receiptCreateReducer
 } from './redux/reducers/financeReducers'
 
 const reducer = combineReducers({
@@ -27,6 +28,7 @@ const reducer = combineReducers({
 
     receiptList: receiptListReducer,
     receiptDetails: receiptDetailsReducer,
+    receiptCreate: receiptCreateReducer,
 
     paymentList: paymentListReducer,
     paymentDetails: paymentDetailsReducer,

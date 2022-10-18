@@ -2,7 +2,9 @@ import React, {useEffect, useState} from 'react'
 import { Card, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import Message from '../../components/Message';
+import Loader from '../../components/Loader'
+import Message from '../../components/Message'
+import { createReceipt } from '../../redux/actions/financeActions'
 
 function AddReceipt() {
   const [receiptNumber, setReceiptNumber] = useState('')
@@ -12,8 +14,24 @@ function AddReceipt() {
   const [amount, setAmount] = useState(0)
   const [receivedBy, setReceivedBy] = useState('')
 
+  const dispatch = useDispatch()
+  const receiptCreate = useSelector(state => state.receiptCreate)
+  const { loading: loadingCreate, error: errorCreate, success: successCreate, receipt: createdReceipt } = receiptCreate
+
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+
+    dispatch(createReceipt(
+      receiptNumber, payer, student, 
+      paidFor, amount, receivedBy
+    ))
+  }
+
+  useEffect(() => {
+  }, [dispatch, createdReceipt])
 
   return (
     <div>
@@ -31,7 +49,9 @@ function AddReceipt() {
           </Card.Header>
           <Card.Body className="text-left col-md-8">
             <Card.Title className='pb-3'>PAYMENT RECEIPT</Card.Title>
-            <Form>
+            {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
+            {loadingCreate && <Loader />}
+            <Form onSubmit={submitHandler}>
               <Form.Group>
                 <Form.Label>Receipt Number</Form.Label>
                 <Form.Control 
@@ -101,7 +121,7 @@ function AddReceipt() {
                 />
               </Form.Group>
               <Form.Group>
-                <Button className='primary'>Submit Payment</Button>
+                <Button className='primary' type='submit'>Submit Payment</Button>
               </Form.Group>
             </Form>
           </Card.Body>
