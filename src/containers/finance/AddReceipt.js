@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Card, Form, Button } from 'react-bootstrap';
+import { Card, Form, Button, Breadcrumb } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
@@ -35,6 +35,15 @@ function AddReceipt() {
 
   return (
     <div>
+      <Breadcrumb>
+        <Breadcrumb.Item href="#">
+          <Link to="/">Home</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item href="#">
+        <Link to="/finance/receipts/">Receipts</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item active>add receipt</Breadcrumb.Item>
+      </Breadcrumb>
       <Link to="/finance/receipts/" className='btn btn-light my-3'>Go Back</Link>
       { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
         <Card>
