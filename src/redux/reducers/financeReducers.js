@@ -1,6 +1,7 @@
 import {
     RECEIPT_LIST_REQUEST, RECEIPT_LIST_SUCCESS, RECEIPT_LIST_FAIL,
     RECEIPT_DETAILS_REQUEST, RECEIPT_DETAILS_SUCCESS, RECEIPT_DETAILS_FAIL,
+    RECEIPT_CREATE_REQUEST, RECEIPT_CREATE_SUCCESS, RECEIPT_CREATE_FAIL, RECEIPT_CREATE_RESET,
     PAYMENT_LIST_REQUEST, PAYMENT_LIST_SUCCESS, PAYMENT_LIST_FAIL,
     PAYMENT_DETAILS_REQUEST, PAYMENT_DETAILS_SUCCESS, PAYMENT_DETAILS_FAIL,
 } from '../constants/financeConstants'
@@ -34,6 +35,25 @@ export const receiptDetailsReducer = (state = { receipt: [] }, action) => {
 
         case RECEIPT_DETAILS_FAIL:
             return { loading: false, error: action.payload }
+
+        default:
+            return state
+    }
+}
+
+export const receiptCreateReducer = (state = {}, action) => {
+    switch (action.type) {
+        case RECEIPT_CREATE_REQUEST:
+            return { loading: true }
+
+        case RECEIPT_CREATE_SUCCESS:
+            return { loading: false, success: true, receipt: action.payload }
+
+        case RECEIPT_CREATE_FAIL:
+            return { loading: false, error: action.payload }
+
+        case RECEIPT_CREATE_RESET:
+            return {}
 
         default:
             return state
