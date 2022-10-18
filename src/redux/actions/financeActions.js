@@ -5,6 +5,7 @@ import {
     RECEIPT_CREATE_REQUEST, RECEIPT_CREATE_SUCCESS, RECEIPT_CREATE_FAIL, RECEIPT_CREATE_RESET,
     PAYMENT_LIST_REQUEST, PAYMENT_LIST_SUCCESS, PAYMENT_LIST_FAIL,
     PAYMENT_DETAILS_REQUEST, PAYMENT_DETAILS_SUCCESS, PAYMENT_DETAILS_FAIL,
+    PAYMENT_CREATE_REQUEST, PAYMENT_CREATE_SUCCESS, PAYMENT_CREATE_FAIL, PAYMENT_CREATE_RESET,
 } from '../constants/financeConstants'
 
 export const listReceipts = () => async (dispatch, getState) => {
@@ -174,6 +175,52 @@ export const PaymentDetails = (id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: PAYMENT_DETAILS_FAIL,
+            payload: error.response && error.response.data.detail
+                ? error.response.data.detail
+                : error.message,
+        })
+    }
+}
+
+export const createPayment = ( paymentNumber, paidTo, user, 
+    paidFor, amount, paidBy) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: PAYMENT_CREATE_REQUEST
+        })
+
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.post(
+        'http://127.0.0.1:8000/api/finance/payments/',{
+            "payment_no": paymentNumber,
+            "paid_to": paidTo,
+            "user": user,
+            "paid_for": paidFor,
+            "amount": amount,
+            "paid_by": paidBy
+        },
+        config
+        )
+
+        dispatch({
+            type: PAYMENT_CREATE_SUCCESS,
+            payload: data,
+        })
+
+
+    } catch (error) {
+        dispatch({
+            type: PAYMENT_CREATE_FAIL,
             payload: error.response && error.response.data.detail
                 ? error.response.data.detail
                 : error.message,
