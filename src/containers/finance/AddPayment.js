@@ -7,7 +7,7 @@ import Message from '../../components/Message'
 import { createPayment } from '../../redux/actions/financeActions'
 
 function AddPayment() {
-  const [PaymentNumber, setPaymentNumber] = useState('')
+  const [paymentNumber, setPaymentNumber] = useState('')
   const [user, setUser] = useState('')
   const [paidTo, setPaidTo] = useState('')
   const [paidFor, setPaidFor] = useState('')
@@ -25,7 +25,7 @@ function AddPayment() {
     e.preventDefault()
 
     dispatch(createPayment(
-      PaymentNumber, paidTo, user, 
+      paymentNumber, paidTo, user, 
       paidFor, amount, paidBy
     ))
   }
@@ -44,7 +44,7 @@ function AddPayment() {
         </Breadcrumb.Item>
         <Breadcrumb.Item active>add payment</Breadcrumb.Item>
       </Breadcrumb>
-      <Link to="/finance/receipts/" className='btn btn-light my-3'>Go Back</Link>
+      <Link to="/finance/payments/" className='btn btn-light my-3'>Go Back</Link>
       { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
         <Card>
           <Card.Header className="text-center">
