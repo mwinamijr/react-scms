@@ -71,7 +71,8 @@ export const ReceiptDetails = (id) => async (dispatch, getState) => {
     }
 }
 
-export const createReceipt = ( ) => async (dispatch, getState) => {
+export const createReceipt = ( receiptNumber, payer, student, 
+    paidFor, amount, receivedBy) => async (dispatch, getState) => {
     try {
         dispatch({
             type: RECEIPT_CREATE_REQUEST
@@ -90,7 +91,12 @@ export const createReceipt = ( ) => async (dispatch, getState) => {
 
         const { data } = await axios.post(
         'http://127.0.0.1:8000/api/finance/receipts/',{
-        
+            "receipt_no": receiptNumber,
+            "payer": payer,
+            "student": student,
+            "paid_for": paidFor,
+            "amount": amount,
+            "received_by": receivedBy
         },
         config
         )
