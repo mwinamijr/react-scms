@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 
 import { logout } from '../redux/actions/userActions'
+import TopHead from '../components/TopHead'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -116,7 +117,7 @@ function DashLayout(props) {
           }
         </Sider>
         <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ padding: 0 }} />
+          <TopHead />
           <Content style={{ margin: '0 16px' }}>
             <div className="site-layout-background" style={{ padding: 0, minHeight: 360 }}>
             { props.children }

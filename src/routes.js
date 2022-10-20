@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux'
 
 import Dashboard from './containers/Dashboard';
@@ -21,6 +21,9 @@ import AddPayment from './containers/finance/AddPayment';
 const BaseRouter = () => {
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
+  if (userInfo) {
+    <Navigate replace to='/' />
+  }
 	return (
     <div>
       <Routes>

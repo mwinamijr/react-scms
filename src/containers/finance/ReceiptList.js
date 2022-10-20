@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Table } from 'react-bootstrap';
-import { EditOutlined } from '@ant-design/icons';
+import { Breadcrumb, Table, Col, Row } from 'react-bootstrap';
+import { EditOutlined, DeleteOutlined, EyeOutlined, CheckOutlined, CheckCircleOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 import { listReceipts } from '../../redux/actions/financeActions';
 import Loader from '../../components/Loader';
@@ -42,9 +42,8 @@ function Receipts() {
                 <thead>
                   <tr>
                     <th>Receipt No</th>
-                    <th>Payer</th>
-                    <th>Paid for</th>
                     <th>Student</th>
+                    <th>Paid for</th>
                     <th>Amount</th>
                     <th>Received by</th>
                     <th>Actions</th>
@@ -54,12 +53,15 @@ function Receipts() {
                 { receipts.map(receipt => (
                   <tr key={receipt.receipt_no}>
                     <td>{receipt.receipt_no}</td>
-                    <td>{receipt.payer}</td>
-                    <td>{receipt.paid_for}</td>
                     <td>{receipt.student}</td>
+                    <td>{receipt.paid_for}</td>
                     <td>{receipt.amount}</td>
                     <td>{receipt.received_by}</td>
-                    <td><Link to={`/finance/receipts/${receipt.id}`}><EditOutlined /></Link></td>
+                    <td>
+                      <Link to={`/finance/receipts/${receipt.id}`}><EyeOutlined /></Link><span>  </span>
+                      <Link to={`/finance/receipts/${receipt.id}`}><EditOutlined /></Link><span>  </span>
+                      <Link to={`/finance/receipts/${receipt.id}`}><DeleteOutlined /></Link><span>  </span>
+                    </td>
                   </tr>
                   ))}
                 </tbody>

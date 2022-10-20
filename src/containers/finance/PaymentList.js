@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Table } from 'react-bootstrap';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { listPayments } from '../../redux/actions/financeActions';
 import Loader from '../../components/Loader';
@@ -59,7 +59,11 @@ function Payments() {
                     <td>{payment.user}</td>
                     <td>{payment.amount}</td>
                     <td>{payment.paid_by}</td>
-                    <td><Link to={`/finance/payments/${payment.id}`}><EditOutlined /></Link></td>
+                    <td>
+                      <Link to={`/finance/payments/${payment.id}`}><EyeOutlined /></Link><span>   </span>
+                      <Link to={`/finance/payments/${payment.id}`}><EditOutlined /></Link><span>   </span>
+                      <Link to={`/finance/payments/${payment.id}`}><DeleteOutlined /></Link>
+                    </td>
                   </tr>
                   ))}
                 </tbody>

@@ -17,10 +17,11 @@ function App() {
   return (
 	<div className="App">
 		<Router>
-			{ userInfo ? 
+			{ userInfo ? <div>
+				
 				<DashboardLayout> 
 					<BaseRouter />
-				</DashboardLayout>	
+				</DashboardLayout>	</div>
 			:
 			<Routes>
 				<Route path="/" element={<Home /> } />
