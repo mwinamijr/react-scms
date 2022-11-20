@@ -103,9 +103,9 @@ function AddReceipt() {
               
               >
                 <option>Paid For</option>
-                <option value="1">School Fees</option>
-                <option value="2">Tour</option>
-                <option value="3">Allowances</option>
+                <option value="school fees">School Fees</option>
+                <option value="study tour">Tour</option>
+                <option value="allowances">Allowances</option>
               </Form.Select>
               <Form.Group>
                 <Form.Label>Amount</Form.Label>

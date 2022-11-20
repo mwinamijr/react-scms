@@ -117,7 +117,7 @@ function DashLayout(props) {
           }
         </Sider>
         <Layout className="site-layout">
-          <TopHead />
+          <TopHead style={{ float: 'right'}} />
           <Content style={{ margin: '0 16px' }}>
             <div className="site-layout-background" style={{ padding: 0, minHeight: 360 }}>
             { props.children }

@@ -60,7 +60,7 @@ function Receipts() {
                     <td>
                       <Link to={`/finance/receipts/${receipt.id}`}><EyeOutlined /></Link><span>  </span>
                       <Link to={`/finance/receipts/${receipt.id}`}><EditOutlined /></Link><span>  </span>
-                      <Link to={`/finance/receipts/${receipt.id}`}><DeleteOutlined /></Link><span>  </span>
+                      <DeleteOutlined />
                     </td>
                   </tr>
                   ))}
