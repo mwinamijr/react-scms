@@ -68,8 +68,8 @@ function DashLayout(props) {
                 <Menu.Item key="8"><Link to="/results">Results</Link></Menu.Item>
               </SubMenu>
               <SubMenu key="sub3" icon={<TeamOutlined />} title="Finance">
-                <Menu.Item key="9"><Link to="/receipts">Receipts</Link></Menu.Item>
-                <Menu.Item key="10"><Link to="/payments">Payments</Link></Menu.Item>
+                <Menu.Item key="9"><Link to="/finance/receipts">Receipts</Link></Menu.Item>
+                <Menu.Item key="10"><Link to="/finance/payments">Payments</Link></Menu.Item>
                 <Menu.Item key="11"><Link to="/reports">Reports</Link></Menu.Item>
               </SubMenu>
               <Menu.Item key="15" icon={<FileOutlined />}>

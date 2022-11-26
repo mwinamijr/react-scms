@@ -73,7 +73,7 @@ export const ReceiptDetails = (id) => async (dispatch, getState) => {
 }
 
 export const createReceipt = ( receiptNumber, payer, student, 
-    paidFor, amount, receivedBy) => async (dispatch, getState) => {
+    paidFor, amount) => async (dispatch, getState) => {
     try {
         dispatch({
             type: RECEIPT_CREATE_REQUEST
@@ -97,7 +97,7 @@ export const createReceipt = ( receiptNumber, payer, student,
             "student": student,
             "paid_for": paidFor,
             "amount": amount,
-            "received_by": receivedBy
+            "received_by": userInfo.first_name
         },
         config
         )
@@ -183,7 +183,7 @@ export const PaymentDetails = (id) => async (dispatch, getState) => {
 }
 
 export const createPayment = ( paymentNumber, paidTo, user, 
-    paidFor, amount, paidBy) => async (dispatch, getState) => {
+    paidFor, amount) => async (dispatch, getState) => {
     try {
         dispatch({
             type: PAYMENT_CREATE_REQUEST
@@ -207,7 +207,7 @@ export const createPayment = ( paymentNumber, paidTo, user,
             "user": user,
             "paid_for": paidFor,
             "amount": amount,
-            "paid_by": paidBy
+            "paid_by": userInfo.first_name
         },
         config
         )

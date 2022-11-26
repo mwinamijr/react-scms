@@ -12,7 +12,7 @@ function AddReceipt() {
   const [payer, setPayer] = useState('')
   const [paidFor, setPaidFor] = useState('')
   const [amount, setAmount] = useState(0)
-  const [receivedBy, setReceivedBy] = useState('')
+  //const [receivedBy, setReceivedBy] = useState('')
 
   const dispatch = useDispatch()
   const receiptCreate = useSelector(state => state.receiptCreate)
@@ -26,7 +26,7 @@ function AddReceipt() {
 
     dispatch(createReceipt(
       receiptNumber, payer, student, 
-      paidFor, amount, receivedBy
+      paidFor, amount
     ))
   }
 
@@ -45,7 +45,7 @@ function AddReceipt() {
         <Breadcrumb.Item active>add receipt</Breadcrumb.Item>
       </Breadcrumb>
       <Link to="/finance/receipts/" className='btn btn-light my-3'>Go Back</Link>
-      { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
+      { userInfo.user_type.isAccountant || userInfo.isAdmin ?
         <Card>
           <Card.Header className="text-center">
             <div className="receipt-bg">
@@ -116,17 +116,6 @@ function AddReceipt() {
                   type='number'
                   value={amount}
                   onChange={(e) =>setAmount(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Received By</Form.Label>
-                <Form.Control 
-                  id="receivedBy" 
-                  placeholder="receivedBy" 
-                  required
-                  type='text'
-                  value={receivedBy}
-                  onChange={(e) =>setReceivedBy(e.target.value)}
                 />
               </Form.Group>
               <Form.Group>

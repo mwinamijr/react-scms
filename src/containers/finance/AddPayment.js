@@ -12,7 +12,7 @@ function AddPayment() {
   const [paidTo, setPaidTo] = useState('')
   const [paidFor, setPaidFor] = useState('')
   const [amount, setAmount] = useState(0)
-  const [paidBy, setPaidBy] = useState('')
+  //const [paidBy, setPaidBy] = useState('')
 
   const dispatch = useDispatch()
   const paymentCreate = useSelector(state => state.paymentCreate)
@@ -20,13 +20,13 @@ function AddPayment() {
 
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
-
+  
   const submitHandler = (e) => {
     e.preventDefault()
 
     dispatch(createPayment(
       paymentNumber, paidTo, user, 
-      paidFor, amount, paidBy
+      paidFor, amount
     ))
   }
 
@@ -45,7 +45,7 @@ function AddPayment() {
         <Breadcrumb.Item active>add payment</Breadcrumb.Item>
       </Breadcrumb>
       <Link to="/finance/payments/" className='btn btn-light my-3'>Go Back</Link>
-      { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
+      { userInfo.user_type.isAccountant || userInfo.isAdmin ?
         <Card>
           <Card.Header className="text-center">
             <div className="receipt-bg">
@@ -89,7 +89,6 @@ function AddPayment() {
                 <Form.Control 
                   id="user" 
                   placeholder="user" 
-                  required
                   type='text'
                   value={user}
                   onChange={(e) =>setUser(e.target.value)}
@@ -103,7 +102,7 @@ function AddPayment() {
               
               >
                 <option>Paid For</option>
-                <option value="1">Salary</option>
+                <option value="salary">Salary</option>
                 <option value="2">Tour</option>
                 <option value="3">Allowances</option>
               </Form.Select>
@@ -116,17 +115,6 @@ function AddPayment() {
                   type='number'
                   value={amount}
                   onChange={(e) =>setAmount(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Paid By</Form.Label>
-                <Form.Control 
-                  id="paidBy" 
-                  placeholder="paidBy" 
-                  required
-                  type='text'
-                  value={paidBy}
-                  onChange={(e) =>setPaidBy(e.target.value)}
                 />
               </Form.Group>
               <Form.Group>
