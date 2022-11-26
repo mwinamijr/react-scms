@@ -31,7 +31,7 @@ function Payments() {
         </Breadcrumb>
       <div>
       <div>
-        { userInfo.user_type.IsAccountant || userInfo.isAdmin ?
+        { userInfo.user_type.isAccountant || userInfo.isAdmin ?
           <div>
             <h1 className="text-center">Payments</h1>
             <Link to="/finance/payments/add" className='btn btn-light my-3'>Add Payment</Link>
