@@ -16,7 +16,7 @@ function AddStudent() {
   const [gradeLevel, setGradeLevel] = useState('')
   const [classLevel, setClassLevel] = useState('')
   const [birthday, setBirthday] = useState(new Date())
-  const [gradDate, setGradDate] = useState(new Date())
+  const [gradYear, setGradYear] = useState(2024)
   const [region, setRegion] = useState('')
   const [city, setCity] = useState('')
   const [street, setStreet] = useState('')
@@ -35,7 +35,7 @@ function AddStudent() {
     dispatch(createStudent(
       firstName, middleName, lastName, 
       admissionNumber, gradeLevel, classLevel, 
-      region, city, street,
+      gradYear, region, city, street,
       stdViiNumber, premsNumber, sex
     ))
   }
@@ -110,28 +110,28 @@ function AddStudent() {
               <Col>
                 <Form.Select label="Grade Level" 
                   id='gradeLevel'
-                  type='number'
+                  type='text'
                   value={gradeLevel}
                   onChange={(e) => setGradeLevel(e.target.value)}
                 
                 >
                   <option>Grade Level</option>
-                  <option value="2">O Level</option>
-                  <option value="3">A Level</option>
+                  <option value="o-level">O Level</option>
+                  <option value="a-level">A Level</option>
                 </Form.Select>
               </Col>
               <Col>
                 <Form.Select label="Class Level"
                   id='classLevel'
-                  type='number'
+                  type='text'
                   value={classLevel}
                   onChange={(e) => setClassLevel(e.target.value)}
                 >
                   <option>Class Level</option>
-                  <option value="1">Form One</option>
-                  <option value="2">Form Two</option>
-                  <option value="3">Form Three</option>
-                  <option value="4">Form Four</option>
+                  <option value="form one">Form One</option>
+                  <option value="form two">Form Two</option>
+                  <option value="form three">Form Three</option>
+                  <option value="form four">Form Four</option>
                 </Form.Select>
               </Col>
             </Row>
@@ -151,13 +151,13 @@ function AddStudent() {
               </Col>
               <Col>
                 <Form.Group>
-                  <Form.Label>Grad Date</Form.Label>
-                  <DatePicker
-                    id="gradDate"
-                    selected={gradDate}
-                    value={gradDate}
-                    onChange={(date) => setGradDate(date)}
-                  />
+                  <Form.Label>Grad Year</Form.Label>
+                  <Form.Control 
+                    id="gradYear" 
+                    type='number'
+                    value={gradYear}
+                    onChange={(e) =>setGradYear(e.target.value)}
+                    />
                 </Form.Group>
               </Col>
               <Col>

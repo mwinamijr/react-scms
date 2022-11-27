@@ -76,7 +76,7 @@ export const studentsDetails = (id) => async (dispatch, getState) => {
 export const createStudent = (
     firstName, middleName, lastName, 
     admissionNumber, gradeLevel, classLevel,
-    birthday, gradDate, region, city, street,
+    gradYear, region, city, street,
     stdViiNumber, premsNumber, sex ) => async (dispatch, getState) => {
     try {
         dispatch({
@@ -99,11 +99,10 @@ export const createStudent = (
         "first_name": firstName, 
         "middle_name": middleName, 
         "last_name": lastName, 
-        "admission_number": Number(admissionNumber),
-        "grede_level": Number(gradeLevel),
-        "class_level": Number(classLevel),
-        "birthday": birthday,
-        "grad_date": gradDate,
+        "addmission_number": Number(admissionNumber),
+        "grade_level": gradeLevel,
+        "class_level": classLevel,
+        "class_of_year": gradYear,
         "region": region,
         "city": city,
         "street": street,
