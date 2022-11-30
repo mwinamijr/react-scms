@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux'
 
 import Dashboard from './containers/Dashboard';
+import UserList from './containers/users/UserList'
 import Assignment from './containers/learn/Assignment';
 import Payments from './containers/finance/PaymentList';
 import Receipts from './containers/finance/ReceiptList';
@@ -45,6 +46,7 @@ const BaseRouter = () => {
           <Route path="students/add" element={<AddStudent />} />
           <Route path="students/upload" element={<BulkUpload />} />
         </Route>
+        <Route path="users" element={<UserList />} />
         
         <Route path="/teachers/" element={<Teachers />} />
         <Route path="/learn/assignments/" element={<Assignment />} />
