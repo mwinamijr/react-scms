@@ -14,7 +14,6 @@ function Header() {
         <Navbar bg="dark" variant="dark" expand="lg">
           <Container>
             <Nav className="ml-auto float-right">
-              <Nav.Link href="/users">users</Nav.Link>
               <Nav.Link><i className="fas fa-user"></i>{userInfo.first_name}</Nav.Link>
               
             </Nav>
