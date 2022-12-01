@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Table, Row, Col } from 'react-bootstrap';
-import { EditOutlined } from '@ant-design/icons';
+import { EyeOutlined } from '@ant-design/icons';
 
 import { listUsers } from '../../redux/actions/userActions';
 import Loader from './../../components/Loader';
@@ -34,7 +34,7 @@ function UserList() {
         <div>
           <h1 className="text-center">Users</h1>
           <Row>
-            <Col><Link to="/sis/students/add" className='btn btn-light my-3'>Add User</Link></Col>
+            <Col><Link to="/users/add" className='btn btn-light my-3'>Add User</Link></Col>
           </Row>
             { loading ? <Loader /> :
               error ? <Message variant="danger">{error}</Message> :
@@ -64,7 +64,7 @@ function UserList() {
                       <td>{user.isAdmin}</td>
                       <td>{user.isTeacher}</td>
                       <td>{user.isAccountant}</td>
-                      <td><Link to={`/sis/users/${user.id}`}><EditOutlined /></Link></td>
+                      <td><Link to={`/users/${user.id}`}><EyeOutlined /></Link></td>
                     </tr>
                   ))}
                 
