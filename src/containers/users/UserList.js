@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Table, Row, Col } from 'react-bootstrap';
 import { EditOutlined } from '@ant-design/icons';
 
-import { listStudents } from '../../redux/actions/studentActions';
+import { listUsers } from '../../redux/actions/userActions';
 import Loader from './../../components/Loader';
 import Message from './../../components/Message';
 
@@ -12,11 +12,11 @@ function UserList() {
   
   const dispatch = useDispatch()
 
-  const studentList = useSelector(state => state.studentList)
-  const { loading, error, students } = studentList
+  const userList = useSelector(state => state.userList)
+  const { loading, error, users } = userList
 
   useEffect(() => {
-    dispatch(listStudents())
+    dispatch(listUsers())
     
 }, [dispatch,])
 
@@ -45,9 +45,10 @@ function UserList() {
                   <tr>
                     <th>Adm No:</th>
                     <th>Full Name</th>
-                    <th>Sex</th>
-                    <th>Class</th>
-                    <th>Birthday</th>
+                    <th>Email</th>
+                    <th>Ad</th>
+                    <th>Tea</th>
+                    <th>Acc</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -55,14 +56,15 @@ function UserList() {
                 
                 <tbody>
                     
-                  { students.map(student => (
-                    <tr key={student.addmission_number}>
-                      <td>{student.addmission_number}</td>
-                      <td>{student.first_name} {student.middle_name} {student.last_name}</td>
-                      <td>{student.sex}</td>
-                      <td>{student.class_level}</td>
-                      <td>{student.birthday}</td>
-                      <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
+                  { users.map(user => (
+                    <tr key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{user.first_name} {user.middle_name} {user.last_name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.isAdmin}</td>
+                      <td>{user.isTeacher}</td>
+                      <td>{user.isAccountant}</td>
+                      <td><Link to={`/sis/users/${user.id}`}><EditOutlined /></Link></td>
                     </tr>
                   ))}
                 
