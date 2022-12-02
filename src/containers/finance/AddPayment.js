@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Card, Form, Button, Breadcrumb } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 import { createPayment } from '../../redux/actions/financeActions'
@@ -15,6 +15,7 @@ function AddPayment() {
   //const [paidBy, setPaidBy] = useState('')
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const paymentCreate = useSelector(state => state.paymentCreate)
   const { loading: loadingCreate, error: errorCreate, success: successCreate, receipt: createdPayment } = paymentCreate
 
@@ -31,6 +32,9 @@ function AddPayment() {
   }
 
   useEffect(() => {
+    if (successCreate){
+      navigate('/finance/payments')
+    }
   }, [dispatch, createdPayment])
 
   return (
