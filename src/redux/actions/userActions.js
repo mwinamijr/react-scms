@@ -53,7 +53,7 @@ export const logout = () => (dispatch) => {
 }
 
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (firstName, middleName, lastName, email, password, isTeacher) => async (dispatch) => {
     try {
         dispatch({
             type: USER_REGISTER_REQUEST
@@ -67,7 +67,14 @@ export const register = (name, email, password) => async (dispatch) => {
 
         const { data } = await axios.post(
             '/api/users/register/',
-            { 'name': name, 'email': email, 'password': password },
+            { 
+                'first_name': firstName, 
+                'middle_name': middleName,
+                'last_name': lastName, 
+                'email': email, 
+                'password': password,
+                'is_teacher': isTeacher
+             },
             config
         )
 
@@ -75,13 +82,6 @@ export const register = (name, email, password) => async (dispatch) => {
             type: USER_REGISTER_SUCCESS,
             payload: data
         })
-
-        dispatch({
-            type: USER_LOGIN_SUCCESS,
-            payload: data
-        })
-
-        localStorage.setItem('userInfo', JSON.stringify(data))
 
     } catch (error) {
         dispatch({
