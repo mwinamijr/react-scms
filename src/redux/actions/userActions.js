@@ -9,7 +9,7 @@ import {
     USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_RESET,
 } from '../constants/userConstants'
 
-const base_url = 'http://127.0.0.1:8000'
+const baseUrl = 'http://127.0.0.1:8000'
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -112,7 +112,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `/api/users/${id}/`,
+            `${baseUrl}/api/users/${id}/`,
             config
         )
 
@@ -150,7 +150,7 @@ export const listUsers = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${base_url}/api/users/`,
+            `${baseUrl}/api/users/`,
             config
         )
 
