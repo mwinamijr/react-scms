@@ -110,17 +110,28 @@ function AddUser() {
             >
             </Form.Control>
           </Form.Group>
-
-          <Form.Group controlId='userType'>
-            <Form.Label className='text-muted'>Please check this box if you are teacher</Form.Label>
+          
+          <InputGroup>
+            <InputGroup.Text>Please choose user types to register</InputGroup.Text>
+            <Form.Check
+              type='checkbox'
+              label='admin' 
+              value={isAdmin}
+              onChange={(e)=>setIsAdmin(e.target.checked)}
+            />
+            <Form.Check
+              type='checkbox'
+              label='accountant' 
+              value={isAccountant}
+              onChange={(e)=>setIsAccountant(e.target.checked)}
+            />
             <Form.Check
               type='checkbox'
               label='teacher' 
               value={isTeacher}
               onChange={(e)=>setIsTeacher(e.target.checked)}
             />
-          </Form.Group>
-          
+          </InputGroup>
           <Button type='submit' variant='primary'>
             Register
           </Button>
