@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Table, Row, Col } from 'react-bootstrap';
 import { EyeOutlined } from '@ant-design/icons';
 
-import { listUsers } from '../../redux/actions/userActions';
+import { listUsers } from './../../redux/actions/userActions';
 import Loader from './../../components/Loader';
 import Message from './../../components/Message';
 

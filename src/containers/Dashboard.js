@@ -1,8 +1,23 @@
-import React from 'react'
-import {Row, Col, Card, Button} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { Breadcrumb, Card, Row, Col, Button } from 'react-bootstrap';
+import { EyeOutlined } from '@ant-design/icons';
+
+import { listUsers } from './../redux/actions/userActions';
 
 function Dashboard() {
+  
+  const dispatch = useDispatch()
+
+  const userList = useSelector(state => state.userList)
+  const { loading, error, users } = userList
+  
+  useEffect(() => {
+    dispatch(listUsers())
+    
+}, [dispatch,])
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -32,7 +47,9 @@ function Dashboard() {
             <Card.Body>12
             
             </Card.Body>
-            <Card.Footer><Button>New user</Button></Card.Footer>
+            <Card.Footer>
+              <Link to="/users/add" className='btn btn-light my-3'>Add User</Link>
+            </Card.Footer>
           </Card>
         </Col>
       </Row>
