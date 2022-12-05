@@ -2,7 +2,7 @@ import DatePicker from 'react-datepicker'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Card, Col, Row, Form, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { createStudent } from '../../redux/actions/studentActions'
 import Loader from '../../components/Loader'
@@ -25,6 +25,7 @@ function AddStudent() {
   const [sex, setSex] = useState('')
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const studentCreate = useSelector(state => state.studentCreate)
   const { loading: loadingCreate, error: errorCreate, success: successCreate, student: createdStudent } = studentCreate
@@ -41,7 +42,10 @@ function AddStudent() {
   }
 
   useEffect(() => {
-  }, [dispatch, createdStudent])
+    if (successCreate){
+      navigate('/sis/students')
+    }
+  }, [dispatch, createdStudent, successCreate])
 
   return (
     <div>

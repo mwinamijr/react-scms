@@ -9,7 +9,7 @@ import {
     USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_RESET,
 } from '../constants/userConstants'
 
-const base_url = 'http://127.0.0.1:8000'
+const baseUrl = 'http://127.0.0.1:8000'
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -53,7 +53,7 @@ export const logout = () => (dispatch) => {
 }
 
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (firstName, middleName, lastName, email, password, isTeacher, isAdmin, isAccountant) => async (dispatch) => {
     try {
         dispatch({
             type: USER_REGISTER_REQUEST
@@ -66,8 +66,17 @@ export const register = (name, email, password) => async (dispatch) => {
         }
 
         const { data } = await axios.post(
-            '/api/users/register/',
-            { 'name': name, 'email': email, 'password': password },
+            `${baseUrl}/api/users/`,
+            { 
+                'first_name': firstName, 
+                'middle_name': middleName,
+                'last_name': lastName, 
+                'email': email, 
+                'password': password,
+                'is_teacher': isTeacher,
+                'is_staff': isAdmin,
+                'is_accountant': isAccountant
+             },
             config
         )
 
@@ -75,13 +84,6 @@ export const register = (name, email, password) => async (dispatch) => {
             type: USER_REGISTER_SUCCESS,
             payload: data
         })
-
-        dispatch({
-            type: USER_LOGIN_SUCCESS,
-            payload: data
-        })
-
-        localStorage.setItem('userInfo', JSON.stringify(data))
 
     } catch (error) {
         dispatch({
@@ -112,7 +114,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `/api/users/${id}/`,
+            `${baseUrl}/api/users/${id}/`,
             config
         )
 
@@ -150,7 +152,7 @@ export const listUsers = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${base_url}/api/users/`,
+            `${baseUrl}/api/users/`,
             config
         )
 

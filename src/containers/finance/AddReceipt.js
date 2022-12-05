@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Card, Form, Button, Breadcrumb } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 import { createReceipt } from '../../redux/actions/financeActions'
@@ -15,6 +15,7 @@ function AddReceipt() {
   //const [receivedBy, setReceivedBy] = useState('')
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const receiptCreate = useSelector(state => state.receiptCreate)
   const { loading: loadingCreate, error: errorCreate, success: successCreate, receipt: createdReceipt } = receiptCreate
 
@@ -31,7 +32,10 @@ function AddReceipt() {
   }
 
   useEffect(() => {
-  }, [dispatch, createdReceipt])
+    if (successCreate) {
+      navigate('/finance/receipts')
+    }
+  }, [dispatch, createdReceipt, successCreate])
 
   return (
     <div>

@@ -3,14 +3,16 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 import {
-    userLoginReducer, userListReducer,
+    userLoginReducer, userRegisterReducer,userListReducer, userDetailsReducer,
 } from './redux/reducers/userReducers'
 
 import {
     assignmentListReducer,
 } from './redux/reducers/assignmentReducers'
 
-import { studentDetailsReducer, studentListReducer, studentCreateReducer, studentsBulkCreateReducer } from './redux/reducers/studentReducers';
+import { 
+    studentDetailsReducer, studentListReducer, studentCreateReducer, studentsBulkCreateReducer 
+} from './redux/reducers/studentReducers';
 
 import {
     receiptListReducer, receiptDetailsReducer, receiptCreateReducer,
@@ -20,7 +22,9 @@ import {
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
+    userRegister: userRegisterReducer,
     userList: userListReducer,
+    userDetails: userDetailsReducer,
 
     assignmentList: assignmentListReducer,
     studentList: studentListReducer,
