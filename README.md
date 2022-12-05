@@ -33,6 +33,18 @@ This tracks the students’ information and their parent/guardian/contact inform
 ##Admissions
 This tracks potential students and their registration processes. It allows various admission levels to be added as well as steps that need to be completed before moving onto the next level. It also tracks any open houses a student has attended and how the student heard about the school.
 
+##Authentication
+.... in progress
+
+##Attendance
+.... in progress
+
+##Finance
+.... in progress
+
+## To Contribute
+This is intended to be an Open Source project to anyone need to use and learn. Hence I welcome all of you to contribute in this project so as to help make this project better.
+
 ## Contributors
 
 - [Mwinamijr](https://github.com/mwinamijr)
