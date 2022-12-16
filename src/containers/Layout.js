@@ -32,7 +32,7 @@ function DashLayout(props) {
     <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
           <div className="logo" />
-          { userInfo.user_type.isTeacher ?
+          { userInfo.isTeacher ?
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
               <Menu.Item key="1" icon={<PieChartOutlined />}>
                 <Link to="/">Dashboard</Link>
@@ -54,7 +54,7 @@ function DashLayout(props) {
                 <Link onClick={logoutHandler} to='/'>Logout</Link>
               </Menu.Item>
             </Menu>
-            : userInfo.user_type.isAccountant ?
+            : userInfo.isAccountant ?
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
               <Menu.Item key="1" icon={<PieChartOutlined />}>
                 <Link to="/">Dashboard</Link>

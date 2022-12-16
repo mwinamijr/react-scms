@@ -9,7 +9,8 @@ import {
     USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_RESET,
 } from '../constants/userConstants'
 
-const baseUrl = 'http://127.0.0.1:8000'
+const djangoUrl = 'http://127.0.0.1:8000'
+const nodeUrl = 'http://localhost:4001'
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -24,7 +25,7 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/users/login/',
+            `${nodeUrl}/api/users/login/`,
             { 'email': email, 'password': password },
             config
         )
@@ -66,7 +67,7 @@ export const register = (firstName, middleName, lastName, email, password, isTea
         }
 
         const { data } = await axios.post(
-            `${baseUrl}/api/users/`,
+            `${nodeUrl}/api/users/`,
             { 
                 'first_name': firstName, 
                 'middle_name': middleName,
@@ -96,7 +97,7 @@ export const register = (firstName, middleName, lastName, email, password, isTea
 }
 
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = (userId) => async (dispatch, getState) => {
     try {
         dispatch({
             type: USER_DETAILS_REQUEST
@@ -114,7 +115,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${baseUrl}/api/users/${id}/`,
+            `${nodeUrl}/api/users/${userId}/`,
             config
         )
 
@@ -152,7 +153,7 @@ export const listUsers = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${baseUrl}/api/users/`,
+            `${nodeUrl}/api/users/`,
             config
         )
 
@@ -191,7 +192,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.delete(
-            `/api/users/delete/${id}/`,
+            `${nodeUrl}/api/users/delete/${id}/`,
             config
         )
 

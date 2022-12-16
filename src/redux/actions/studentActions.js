@@ -9,6 +9,9 @@ import {
     STUDENT_DELETE_REQUEST, STUDENT_DELETE_SUCCESS, STUDENT_DELETE_FAIL*/
 } from '../constants/studentConstants'
 
+const djangoUrl = 'http://127.0.0.1:8000'
+const nodeUrl = 'http://localhost:4001'
+
 export const listStudents = () => async (dispatch, getState) => {
     try {
         dispatch({ type: STUDENT_LIST_REQUEST })
@@ -24,7 +27,7 @@ export const listStudents = () => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get('http://127.0.0.1:8000/api/sis/students/', config)
+        const { data } = await axios.get(`${nodeUrl}/api/students/`, config)
 
         dispatch({
             type: STUDENT_LIST_SUCCESS,
@@ -41,7 +44,7 @@ export const listStudents = () => async (dispatch, getState) => {
     }
 }
 
-export const studentsDetails = (id) => async (dispatch, getState) => {
+export const studentsDetails = (studentId) => async (dispatch, getState) => {
     try {
         dispatch({ type: STUDENT_DETAILS_REQUEST })
 
@@ -56,7 +59,7 @@ export const studentsDetails = (id) => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get(`http://127.0.0.1:8000/api/sis/students/${id}`, config)
+        const { data } = await axios.get(`${nodeUrl}/api/students/${studentId}`, config)
 
         dispatch({
             type: STUDENT_DETAILS_SUCCESS,
@@ -74,10 +77,8 @@ export const studentsDetails = (id) => async (dispatch, getState) => {
 }
 
 export const createStudent = (
-    firstName, middleName, lastName, 
-    admissionNumber, gradeLevel, classLevel,
-    gradYear, region, city, street,
-    stdViiNumber, premsNumber, sex ) => async (dispatch, getState) => {
+    firstName, middleName, lastName, admissionNumber, classLevel, 
+    region, city, street, stdViiNumber, premsNumber, sex ) => async (dispatch, getState) => {
     try {
         dispatch({
             type: STUDENT_CREATE_REQUEST
@@ -95,20 +96,18 @@ export const createStudent = (
         }
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/sis/students/',{
-        "first_name": firstName, 
-        "middle_name": middleName, 
-        "last_name": lastName, 
-        "addmission_number": Number(admissionNumber),
-        "grade_level": gradeLevel,
-        "class_level": classLevel,
-        "class_of_year": gradYear,
+        `${nodeUrl}/api/students/`,{
+        "firstName": firstName, 
+        "middleName": middleName, 
+        "lastName": lastName, 
+        "addmissionNumber": Number(admissionNumber),
+        "classLevel": classLevel,
         "region": region,
         "city": city,
         "street": street,
-        "std_vii_number": stdViiNumber,
-        "prems_number": premsNumber,
-        "sex": sex
+        "stdViiNumber": stdViiNumber,
+        "premsNumber": premsNumber,
+        "gender": sex
         },
         config
         )
@@ -146,7 +145,7 @@ export const bulkCreateStudents = (filename) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.post(
-        `http://127.0.0.1:8000/api/sis/upload/:${filename}/`,
+        `${nodeUrl}/api/sis/upload/:${filename}/`,
         config
         )
 

@@ -53,18 +53,17 @@ function UserList() {
                   </tr>
                 </thead>
                   
-                
                 <tbody>
                     
                   { users.map(user => (
-                    <tr key={user.id}>
+                    <tr key={user._id}>
                       <td>{user.id}</td>
-                      <td>{user.first_name} {user.middle_name} {user.last_name}</td>
+                      <td>{user.firstName} {user.lastName}</td>
                       <td>{user.email}</td>
                       <td>{user.isAdmin}</td>
                       <td>{user.isTeacher}</td>
                       <td>{user.isAccountant}</td>
-                      <td><Link to={`/users/${user.id}`}><EyeOutlined /></Link></td>
+                      <td><Link to={`/users/${user._id}`}><EyeOutlined /></Link></td>
                     </tr>
                   ))}
                 
