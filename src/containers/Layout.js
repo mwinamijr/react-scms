@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector} from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
   DesktopOutlined,
@@ -20,13 +20,22 @@ const { SubMenu } = Menu;
 function DashLayout(props) {
   const [collapsed, setCollapsed] = useState(false)
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
-  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (userInfo) {
+        navigate('/')
+    }
+  }, [userInfo])
 
   const logoutHandler = () => {
     dispatch(logout())
   }
+  
 
   return (
     <Layout style={{ minHeight: '100vh' }}>

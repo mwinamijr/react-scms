@@ -77,8 +77,8 @@ export const studentsDetails = (studentId) => async (dispatch, getState) => {
 }
 
 export const createStudent = (
-    firstName, middleName, lastName, admissionNumber, classLevel, 
-    region, city, street, stdViiNumber, premsNumber, sex ) => async (dispatch, getState) => {
+    firstName, middleName, lastName, admissionNumber, classLevel, birthday, 
+    region, city, street, parentContact, stdViiNumber, premsNumber, gender ) => async (dispatch, getState) => {
     try {
         dispatch({
             type: STUDENT_CREATE_REQUEST
@@ -96,18 +96,22 @@ export const createStudent = (
         }
 
         const { data } = await axios.post(
-        `${nodeUrl}/api/students/`,{
+        `${nodeUrl}/api/students/addstudent`,{
         "firstName": firstName, 
         "middleName": middleName, 
         "lastName": lastName, 
         "addmissionNumber": Number(admissionNumber),
         "classLevel": classLevel,
-        "region": region,
-        "city": city,
-        "street": street,
+        address: {
+            "region": region,
+            "city": city,
+            "street": street,
+            },
         "stdViiNumber": stdViiNumber,
         "premsNumber": premsNumber,
-        "gender": sex
+        "birthday": birthday,
+        "gender": gender,
+        "parentContact": parentContact
         },
         config
         )
