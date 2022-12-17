@@ -31,7 +31,7 @@ function Receipts() {
         </Breadcrumb>
       <div>
       <div>
-        { userInfo.user_type.isAccountant || userInfo.isAdmin ?
+        { userInfo.isAccountant || userInfo.isAdmin ?
           <div>
             <h1 className="text-center">Receipts</h1>
             <Link to="/finance/receipts/add" className='btn btn-light my-3'>Add Receipt</Link>
@@ -51,15 +51,15 @@ function Receipts() {
                 </thead>
                 <tbody>
                 { receipts.map(receipt => (
-                  <tr key={receipt.receipt_no}>
-                    <td>{receipt.receipt_no}</td>
+                  <tr key={receipt.receiptNumber}>
+                    <td>{receipt.receiptNumber}</td>
                     <td>{receipt.student}</td>
-                    <td>{receipt.paid_for}</td>
+                    <td>{receipt.paidFor}</td>
                     <td>{receipt.amount}</td>
-                    <td>{receipt.received_by}</td>
+                    <td>{receipt.receivedBy}</td>
                     <td>
-                      <Link to={`/finance/receipts/${receipt.id}`}><EyeOutlined /></Link><span>  </span>
-                      <Link to={`/finance/receipts/${receipt.id}`}><EditOutlined /></Link><span>  </span>
+                      <Link to={`/finance/receipts/${receipt._id}`}><EyeOutlined /></Link><span>  </span>
+                      <Link to={`/finance/receipts/${receipt._id}`}><EditOutlined /></Link><span>  </span>
                       <DeleteOutlined />
                     </td>
                   </tr>

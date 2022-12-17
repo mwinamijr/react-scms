@@ -8,6 +8,9 @@ import {
     PAYMENT_CREATE_REQUEST, PAYMENT_CREATE_SUCCESS, PAYMENT_CREATE_FAIL, PAYMENT_CREATE_RESET,
 } from '../constants/financeConstants'
 
+//const djangoUrl = 'http://127.0.0.1:8000'
+const nodeUrl = 'http://localhost:4001'
+
 export const listReceipts = () => async (dispatch, getState) => {
     try {
         dispatch({ type: RECEIPT_LIST_REQUEST })
@@ -23,7 +26,7 @@ export const listReceipts = () => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get('http://127.0.0.1:8000/api/finance/receipts/', config)
+        const { data } = await axios.get(`${nodeUrl}/api/finance/receipts/`, config)
 
         dispatch({
             type: RECEIPT_LIST_SUCCESS,
@@ -55,7 +58,7 @@ export const ReceiptDetails = (id) => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get(`http://127.0.0.1:8000/api/finance/receipts/${id}`, config)
+        const { data } = await axios.get(`${nodeUrl}/api/finance/receipts/${id}`, config)
 
         dispatch({
             type: RECEIPT_DETAILS_SUCCESS,
@@ -91,7 +94,7 @@ export const createReceipt = ( receiptNumber, payer, student,
         }
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/finance/receipts/',{
+        `${nodeUrl}/api/finance/receipts/`,{
             "receipt_no": receiptNumber,
             "payer": payer,
             "student": student,
@@ -133,7 +136,7 @@ export const listPayments = () => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get('http://127.0.0.1:8000/api/finance/payments/', config)
+        const { data } = await axios.get(`${nodeUrl}/api/finance/payments/`, config)
 
         dispatch({
             type: PAYMENT_LIST_SUCCESS,
@@ -165,7 +168,7 @@ export const PaymentDetails = (id) => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get(`http://127.0.0.1:8000/api/finance/payments/${id}`, config)
+        const { data } = await axios.get(`${nodeUrl}/api/finance/payments/${id}`, config)
 
         dispatch({
             type: PAYMENT_DETAILS_SUCCESS,
@@ -201,7 +204,7 @@ export const createPayment = ( paymentNumber, paidTo, user,
         }
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/finance/payments/',{
+        `${nodeUrl}/api/finance/payments/`,{
             "payment_no": paymentNumber,
             "paid_to": paidTo,
             "user": user,

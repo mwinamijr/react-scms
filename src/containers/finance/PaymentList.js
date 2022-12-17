@@ -31,7 +31,7 @@ function Payments() {
         </Breadcrumb>
       <div>
       <div>
-        { userInfo.user_type.isAccountant || userInfo.isAdmin ?
+        { userInfo.isAccountant || userInfo.isAdmin ?
           <div>
             <h1 className="text-center">Payments</h1>
             <Link to="/finance/payments/add" className='btn btn-light my-3'>Add Payment</Link>
@@ -52,17 +52,17 @@ function Payments() {
                 </thead>
                 <tbody>
                 { payments.map(payment => (
-                  <tr key={payment.payment_no}>
-                    <td>{payment.payment_no}</td>
-                    <td>{payment.paid_to}</td>
-                    <td>{payment.paid_for}</td>
+                  <tr key={payment.paymentNumber}>
+                    <td>{payment.paymentNumber}</td>
+                    <td>{payment.paidTo}</td>
+                    <td>{payment.paidFor}</td>
                     <td>{payment.user}</td>
                     <td>{payment.amount}</td>
-                    <td>{payment.paid_by}</td>
+                    <td>{payment.paidBy}</td>
                     <td>
-                      <Link to={`/finance/payments/${payment.id}`}><EyeOutlined /></Link><span>   </span>
-                      <Link to={`/finance/payments/${payment.id}`}><EditOutlined /></Link><span>   </span>
-                      <Link to={`/finance/payments/${payment.id}`}><DeleteOutlined /></Link>
+                      <Link to={`/finance/payments/${payment._id}`}><EyeOutlined /></Link><span>   </span>
+                      <Link to={`/finance/payments/${payment._id}`}><EditOutlined /></Link><span>   </span>
+                      <Link to={`/finance/payments/${payment._id}`}><DeleteOutlined /></Link>
                     </td>
                   </tr>
                   ))}
