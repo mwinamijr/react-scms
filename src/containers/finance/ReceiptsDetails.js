@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Breadcrumb, Col, Table} from 'react-bootstrap'
+import { Card, Breadcrumb, Table} from 'react-bootstrap'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 import { ReceiptDetails } from '../../redux/actions/financeActions'

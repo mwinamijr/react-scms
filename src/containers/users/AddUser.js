@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Form, Button, Row, Col, InputGroup } from 'react-bootstrap'
+import { Form, Button, InputGroup } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
@@ -29,12 +29,12 @@ function AddUser() {
       if (userInfo) {
           navigate('/users')
       }
-  }, [userInfo])
+  }, [userInfo, navigate])
 
   const submitHandler = (e) => {
     e.preventDefault()
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
         setMessage('Passwords do not match')
     } else {
       dispatch(register(firstName, lastName, email, phone, password, isAdmin, isAccountant, isTeacher))

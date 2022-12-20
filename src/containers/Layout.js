@@ -30,7 +30,7 @@ function DashLayout(props) {
     if (userInfo) {
         navigate('/')
     }
-  }, [userInfo])
+  }, [userInfo, navigate])
 
   const logoutHandler = () => {
     dispatch(logout())

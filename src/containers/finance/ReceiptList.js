@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Table, Col, Row } from 'react-bootstrap';
+import { Breadcrumb, Table } from 'react-bootstrap';
 import { EditOutlined, DeleteOutlined, EyeOutlined, CheckOutlined, CheckCircleOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 import { listReceipts } from '../../redux/actions/financeActions';

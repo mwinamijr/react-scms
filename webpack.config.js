@@ -10,7 +10,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        use: ["less-loader"]
+        use: [{ loader: "less-loader" }, { loader: "css-loader"} ]
       }
     ]
   }
