@@ -20,7 +20,7 @@ const { SubMenu } = Menu;
 function DashLayout(props) {
   const [collapsed, setCollapsed] = useState(false)
 
-  const navigate = useNavigate()
+  //const navigate = useNavigate()
   const dispatch = useDispatch()
   
   const userLogin = useSelector(state => state.userLogin)
@@ -28,9 +28,8 @@ function DashLayout(props) {
 
   useEffect(() => {
     if (userInfo) {
-        navigate('/')
     }
-  }, [userInfo, navigate])
+  }, [userInfo,])
 
   const logoutHandler = () => {
     dispatch(logout())

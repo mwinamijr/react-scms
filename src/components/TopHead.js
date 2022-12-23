@@ -1,29 +1,46 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Navbar, Nav, Container, Row, NavDropdown } from 'react-bootstrap'
-import {
-  UserOutlined,
-} from '@ant-design/icons';
-import { Link } from 'react-router-dom'
-import SearchBox from './SearchBox'
+import React, { useState } from 'react';
+import { useDispatch, useSelector} from 'react-redux'
+import { UserAddOutlined, MailOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
 
-function Header() {
+const items = [
+  {
+    label: 'Navigation One',
+    key: 'mail',
+    icon: <MailOutlined />,
+  },
+  {
+    label: `'Navigation Three - Submenu'`,
+    key: 'SubMenu',
+    icon: <UserAddOutlined />,
+    children: [
+      {
+        type: 'group',
+        label: 'Item 1',
+        children: [
+          {
+            label: 'Option 1',
+            key: 'setting:1',
+          },
+          {
+            label: 'Option 2',
+            key: 'setting:2',
+          },
+        ],
+      },
+    ],
+  },
+];
+const TopHead = () => {
 
-    const userLogin = useSelector(state => state.userLogin)
-    const { userInfo } = userLogin
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 
-    return (
-      <header>
-        <Navbar bg="dark" variant="dark" expand="lg">
-          <Container>
-            <Nav className="ml-auto float-right">
-              <Nav.Link><i className="fas fa-user"></i>{userInfo.firstName}</Nav.Link>
-              
-            </Nav>
-          </Container>
-        </Navbar>
-      </header>
-    )
-}
-
-export default Header
+  const [current, setCurrent] = useState('mail');
+  const onClick = (e) => {
+    console.log('click ', e);
+    setCurrent(e.key);
+  };
+  return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
+};
+export default TopHead;

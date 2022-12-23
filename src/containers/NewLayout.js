@@ -1,71 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
+  DesktopOutlined, FileOutlined, PieChartOutlined,
+  TeamOutlined, UserOutlined, AppstoreOutlined
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu } from 'antd';
+import { Link } from 'react-router-dom';
+
+import { logout } from '../redux/actions/userActions'
+import TopHead from '../components/TopHead'
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
+function getItem(label, key, icon, children) {
   return {
     key,
     icon,
     children,
     label,
-  } as MenuItem;
+  };
 }
-
-const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
+const items = [
+  getItem(<Link to="/">Dashboard</Link>, '1', <PieChartOutlined />),
+  getItem('Admission', '2', <DesktopOutlined />),
+  getItem(<Link to="/sis/students">Students</Link>, '3', <UserOutlined />),
+  getItem('Employees', 'sub1', <TeamOutlined />, [
+    getItem(<Link to="/teachers">Teachers</Link>, '4'),
+    getItem('Accountants', '5'),
   ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />),
+  getItem('Finance', 'sub2', <TeamOutlined />, [
+    getItem(<Link to="/finance/receipts">Receipts</Link>, '6'), 
+    getItem(<Link to="/finance/payments">Payments</Link>, '8')
+  ]),
+  getItem('Navigation Two', 'sub3', <AppstoreOutlined />, [
+    getItem('Option 9', '9'),
+    getItem('Option 10', '10'),
+    getItem('Submenu', 'sub4', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
+  ]),
+  getItem('Logout', '13', <FileOutlined />),
 ];
-
-const App: React.FC = () => {
+const DashLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const dispatch = useDispatch()
+  
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 
+  useEffect(() => {
+    if (userInfo) {
+    }
+  }, [userInfo,])
+
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
+  
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout
+      style={{
+        minHeight: '100vh',
+      }}
+    >
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
+        <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)', }}
+        />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout className="site-layout">
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-            Bill is a cat.
+      <TopHead style={{ float: 'right'}} />
+        <Content style={{margin: '0 16px', }}>
+          <div style={{ padding: 24, minHeight: 360, }}>
+            { props.children }
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+        <Footer style={{ textAlign: 'center',  }}>
+        Hayatul Islamiya ©2022 Created by Techdometz
+        </Footer>
       </Layout>
     </Layout>
   );
 };
-
-export default App;
+export default DashLayout
