@@ -7,12 +7,14 @@ import {
     ASSIGNMENT_DELETE_REQUEST, ASSIGNMENT_DELETE_SUCCESS, ASSIGNMENT_DELETE_FAIL */
 } from '../constants/assignmentConstants'
 
+/*
 const initialState = {
   assignments: [],
   currentAssignment: {},
   error: null,
   loading: false
 };
+*/
 
 export const assignmentListReducer = (state = { assignments : [] }, action) => {
   switch (action.type) {

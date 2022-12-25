@@ -52,13 +52,15 @@ const items = [
     getItem('Attendance report', '23'),
   ]),
   getItem('Email / SMS', 'sub3', <MailOutlined />, [
-    getItem('Inbox', '9'),
+    getItem(<Link to="/notification/sms">SMS</Link>, '9'),
     getItem('Compose', '10'),
     getItem('Submenu', 'sub4', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
   ]),
   getItem('School calender', '28', <CalendarOutlined />),
   getItem('Logout', '13', <UserDeleteOutlined />),
 ];
+
+
 const DashLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch()
@@ -83,6 +85,7 @@ const DashLayout = (props) => {
     >
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)', }}
+        
         />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
