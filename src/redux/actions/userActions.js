@@ -139,10 +139,7 @@ export const getUserDetails = (userId) => async (dispatch, getState) => {
 
 export const listUsers = () => async (dispatch, getState) => {
     try {
-        dispatch({
-            type: USER_LIST_REQUEST
-        })
-
+        
         const {
             userLogin: { userInfo },
         } = getState()

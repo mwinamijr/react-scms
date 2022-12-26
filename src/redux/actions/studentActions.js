@@ -14,7 +14,6 @@ const nodeUrl = 'http://localhost:4001'
 
 export const listStudents = () => async (dispatch, getState) => {
     try {
-        dispatch({ type: STUDENT_LIST_REQUEST })
         
         const {
             userLogin: { userInfo},

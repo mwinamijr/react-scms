@@ -9,6 +9,7 @@ import Message from '../../components/Message';
 import { listStudents } from '../../redux/actions/studentActions';
 import { listUsers } from './../../redux/actions/userActions';
 
+
 const Sms = () => {
   const [sendTo, setSendTo] = useState('')
   const [message, setMessage] = useState('')
@@ -17,30 +18,34 @@ const Sms = () => {
 
   const dispatch = useDispatch()
 
-  const userLogin = useSelector(state => state.userLogin)
-  const { userInfo } = userLogin
-
   const studentList = useSelector(state => state.studentList)
-  const { loading, error, students } = studentList
-
+  const { studentLoading, studentError, students } = studentList
+  
   const userList = useSelector(state => state.userList)
-  const { users } = userList
+  const { userLoading, userError, users } = userList
+  
+  
+  if (!userLoading) {
+    console.log('users', users.length)
+  }
+  
+  if (!studentLoading) {
+    console.log('students', students.length)
+  }
+  
+  for (let i; i<2; i++) {
+    console.log(i)
+  }
+  
+  useEffect(() => {
+    dispatch(listStudents())
+    dispatch(listUsers())
+  }, [dispatch,])
 
-  console.log(users)
 
   const employees = []
   const parents = []
 
-  for (let i=0; i < 2; i++) {
-    console.log(i)
-  }
-  useEffect(() => {
-    //dispatch(listStudents())
-    dispatch(listUsers())
-    
-  }, [dispatch,])
-
-  
   const submitHandler = (e) => {
     e.preventDefault()
     if (sendTo == 'parents') {
