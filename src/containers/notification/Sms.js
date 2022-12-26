@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Card, Button, Breadcrumb, Form, Select } from 'react-bootstrap'
+import { Card, Button, Breadcrumb, Form } from 'react-bootstrap'
 import axios from 'axios'
-import Loader from '../../components/Loader';
-import Message from '../../components/Message';
 
 import { listStudents } from '../../redux/actions/studentActions';
 import { listUsers } from './../../redux/actions/userActions';
@@ -19,23 +17,33 @@ const Sms = () => {
   const dispatch = useDispatch()
 
   const studentList = useSelector(state => state.studentList)
-  const { studentLoading, studentError, students } = studentList
+  const { studentLoading, students } = studentList
   
   const userList = useSelector(state => state.userList)
-  const { userLoading, userError, users } = userList
+  const { userLoading, users } = userList
   
   
+  const employees = []
+  const parents = []
+
   if (!userLoading) {
-    console.log('users', users.length)
+    //console.log('users', users.length)
+    for (const user of users ) {
+      //console.log(user.firstName, user.phone)
+      employees.push(user.phone)
+    }
   }
   
   if (!studentLoading) {
-    console.log('students', students.length)
+    //console.log('students', students.length)
+    for (const student of students ) {
+      //console.log(student.firstName, student.lastName, student.parentContact)
+      parents.push(student.parentContact)
+    }
   }
-  
-  for (let i; i<2; i++) {
-    console.log(i)
-  }
+
+  //console.log('parents', parents)
+  //console.log('employees', employees)
   
   useEffect(() => {
     dispatch(listStudents())
@@ -43,16 +51,14 @@ const Sms = () => {
   }, [dispatch,])
 
 
-  const employees = []
-  const parents = []
-
   const submitHandler = (e) => {
     e.preventDefault()
-    if (sendTo == 'parents') {
-
+    if (sendTo === 'parents') {
+      axios.post(`${nodeUrl}/api/notification/sms/send`, { parents, message })
+    } else {
+      axios.post(`${nodeUrl}/api/notification/sms/send`, { employees, message })
     }
 
-    //axios.post(`${nodeUrl}/api/sms/send`, { sendTo, message })
   }
 
   return (
