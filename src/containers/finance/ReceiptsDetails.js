@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Breadcrumb, Col, Table} from 'react-bootstrap'
+import { Card, Breadcrumb, Table} from 'react-bootstrap'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 import { ReceiptDetails } from '../../redux/actions/financeActions'
@@ -54,11 +54,11 @@ function ReceiptsDetails() {
                             <td>date</td>
                             <td>{receipt.date}</td>
                             <td>Receipt number</td>
-                            <td>{receipt.receipt_no}</td>
+                            <td>{receipt.receiptNumber}</td>
                           </tr>
                           <tr>
                             <td>Payer</td>
-                            <td>{receipt.payer}</td>
+                            <td>{receipt.receivedFrom}</td>
                           </tr>
                           <tr>
                             <td>Student</td>
@@ -66,7 +66,7 @@ function ReceiptsDetails() {
                           </tr>
                           <tr>
                             <td>Paid for</td>
-                            <td>{receipt.paid_for}</td>
+                            <td>{receipt.paidFor}</td>
                           </tr>
                           <tr>
                             <td>amount</td>
@@ -74,7 +74,7 @@ function ReceiptsDetails() {
                           </tr>
                           <tr>
                             <td>Received by</td>
-                            <td>{receipt.received_by}</td>
+                            <td>{receipt.receivedBy}</td>
                           </tr>
                         </tbody>
                       </Table>

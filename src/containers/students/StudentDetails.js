@@ -28,7 +28,7 @@ function StudentDetailsScreen() {
                       <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
                         <div className="col-md-10 px-0">
                           <h1 className="display-4 fst-italic">student details</h1>
-                          <span>{student.addmission_number}: {student.first_name} {student.last_name} </span>
+                          <span>{student.addmissionNumber}: {student.firstName} {student.lastName} </span>
                         </div>
                       </div>
                       )}

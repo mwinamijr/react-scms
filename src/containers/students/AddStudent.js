@@ -1,7 +1,7 @@
 import DatePicker from 'react-datepicker'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Col, Row, Form, Button } from 'react-bootstrap'
+import { Card, Row, Col, Form, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { createStudent } from '../../redux/actions/studentActions'
@@ -13,16 +13,15 @@ function AddStudent() {
   const [middleName, setMiddleName] = useState('')
   const [lastName, setLastName] = useState('')
   const [admissionNumber, setAdmissionNumber] = useState(0)
-  const [gradeLevel, setGradeLevel] = useState('')
   const [classLevel, setClassLevel] = useState('')
   const [birthday, setBirthday] = useState(new Date())
-  const [gradYear, setGradYear] = useState(2024)
   const [region, setRegion] = useState('')
   const [city, setCity] = useState('')
   const [street, setStreet] = useState('')
   const [stdViiNumber, setStdViiNumber] = useState('')
   const [premsNumber, setPremsNumber] = useState('')
-  const [sex, setSex] = useState('')
+  const [gender, setGender] = useState('')
+  const [parentContact, setParentContact ] = useState('')
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -35,9 +34,9 @@ function AddStudent() {
 
     dispatch(createStudent(
       firstName, middleName, lastName, 
-      admissionNumber, gradeLevel, classLevel, 
-      gradYear, region, city, street,
-      stdViiNumber, premsNumber, sex
+      admissionNumber, classLevel, birthday,
+      region, city, street, parentContact,
+      stdViiNumber, premsNumber, gender
     ))
   }
 
@@ -45,7 +44,7 @@ function AddStudent() {
     if (successCreate){
       navigate('/sis/students')
     }
-  }, [dispatch, createdStudent, successCreate])
+  }, [dispatch, createdStudent, successCreate, navigate])
 
   return (
     <div>
@@ -112,19 +111,6 @@ function AddStudent() {
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Select label="Grade Level" 
-                  id='gradeLevel'
-                  type='text'
-                  value={gradeLevel}
-                  onChange={(e) => setGradeLevel(e.target.value)}
-                
-                >
-                  <option>Grade Level</option>
-                  <option value="o-level">O Level</option>
-                  <option value="a-level">A Level</option>
-                </Form.Select>
-              </Col>
-              <Col>
                 <Form.Select label="Class Level"
                   id='classLevel'
                   type='text'
@@ -132,10 +118,10 @@ function AddStudent() {
                   onChange={(e) => setClassLevel(e.target.value)}
                 >
                   <option>Class Level</option>
-                  <option value="form one">Form One</option>
-                  <option value="form two">Form Two</option>
-                  <option value="form three">Form Three</option>
-                  <option value="form four">Form Four</option>
+                  <option value="form-one">form one</option>
+                  <option value="form-two">form two</option>
+                  <option value="form-three">form three</option>
+                  <option value="form-four">form four</option>
                 </Form.Select>
               </Col>
             </Row>
@@ -154,26 +140,15 @@ function AddStudent() {
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Group>
-                  <Form.Label>Grad Year</Form.Label>
-                  <Form.Control 
-                    id="gradYear" 
-                    type='number'
-                    value={gradYear}
-                    onChange={(e) =>setGradYear(e.target.value)}
-                    />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Select label="Sex"
-                  id='sex'
+                <Form.Select label="Gender"
+                  id='gender'
                   type='text'
-                  value={sex}
-                  onChange={(e) => setSex(e.target.value)}
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
                 >
-                  <option>Sex</option>
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
+                  <option>Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </Form.Select>
               </Col>
             </Row>
@@ -242,8 +217,14 @@ function AddStudent() {
             </Row>
             <br/>
             <Form.Group>
-              <Form.Label>Emergency Phone</Form.Label>
-              <Form.Control id="emergencyPhone" placeholder="Emergency Phone" />
+              <Form.Label>Parent Phone</Form.Label>
+              <Form.Control
+                id="parentPhone"
+                placeholder="parent phone number"
+                type="text"
+                value={parentContact}
+                onChange={(e) => setParentContact(e.target.value)}
+              />
             </Form.Group>
             <br/>
             <Form.Group>

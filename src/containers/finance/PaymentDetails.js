@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Breadcrumb, Col, Table} from 'react-bootstrap'
+import { Card, Breadcrumb, Table} from 'react-bootstrap'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 import { PaymentDetails } from '../../redux/actions/financeActions'
@@ -53,11 +53,11 @@ function PaymentsDetails() {
                             <td>date</td>
                             <td>{payment.date}</td>
                             <td>Payment number</td>
-                            <td>{payment.payment_no}</td>
+                            <td>{payment.paymentNumber}</td>
                           </tr>
                           <tr>
                             <td>Paid to</td>
-                            <td>{payment.paid_to}</td>
+                            <td>{payment.paidTo}</td>
                           </tr>
                           <tr>
                             <td>User</td>
@@ -65,7 +65,7 @@ function PaymentsDetails() {
                           </tr>
                           <tr>
                             <td>Paid for</td>
-                            <td>{payment.paid_for}</td>
+                            <td>{payment.paidFor}</td>
                           </tr>
                           <tr>
                             <td>Amount</td>
@@ -73,7 +73,7 @@ function PaymentsDetails() {
                           </tr>
                           <tr>
                             <td>Paid by</td>
-                            <td>{payment.paid_by}</td>
+                            <td>{payment.paidBy}</td>
                           </tr>
                         </tbody>
                       </Table>

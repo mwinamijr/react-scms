@@ -58,13 +58,13 @@ function Students() {
                 <tbody>
                     
                   { students.map(student => (
-                    <tr key={student.addmission_number}>
-                      <td>{student.addmission_number}</td>
-                      <td>{student.first_name} {student.middle_name} {student.last_name}</td>
-                      <td>{student.sex}</td>
-                      <td>{student.class_level}</td>
+                    <tr key={student.addmissionNumber}>
+                      <td>{student.addmissionNumber}</td>
+                      <td>{student.firstName} {student.middleName} {student.lastName}</td>
+                      <td>{student.gender}</td>
+                      <td>{student.classLevel}</td>
                       <td>{student.birthday}</td>
-                      <td><Link to={`/sis/students/${student.addmission_number}`}><EditOutlined /></Link></td>
+                      <td><Link to={`/sis/students/${student._id}`}><EditOutlined /></Link></td>
                     </tr>
                   ))}
                 

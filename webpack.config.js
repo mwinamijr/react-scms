@@ -8,6 +8,10 @@ module.exports = {
           loader: "babel-loader"
         }
       },
+      {
+        test: /\.less$/,
+        use: [{ loader: "less-loader" }, { loader: "css-loader"} ]
+      }
     ]
   }
 }

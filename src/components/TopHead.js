@@ -1,26 +1,46 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Navbar, Nav, Container, Row, NavDropdown } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import SearchBox from './SearchBox'
+import React, { useState } from 'react';
+import { useDispatch, useSelector} from 'react-redux'
+import { UserAddOutlined, MailOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
 
-function Header() {
+const TopHead = () => {
 
-    const userLogin = useSelector(state => state.userLogin)
-    const { userInfo } = userLogin
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 
-    return (
-      <header>
-        <Navbar bg="dark" variant="dark" expand="lg">
-          <Container>
-            <Nav className="ml-auto float-right">
-              <Nav.Link><i className="fas fa-user"></i>{userInfo.first_name}</Nav.Link>
-              
-            </Nav>
-          </Container>
-        </Navbar>
-      </header>
-    )
-}
-
-export default Header
+  const [current, setCurrent] = useState('mail');
+  const onClick = (e) => {
+    console.log('click ', e);
+    setCurrent(e.key);
+  };
+  return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={
+    [
+      {
+        label: 'Notifications',
+        key: 'mail',
+        icon: <MailOutlined />,
+      },
+      {
+        label: `${userInfo.firstName} ${userInfo.lastName}`,
+        key: 'SubMenu',
+        icon: <UserAddOutlined />,
+        children: [
+          {
+            type: 'group',
+            children: [
+              {
+                label: 'User Profile',
+                key: 'setting:1',
+              },
+              {
+                label: 'logout',
+                key: 'setting:2',
+              },
+            ],
+          },
+        ],
+      },
+    ]
+  } />;
+};
+export default TopHead;

@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { Breadcrumb, Card, Row, Col, Button } from 'react-bootstrap';
-import { EyeOutlined } from '@ant-design/icons';
+import { Card, Row, Col } from 'react-bootstrap';
 
 import { listUsers } from './../redux/actions/userActions';
 
@@ -10,8 +9,8 @@ function Dashboard() {
   
   const dispatch = useDispatch()
 
-  const userList = useSelector(state => state.userList)
-  const { loading, error, users } = userList
+  //const userList = useSelector(state => state.userList)
+  //const { loading, error, users } = userList
   
   useEffect(() => {
     dispatch(listUsers())

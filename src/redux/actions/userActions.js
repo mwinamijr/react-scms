@@ -3,13 +3,14 @@ import {
     USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS,USER_LOGIN_FAIL,
     USER_LOGOUT,
     USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL,
-    USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_RESET,
-    USER_LIST_REQUEST, USER_LIST_SUCCESS, USER_LIST_FAIL, USER_LIST_RESET,
+    USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL,
+    USER_LIST_SUCCESS, USER_LIST_FAIL,
     USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DELETE_FAIL,
-    USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_RESET,
+    USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL,
 } from '../constants/userConstants'
 
-const baseUrl = 'http://127.0.0.1:8000'
+//const djangoUrl = 'http://127.0.0.1:8000'
+const nodeUrl = 'http://localhost:4001'
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -24,7 +25,7 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/users/login/',
+            `${nodeUrl}/api/users/login/`,
             { 'email': email, 'password': password },
             config
         )
@@ -53,7 +54,9 @@ export const logout = () => (dispatch) => {
 }
 
 
-export const register = (firstName, middleName, lastName, email, password, isTeacher, isAdmin, isAccountant) => async (dispatch) => {
+export const register = (
+    firstName, lastName, email, phone,
+    password, isTeacher, isAdmin, isAccountant) => async (dispatch) => {
     try {
         dispatch({
             type: USER_REGISTER_REQUEST
@@ -66,16 +69,16 @@ export const register = (firstName, middleName, lastName, email, password, isTea
         }
 
         const { data } = await axios.post(
-            `${baseUrl}/api/users/`,
+            `${nodeUrl}/api/users/register`,
             { 
-                'first_name': firstName, 
-                'middle_name': middleName,
-                'last_name': lastName, 
-                'email': email, 
+                'firstName': firstName, 
+                'lastName': lastName, 
+                'email': email,
+                'phone': phone,
                 'password': password,
-                'is_teacher': isTeacher,
-                'is_staff': isAdmin,
-                'is_accountant': isAccountant
+                'isTeacher': isTeacher,
+                'isAdmin': isAdmin,
+                'isAccountant': isAccountant
              },
             config
         )
@@ -96,7 +99,7 @@ export const register = (firstName, middleName, lastName, email, password, isTea
 }
 
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = (userId) => async (dispatch, getState) => {
     try {
         dispatch({
             type: USER_DETAILS_REQUEST
@@ -114,7 +117,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${baseUrl}/api/users/${id}/`,
+            `${nodeUrl}/api/users/${userId}/`,
             config
         )
 
@@ -136,10 +139,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 
 export const listUsers = () => async (dispatch, getState) => {
     try {
-        dispatch({
-            type: USER_LIST_REQUEST
-        })
-
+        
         const {
             userLogin: { userInfo },
         } = getState()
@@ -152,7 +152,7 @@ export const listUsers = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${baseUrl}/api/users/`,
+            `${nodeUrl}/api/users/`,
             config
         )
 
@@ -191,7 +191,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.delete(
-            `/api/users/delete/${id}/`,
+            `${nodeUrl}/api/users/delete/${id}/`,
             config
         )
 

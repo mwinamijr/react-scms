@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from './containers/Home';
 import Login from './containers/Login';
-import DashboardLayout from './containers/Layout';
+import DashboardLayout from './containers/NewLayout';
 
 import BaseRouter from "./routes";
 import Parents from './containers/gettingStarted/Parents';

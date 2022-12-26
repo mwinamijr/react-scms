@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Form, Button, Row, Col, InputGroup } from 'react-bootstrap'
+import { Form, Button, InputGroup } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
@@ -10,9 +10,9 @@ import { register} from '../../redux/actions/userActions'
 function AddUser() {
    
   const [firstName, setFirstName] = useState('')
-  const [middleName, setMiddleName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
@@ -29,15 +29,15 @@ function AddUser() {
       if (userInfo) {
           navigate('/users')
       }
-  }, [userInfo])
+  }, [userInfo, navigate])
 
   const submitHandler = (e) => {
     e.preventDefault()
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
         setMessage('Passwords do not match')
     } else {
-      dispatch(register(firstName, middleName, lastName, email, password, isAdmin, isAccountant, isTeacher))
+      dispatch(register(firstName, lastName, email, phone, password, isAdmin, isAccountant, isTeacher))
         
     }
 
@@ -61,12 +61,6 @@ function AddUser() {
             onChange={(e)=>setFirstName(e.target.value)}
             />
             <Form.Control
-            type='name'
-            placeholder='Middle Name'
-            value={middleName}
-            onChange={(e)=>setMiddleName(e.target.value)}
-            />
-            <Form.Control
             required
             type='name'
             placeholder='Last Name'
@@ -83,6 +77,18 @@ function AddUser() {
               placeholder='Enter Email'
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
+            >
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId='phone'>
+            <Form.Label>Phone number</Form.Label>
+            <Form.Control
+              required
+              type='text'
+              placeholder='Enter phone number'
+              value={phone}
+              onChange={(e)=>setPhone(e.target.value)}
             >
             </Form.Control>
           </Form.Group>

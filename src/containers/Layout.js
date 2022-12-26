@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector} from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
   DesktopOutlined,
@@ -20,19 +20,27 @@ const { SubMenu } = Menu;
 function DashLayout(props) {
   const [collapsed, setCollapsed] = useState(false)
 
+  //const navigate = useNavigate()
+  const dispatch = useDispatch()
+  
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
-  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (userInfo) {
+    }
+  }, [userInfo,])
 
   const logoutHandler = () => {
     dispatch(logout())
   }
+  
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
           <div className="logo" />
-          { userInfo.user_type.isTeacher ?
+          { userInfo.isTeacher ?
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
               <Menu.Item key="1" icon={<PieChartOutlined />}>
                 <Link to="/">Dashboard</Link>
@@ -54,7 +62,7 @@ function DashLayout(props) {
                 <Link onClick={logoutHandler} to='/'>Logout</Link>
               </Menu.Item>
             </Menu>
-            : userInfo.user_type.isAccountant ?
+            : userInfo.isAccountant ?
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
               <Menu.Item key="1" icon={<PieChartOutlined />}>
                 <Link to="/">Dashboard</Link>
