@@ -35,7 +35,7 @@ function AddReceipt() {
     if (successCreate) {
       navigate('/finance/receipts')
     }
-  }, [dispatch, createdReceipt, successCreate])
+  }, [dispatch, navigate, createdReceipt, successCreate])
 
   return (
     <div>
