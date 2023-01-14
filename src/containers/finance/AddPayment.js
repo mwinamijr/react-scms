@@ -35,7 +35,7 @@ function AddPayment() {
     if (successCreate){
       navigate('/finance/payments')
     }
-  }, [dispatch, createdPayment])
+  }, [dispatch, createdPayment, successCreate, navigate])
 
   return (
     <div>

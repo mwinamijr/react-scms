@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
   DesktopOutlined, MailOutlined, PieChartOutlined, CalculatorOutlined, UserDeleteOutlined,
   TeamOutlined, UserOutlined, FileExcelOutlined, FileDoneOutlined, CalendarOutlined
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { logout } from '../redux/actions/userActions'
+//import { logout } from '../redux/actions/userActions'
 import TopHead from '../components/TopHead'
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
   return {
@@ -63,7 +63,7 @@ const items = [
 
 const DashLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const dispatch = useDispatch()
+  //const dispatch = useDispatch()
   
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
@@ -73,10 +73,12 @@ const DashLayout = (props) => {
     }
   }, [userInfo,])
 
+  /*
   const logoutHandler = () => {
     dispatch(logout())
   }
-  
+  */
+
   return (
     <Layout
       style={{
