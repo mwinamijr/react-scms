@@ -4,13 +4,13 @@ import {
   DesktopOutlined, MailOutlined, PieChartOutlined, CalculatorOutlined, UserDeleteOutlined,
   TeamOutlined, UserOutlined, FileExcelOutlined, FileDoneOutlined, CalendarOutlined
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { logout } from '../redux/actions/userActions'
+//import { logout } from '../redux/actions/userActions'
 import TopHead from '../components/TopHead'
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
   return {
@@ -73,10 +73,12 @@ const DashLayout = (props) => {
     }
   }, [userInfo,])
 
+  /*
   const logoutHandler = () => {
     dispatch(logout())
   }
-  
+  */
+
   return (
     <Layout
       style={{

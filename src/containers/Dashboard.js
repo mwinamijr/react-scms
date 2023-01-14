@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Card, Row, Col } from 'react-bootstrap';
 
 import { listUsers } from './../redux/actions/userActions';
