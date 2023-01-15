@@ -86,9 +86,12 @@ const DashLayout = (props) => {
       }}
     >
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)', }}
-        
-        />
+        <div 
+          style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)', }}
+          className="text-center"
+        >
+          <span style={{ color: 'white', fontSize:"120%"}} >HISMS</span>
+        </div>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout className="site-layout">
