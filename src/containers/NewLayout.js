@@ -46,6 +46,11 @@ const items = [
     ]),
     getItem('Exam Schedule', '19'),
   ]),
+  getItem('Teaching Records', 'teachingR', <FileDoneOutlined />, [
+    getItem('Schemes', '29'),
+    getItem('Subject Teachers', '30'),
+    getItem('Class Journals', '31'),
+  ]),
   getItem('Attendance', 'sub8', <FileExcelOutlined />, [
     getItem('Student Attendance', '21'),
     getItem('Employee Attendance', '22'),
