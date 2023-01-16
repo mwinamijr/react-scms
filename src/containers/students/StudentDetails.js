@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { Card, Row, Col, Tab, Tabs, ListGroup } from 'react-bootstrap'
 import Loader from './../../components/Loader'
 import Message from './../../components/Message'
 import { studentsDetails } from '../../redux/actions/studentActions'
@@ -11,6 +12,9 @@ function StudentDetailsScreen() {
     const studentDetails = useSelector(state => state.studentDetails)
     const { loading, error, student } = studentDetails
     const { id } = useParams()
+
+    const [key, setKey] = useState('info');
+
     
     useEffect(() => {
       dispatch(studentsDetails(id))
@@ -23,15 +27,79 @@ function StudentDetailsScreen() {
               {loading ?
                 <Loader />
                 : error
-                    ? <Message variant='danger'>{error}</Message>
-                    : (
-                      <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
-                        <div className="col-md-10 px-0">
-                          <h1 className="display-4 fst-italic">student details</h1>
-                          <span>{student.addmissionNumber}: {student.firstName} {student.lastName} </span>
-                        </div>
-                      </div>
-                      )}
+                  ? <Message variant='danger'>{error}</Message>
+                  : (
+                    <div>
+                    <h4>Student Profile</h4>
+                    <Row className="site-card-wrapper">
+                      <Col sm={4}>
+                        <Card>
+                        <Card.Header>
+                          <h5>{student.firstName} {student.lastName}</h5> 
+                          <h5 className='text-muted'>prems#: {student.premsNumber}</h5>
+                        </Card.Header>
+                        <ListGroup>
+                          <ListGroup.Item>Addmission number: {student.addmissionNumber}</ListGroup.Item>
+                          <ListGroup.Item>Sex: <span className='float-right'> {student.gender}</span></ListGroup.Item>
+                          <ListGroup.Item>Date of birth: {student.birthday}</ListGroup.Item>
+                        </ListGroup>
+                        </Card>
+                      </Col>
+                      <Col sm={8}>
+                        <Card>
+                        <Tabs
+                          id="controlled-tab-example"
+                          activeKey={key}
+                          onSelect={(k) => setKey(k)}
+                          className="mb-3"
+                        >
+                          <Tab eventKey="info" title="Basic Info">
+                            <h4>Details</h4>
+                            <div>
+                              <Row>
+                                <Col>Status: active</Col>
+                                <Col>Form: {student.classLevel}</Col>
+                                <Col>Stream: A</Col>
+                              </Row>
+                              <Row>
+                                <Col>Citizenship: Tanzanian</Col>
+                                <Col>Health Status: </Col>
+                                <Col> </Col>
+                              </Row>
+                            </div>
+                            <hr />
+                            <h4>Address</h4>
+                            <div>
+                              <Row>
+                                <Col>Region: {student.address.region}</Col>
+                                <Col>City: {student.address.city}</Col>
+                                <Col>Street: {student.address.street}</Col>
+                              </Row>
+                            </div>
+                            <hr />
+                            <h4>Qualifications</h4>
+                            <div>
+                              Previous qualifications
+                             <Row>
+                              <Col>Standard VII #: {student.stdViiNumber}</Col>
+                             </Row>
+                            </div>
+                          </Tab>
+                          <Tab eventKey="payments" title="Payments">
+                            Profile
+                          </Tab>
+                          <Tab eventKey="attendance" title="Attendance">
+                            Contact
+                          </Tab>
+                          <Tab eventKey="exams" title="Examination">
+                            Contact
+                          </Tab>
+                        </Tabs>
+                        </Card>
+                      </Col>
+                    </Row>
+                    </div>
+                    )}
              </div>
                     
         </div>

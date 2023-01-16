@@ -25,7 +25,7 @@ const items = [
   getItem('Admission', '2', <DesktopOutlined />),
   getItem(<Link to="/sis/students">Students</Link>, '3', <UserOutlined />),
   getItem('Employees', 'sub1', <TeamOutlined />, [
-    getItem(<Link to="/teachers">Teachers</Link>, '4'),
+    getItem(<Link to="/users">Users</Link>, '4'),
     getItem('Accountants', '5'),
   ]),
   getItem('Finance', 'sub2', <CalculatorOutlined />, [
@@ -107,7 +107,7 @@ const DashLayout = (props) => {
           </div>
         </Content>
         <Footer style={{ textAlign: 'center',  }}>
-        Hayatul Islamiya ©2022 Created by Techdometz
+        Hayatul Islamiya © 2022 - 2023 Created by Techdometz
         </Footer>
       </Layout>
     </Layout>
