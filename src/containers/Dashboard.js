@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card, Row, Col } from 'react-bootstrap';
 
 import { listUsers } from './../redux/actions/userActions';
+import {listStudents} from './../redux/actions/studentActions'
 
 function Dashboard() {
   
   const dispatch = useDispatch()
 
-  //const userList = useSelector(state => state.userList)
-  //const { loading, error, users } = userList
+  const studentList = useSelector(state => state.studentList)
+  const { students } = studentList
+
+  const userList = useSelector(state => state.userList)
+  const { users } = userList
   
   useEffect(() => {
     dispatch(listUsers())
+    dispatch(listStudents())
     
 }, [dispatch,])
 
@@ -26,7 +31,7 @@ function Dashboard() {
             <Card.Header>
             <Link to='/sis/students'>Students</Link>
             </Card.Header>
-            <Card.Body>12</Card.Body>
+            <Card.Body>{students.length}</Card.Body>
             <Card.Footer>
             <Link to="/sis/students/add" className='btn btn-light my-3'>Add Student</Link>
             </Card.Footer>
@@ -43,8 +48,8 @@ function Dashboard() {
             <Card.Header>
               <Link to='/users'>Users</Link>
             </Card.Header>
-            <Card.Body>12
-            
+            <Card.Body>
+              {users.length}
             </Card.Body>
             <Card.Footer>
               <Link to="/users/add" className='btn btn-light my-3'>Add User</Link>
