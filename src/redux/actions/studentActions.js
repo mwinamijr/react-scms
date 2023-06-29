@@ -9,8 +9,8 @@ import {
     STUDENT_DELETE_REQUEST, STUDENT_DELETE_SUCCESS, STUDENT_DELETE_FAIL*/
 } from '../constants/studentConstants'
 
-//const djangoUrl = 'http://127.0.0.1:8000'
-const nodeUrl = 'http://localhost:4001'
+const djangoUrl = 'http://127.0.0.1:8000'
+//const nodeUhrl = 'http://localhost:4001'
 
 export const listStudents = () => async (dispatch, getState) => {
     try {
@@ -26,7 +26,7 @@ export const listStudents = () => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get(`${nodeUrl}/api/students/`, config)
+        const { data } = await axios.get(`${djangoUrl}/api/sis/students/`, config)
 
         dispatch({
             type: STUDENT_LIST_SUCCESS,
@@ -43,7 +43,7 @@ export const listStudents = () => async (dispatch, getState) => {
     }
 }
 
-export const studentsDetails = (studentId) => async (dispatch, getState) => {
+export const studentsDetails = (id) => async (dispatch, getState) => {
     try {
         dispatch({ type: STUDENT_DETAILS_REQUEST })
 
@@ -58,7 +58,7 @@ export const studentsDetails = (studentId) => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.get(`${nodeUrl}/api/students/${studentId}`, config)
+        const { data } = await axios.get(`${djangoUrl}/api/sis/students/${id}`, config)
 
         dispatch({
             type: STUDENT_DETAILS_SUCCESS,
@@ -95,7 +95,7 @@ export const createStudent = (
         }
 
         const { data } = await axios.post(
-        `${nodeUrl}/api/students/addstudent`,{
+        `${djangoUrl}/api/sis/students/addstudent`,{
         "firstName": firstName, 
         "middleName": middleName, 
         "lastName": lastName, 
@@ -149,7 +149,7 @@ export const bulkCreateStudents = (filename) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.post(
-        `${nodeUrl}/api/sis/upload/:${filename}/`,
+        `${djangoUrl}/api/sis/upload/:${filename}/`,
         config
         )
 

@@ -71,9 +71,9 @@ function StudentDetailsScreen() {
                             <h4>Address</h4>
                             <div>
                               <Row>
-                                <Col>Region: {student.address.region}</Col>
-                                <Col>City: {student.address.city}</Col>
-                                <Col>Street: {student.address.street}</Col>
+                                <Col>Region: </Col>
+                                <Col>City:</Col>
+                                <Col>Street: </Col>
                               </Row>
                             </div>
                             <hr />

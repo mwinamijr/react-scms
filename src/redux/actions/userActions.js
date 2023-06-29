@@ -9,8 +9,8 @@ import {
     USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL,
 } from '../constants/userConstants'
 
-//const djangoUrl = 'http://127.0.0.1:8000'
-const nodeUrl = 'http://localhost:4001'
+const djangoUrl = 'http://127.0.0.1:8000'
+//const nodeUrfl = 'http://localhost:4001'
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -25,7 +25,7 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const { data } = await axios.post(
-            `${nodeUrl}/api/users/login/`,
+            `${djangoUrl}/api/users/login/`,
             { 'email': email, 'password': password },
             config
         )
@@ -69,7 +69,7 @@ export const register = (
         }
 
         const { data } = await axios.post(
-            `${nodeUrl}/api/users/register`,
+            `${djangoUrl}/api/users/register`,
             { 
                 'firstName': firstName, 
                 'lastName': lastName, 
@@ -117,7 +117,7 @@ export const getUserDetails = (userId) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${nodeUrl}/api/users/${userId}/`,
+            `${djangoUrl}/api/users/${userId}/`,
             config
         )
 
@@ -152,7 +152,7 @@ export const listUsers = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `${nodeUrl}/api/users/`,
+            `${djangoUrl}/api/users/`,
             config
         )
 
@@ -191,7 +191,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.delete(
-            `${nodeUrl}/api/users/delete/${id}/`,
+            `${djangoUrl}/api/users/delete/${id}/`,
             config
         )
 
