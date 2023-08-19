@@ -21,7 +21,7 @@ const TopHead = () => {
         icon: <MailOutlined />,
       },
       {
-        label: `${userInfo.firstName} ${userInfo.lastName}`,
+        label: `${userInfo.first_name} ${userInfo.last_name}`,
         key: 'SubMenu',
         icon: <UserAddOutlined />,
         children: [

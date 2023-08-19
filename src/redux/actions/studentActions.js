@@ -95,22 +95,19 @@ export const createStudent = (
         }
 
         const { data } = await axios.post(
-        `${djangoUrl}/api/sis/students/addstudent`,{
-        "firstName": firstName, 
-        "middleName": middleName, 
-        "lastName": lastName, 
-        "addmissionNumber": Number(admissionNumber),
-        "classLevel": classLevel,
-        address: {
-            "region": region,
-            "city": city,
-            "street": street,
-            },
-        "stdViiNumber": stdViiNumber,
-        "premsNumber": premsNumber,
-        "birthday": birthday,
+        `${djangoUrl}/api/sis/students/`,{
+        "first_name": firstName, 
+        "middle_name": middleName, 
+        "last_name": lastName, 
+        "addmission_number": Number(admissionNumber),
+        "class_level": classLevel,
+        "region": region,
+        "city": city,
+        "street": street,
+        "std_vii_number": stdViiNumber,
+        "prems_number": premsNumber,
         "gender": gender,
-        "parentContact": parentContact
+        "parent_contact": parentContact
         },
         config
         )
