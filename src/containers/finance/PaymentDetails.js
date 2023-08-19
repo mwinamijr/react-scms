@@ -53,11 +53,11 @@ function PaymentsDetails() {
                             <td>date</td>
                             <td>{payment.date}</td>
                             <td>Payment number</td>
-                            <td>{payment.paymentNumber}</td>
+                            <td>{payment.payment_no}</td>
                           </tr>
                           <tr>
                             <td>Paid to</td>
-                            <td>{payment.paidTo}</td>
+                            <td>{payment.paid_to}</td>
                           </tr>
                           <tr>
                             <td>User</td>
@@ -65,7 +65,7 @@ function PaymentsDetails() {
                           </tr>
                           <tr>
                             <td>Paid for</td>
-                            <td>{payment.paidFor}</td>
+                            <td>{payment.paid_for}</td>
                           </tr>
                           <tr>
                             <td>Amount</td>
@@ -73,7 +73,7 @@ function PaymentsDetails() {
                           </tr>
                           <tr>
                             <td>Paid by</td>
-                            <td>{payment.paidBy}</td>
+                            <td>{payment.paid_by}</td>
                           </tr>
                         </tbody>
                       </Table>
