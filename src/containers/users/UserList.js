@@ -68,8 +68,8 @@ function UserList() {
                       <td>{user.isTeacher ? <CheckOutlined /> : <CloseOutlined />}</td>
                       <td>{user.isAccountant ? <CheckOutlined /> : <CloseOutlined />}</td>
                       <td>
-                        <Link to={`/users/${user._id}`}><EyeOutlined /></Link><span>  </span>
-                        <Link to={`/users/${user._id}`}><EditOutlined /></Link><span>  </span>
+                        <Link to={`/users/${user.id}`}><EyeOutlined /></Link><span>  </span>
+                        <Link to={`/users/${user.id}`}><EditOutlined /></Link><span>  </span>
                         <DeleteOutlined />
                       </td>
                     </tr>

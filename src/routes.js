@@ -5,12 +5,12 @@ import { useSelector } from 'react-redux'
 import Dashboard from './containers/Dashboard';
 import UserList from './containers/users/UserList';
 import AddUser from './containers/users/AddUser';
+import TeacherList from './containers/users/TeacherList';
 import UserProfile from './containers/users/UserProfile';
 import Assignment from './containers/notification/Sms';
 import Payments from './containers/finance/PaymentList';
 import Receipts from './containers/finance/ReceiptList';
 import Reports from './containers/finance/Reports';
-import Teachers from './containers/Teachers';
 import StudentList from './containers/students/StudentList';
 import StudentDetailsScreen from './containers/students/StudentDetails';
 import AddStudent from './containers/students/AddStudent';
@@ -50,9 +50,9 @@ const BaseRouter = () => {
         </Route>
         <Route path="users" element={<UserList />} />
         <Route path="users/add" element={<AddUser />} />
+        <Route path="users/teachers" element={<TeacherList />} />
         <Route path="users/:id" element={<UserProfile />} />
         
-        <Route path="/teachers/" element={<Teachers />} />
         <Route path="/notification/sms/" element={<Assignment />} />
       </Routes>
     </div>

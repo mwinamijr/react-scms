@@ -33,7 +33,7 @@ function UserProfile() {
                     <Col>
                       <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
                         <div className="col-md-10 px-0">
-                          <span>{user.id}: {user.firstName} {user.lastName} </span>
+                          <span>{user.id}: {user.first_name} {user.last_name} </span>
                         </div>
                       </div>
                     </Col>

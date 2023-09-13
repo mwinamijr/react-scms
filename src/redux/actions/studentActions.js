@@ -1,6 +1,6 @@
 import axios from "axios";
 import {
-    STUDENT_LIST_SUCCESS, STUDENT_LIST_FAIL, 
+    STUDENT_LIST_REQUEST, STUDENT_LIST_SUCCESS, STUDENT_LIST_FAIL, 
     STUDENT_DETAILS_REQUEST, STUDENT_DETAILS_SUCCESS, STUDENT_DETAILS_FAIL, 
     STUDENT_CREATE_REQUEST, STUDENT_CREATE_SUCCESS, STUDENT_CREATE_FAIL,
     STUDENT_BULK_CREATE_REQUEST, STUDENT_BULK_CREATE_SUCCESS, STUDENT_BULK_CREATE_FAIL, 
@@ -14,7 +14,7 @@ const djangoUrl = 'http://127.0.0.1:8000'
 
 export const listStudents = () => async (dispatch, getState) => {
     try {
-        
+        dispatch({ type: STUDENT_LIST_REQUEST })
         const {
             userLogin: { userInfo},
         } = getState()

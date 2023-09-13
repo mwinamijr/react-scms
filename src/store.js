@@ -4,6 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 
 import {
     userLoginReducer, userRegisterReducer,userListReducer, userDetailsReducer,
+    teacherListReducer,
 } from './redux/reducers/userReducers'
 
 import {
@@ -25,6 +26,8 @@ const reducer = combineReducers({
     userRegister: userRegisterReducer,
     userList: userListReducer,
     userDetails: userDetailsReducer,
+
+    teacherList: teacherListReducer,
 
     assignmentList: assignmentListReducer,
     studentList: studentListReducer,
