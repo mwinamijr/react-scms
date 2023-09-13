@@ -6,6 +6,7 @@ import Dashboard from './containers/Dashboard';
 import UserList from './containers/users/UserList';
 import AddUser from './containers/users/AddUser';
 import TeacherList from './containers/users/TeacherList';
+import TeacherDetails from './containers/users/TeacherDetails';
 import UserProfile from './containers/users/UserProfile';
 import Assignment from './containers/notification/Sms';
 import Payments from './containers/finance/PaymentList';
@@ -51,6 +52,7 @@ const BaseRouter = () => {
         <Route path="users" element={<UserList />} />
         <Route path="users/add" element={<AddUser />} />
         <Route path="users/teachers" element={<TeacherList />} />
+        <Route path="users/teachers/:id" element={<TeacherDetails />} />
         <Route path="users/:id" element={<UserProfile />} />
         
         <Route path="/notification/sms/" element={<Assignment />} />
