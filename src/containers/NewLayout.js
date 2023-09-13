@@ -26,6 +26,7 @@ const items = [
   getItem(<Link to="/sis/students">Students</Link>, '3', <UserOutlined />),
   getItem('Employees', 'sub1', <TeamOutlined />, [
     getItem(<Link to="/users">Users</Link>, '4'),
+    getItem('Teachers', '32'),
     getItem('Accountants', '5'),
   ]),
   getItem('Finance', 'sub2', <CalculatorOutlined />, [
