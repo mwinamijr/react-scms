@@ -5,6 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import {
     userLoginReducer, userRegisterReducer,userListReducer, userDetailsReducer,
     teacherListReducer, teacherDetailsReducer,
+    accountantListReducer, accountantDetailsReducer,
 } from './redux/reducers/userReducers'
 
 import {
@@ -29,6 +30,9 @@ const reducer = combineReducers({
 
     teacherList: teacherListReducer,
     teacherDetails: teacherDetailsReducer,
+
+    accountantList: accountantListReducer,
+    accountantDetails: accountantDetailsReducer,
 
     assignmentList: assignmentListReducer,
     studentList: studentListReducer,
