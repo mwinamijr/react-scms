@@ -13,6 +13,7 @@ import UserProfile from './screens/users/UserProfile';
 import Assignment from './screens/notification/Sms';
 import Payments from './screens/finance/PaymentList';
 import Receipts from './screens/finance/ReceiptList';
+import Payroll from './screens/finance/Payroll';
 import Reports from './screens/finance/Reports';
 import StudentList from './screens/students/StudentList';
 import StudentDetailsScreen from './screens/students/StudentDetails';
@@ -42,6 +43,7 @@ const BaseRouter = () => {
           <Route path="payments/" element={<Payments />} />
           <Route path="payments/:id" element={<PaymentDetails />} />
           <Route path="payments/add/" element={<AddPayment />} />
+          <Route path="payroll/" element={<Payroll />} />
           <Route path="reports/" element={<Reports />} />
         </Route>
         

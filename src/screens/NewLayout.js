@@ -32,7 +32,7 @@ const items = [
   getItem('Finance', 'sub2', <CalculatorOutlined />, [
     getItem(<Link to="/finance/receipts">Receipts</Link>, '6'), 
     getItem(<Link to="/finance/payments">Payments</Link>, '24'),
-    getItem(<Link to="/finance/payments">Payroll</Link>, '25'),
+    getItem(<Link to="/finance/payroll">Payroll</Link>, '25'),
     getItem('Reports', 'sub9', null, [
       getItem('Collections', '26'),
       getItem('Invoices', '27')
