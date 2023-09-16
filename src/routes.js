@@ -2,26 +2,26 @@ import React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux'
 
-import Dashboard from './containers/Dashboard';
-import UserList from './containers/users/UserList';
-import AddUser from './containers/users/AddUser';
-import TeacherList from './containers/users/TeacherList';
-import TeacherDetails from './containers/users/TeacherDetails';
-import AccountantList from './containers/users/AccountantList';
-import AccountantDetails from './containers/users/AccountantDetails';
-import UserProfile from './containers/users/UserProfile';
-import Assignment from './containers/notification/Sms';
-import Payments from './containers/finance/PaymentList';
-import Receipts from './containers/finance/ReceiptList';
-import Reports from './containers/finance/Reports';
-import StudentList from './containers/students/StudentList';
-import StudentDetailsScreen from './containers/students/StudentDetails';
-import AddStudent from './containers/students/AddStudent';
-import AddReceipt from './containers/finance/AddReceipt';
-import BulkUpload from './containers/students/BulkUpload';
-import ReceiptsDetails from './containers/finance/ReceiptsDetails';
-import PaymentDetails from './containers/finance/PaymentDetails';
-import AddPayment from './containers/finance/AddPayment';
+import Dashboard from './screens/Dashboard';
+import UserList from './screens/users/UserList';
+import AddUser from './screens/users/AddUser';
+import TeacherList from './screens/users/TeacherList';
+import TeacherDetails from './screens/users/TeacherDetails';
+import AccountantList from './screens/users/AccountantList';
+import AccountantDetails from './screens/users/AccountantDetails';
+import UserProfile from './screens/users/UserProfile';
+import Assignment from './screens/notification/Sms';
+import Payments from './screens/finance/PaymentList';
+import Receipts from './screens/finance/ReceiptList';
+import Reports from './screens/finance/Reports';
+import StudentList from './screens/students/StudentList';
+import StudentDetailsScreen from './screens/students/StudentDetails';
+import AddStudent from './screens/students/AddStudent';
+import AddReceipt from './screens/finance/AddReceipt';
+import BulkUpload from './screens/students/BulkUpload';
+import ReceiptsDetails from './screens/finance/ReceiptsDetails';
+import PaymentDetails from './screens/finance/PaymentDetails';
+import AddPayment from './screens/finance/AddPayment';
 
 
 const BaseRouter = () => {
