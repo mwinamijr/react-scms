@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { Breadcrumb, Table, Row, Col } from 'react-bootstrap';
-import { EyeOutlined } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { listUsers } from './../../redux/actions/userActions';
 import Loader from './../../components/Loader';
@@ -56,14 +56,22 @@ function UserList() {
                 <tbody>
                     
                   { users.map(user => (
-                    <tr key={user._id}>
-                      <td>{user.id}</td>
-                      <td>{user.firstName} {user.lastName}</td>
+                    <tr key={user.id}>
+                      <td>{user.empId}</td>
+                      <td>{user.first_name} {user.last_name}</td>
                       <td>{user.email}</td>
-                      <td>{user.isAdmin}</td>
-                      <td>{user.isTeacher}</td>
-                      <td>{user.isAccountant}</td>
-                      <td><Link to={`/users/${user._id}`}><EyeOutlined /></Link></td>
+                      <td>
+                        {
+                          user.isAdmin ? <CheckOutlined /> : <CloseOutlined />
+                        }
+                      </td>
+                      <td>{user.isTeacher ? <CheckOutlined /> : <CloseOutlined />}</td>
+                      <td>{user.isAccountant ? <CheckOutlined /> : <CloseOutlined />}</td>
+                      <td>
+                        <Link to={`/users/${user.id}`}><EyeOutlined /></Link><span>  </span>
+                        <Link to={`/users/${user.id}`}><EditOutlined /></Link><span>  </span>
+                        <DeleteOutlined />
+                      </td>
                     </tr>
                   ))}
                 

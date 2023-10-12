@@ -25,13 +25,14 @@ const items = [
   getItem('Admission', '2', <DesktopOutlined />),
   getItem(<Link to="/sis/students">Students</Link>, '3', <UserOutlined />),
   getItem('Employees', 'sub1', <TeamOutlined />, [
-    getItem(<Link to="/teachers">Teachers</Link>, '4'),
-    getItem('Accountants', '5'),
+    getItem(<Link to="/users">Users</Link>, '4'),
+    getItem(<Link to="/users/teachers">Teachers</Link>, '32'),
+    getItem(<Link to="/users/accountants">Accountants</Link>, '5'),
   ]),
   getItem('Finance', 'sub2', <CalculatorOutlined />, [
     getItem(<Link to="/finance/receipts">Receipts</Link>, '6'), 
     getItem(<Link to="/finance/payments">Payments</Link>, '24'),
-    getItem(<Link to="/finance/payments">Payroll</Link>, '25'),
+    getItem(<Link to="/finance/payroll">Payroll</Link>, '25'),
     getItem('Reports', 'sub9', null, [
       getItem('Collections', '26'),
       getItem('Invoices', '27')
@@ -45,6 +46,11 @@ const items = [
       getItem('CA Report', '20'),
     ]),
     getItem('Exam Schedule', '19'),
+  ]),
+  getItem('Teaching Records', 'teachingR', <FileDoneOutlined />, [
+    getItem('Schemes', '29'),
+    getItem('Subject Teachers', '30'),
+    getItem('Class Journals', '31'),
   ]),
   getItem('Attendance', 'sub8', <FileExcelOutlined />, [
     getItem('Student Attendance', '21'),
@@ -86,9 +92,12 @@ const DashLayout = (props) => {
       }}
     >
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)', }}
-        
-        />
+        <div 
+          style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)', }}
+          className="text-center"
+        >
+          <span style={{ color: 'white', fontSize:"120%"}} >HISMS</span>
+        </div>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout className="site-layout">
@@ -99,7 +108,7 @@ const DashLayout = (props) => {
           </div>
         </Content>
         <Footer style={{ textAlign: 'center',  }}>
-        Hayatul Islamiya ©2022 Created by Techdometz
+        Hayatul Islamiya © 2022 - 2023 Created by Techdometz
         </Footer>
       </Layout>
     </Layout>

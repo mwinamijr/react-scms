@@ -52,17 +52,17 @@ function Payments() {
                 </thead>
                 <tbody>
                 { payments.map(payment => (
-                  <tr key={payment.paymentNumber}>
-                    <td>{payment.paymentNumber}</td>
-                    <td>{payment.paidTo}</td>
-                    <td>{payment.paidFor}</td>
+                  <tr key={payment.payment_no}>
+                    <td>{payment.payment_no}</td>
+                    <td>{payment.paid_to}</td>
+                    <td>{payment.paid_for}</td>
                     <td>{payment.user}</td>
                     <td>{payment.amount}</td>
-                    <td>{payment.paidBy}</td>
+                    <td>{payment.paid_by}</td>
                     <td>
-                      <Link to={`/finance/payments/${payment._id}`}><EyeOutlined /></Link><span>   </span>
-                      <Link to={`/finance/payments/${payment._id}`}><EditOutlined /></Link><span>   </span>
-                      <Link to={`/finance/payments/${payment._id}`}><DeleteOutlined /></Link>
+                      <Link to={`/finance/payments/${payment.id}`}><EyeOutlined /></Link><span>   </span>
+                      <Link to={`/finance/payments/${payment.id}`}><EditOutlined /></Link><span>   </span>
+                      <Link to={`/finance/payments/${payment.id}`}><DeleteOutlined /></Link>
                     </td>
                   </tr>
                   ))}

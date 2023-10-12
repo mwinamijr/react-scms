@@ -52,15 +52,15 @@ function Receipts() {
                 </thead>
                 <tbody>
                 { receipts.map(receipt => (
-                  <tr key={receipt.receiptNumber}>
-                    <td>{receipt.receiptNumber}</td>
+                  <tr key={receipt.receipt_no}>
+                    <td>{receipt.receipt_no}</td>
                     <td>{receipt.student}</td>
-                    <td>{receipt.paidFor}</td>
+                    <td>{receipt.paid_for}</td>
                     <td>{receipt.amount}</td>
-                    <td>{receipt.receivedBy}</td>
+                    <td>{receipt.received_by}</td>
                     <td>
-                      <Link to={`/finance/receipts/${receipt._id}`}><EyeOutlined /></Link><span>  </span>
-                      <Link to={`/finance/receipts/${receipt._id}`}><EditOutlined /></Link><span>  </span>
+                      <Link to={`/finance/receipts/${receipt.id}`}><EyeOutlined /></Link><span>  </span>
+                      <Link to={`/finance/receipts/${receipt.id}`}><EditOutlined /></Link><span>  </span>
                       <DeleteOutlined />
                     </td>
                   </tr>
