@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { UserAddOutlined, MailOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
+import { Link } from 'react-router-dom';
+import { logout } from './../redux/actions/userActions'
 
 const TopHead = () => {
+  const dispatch = useDispatch()
 
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
@@ -13,6 +16,13 @@ const TopHead = () => {
     console.log('click ', e);
     setCurrent(e.key);
   };
+
+  const logoutHandler = () => {
+    dispatch(logout())
+    console.log('signed out')
+  }
+
+
   return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={
     [
       {
@@ -21,7 +31,7 @@ const TopHead = () => {
         icon: <MailOutlined />,
       },
       {
-        label: `${userInfo.firstName} ${userInfo.lastName}`,
+        label: `${userInfo.first_name} ${userInfo.last_name}`,
         key: 'SubMenu',
         icon: <UserAddOutlined />,
         children: [
@@ -33,7 +43,7 @@ const TopHead = () => {
                 key: 'setting:1',
               },
               {
-                label: 'logout',
+                label: <Link onClick={logoutHandler} to='/'>Sign Out</Link>,
                 key: 'setting:2',
               },
             ],

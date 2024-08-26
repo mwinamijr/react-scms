@@ -4,16 +4,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Card, Breadcrumb, Table} from 'react-bootstrap'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
-import { PaymentDetails } from '../../redux/actions/financeActions'
+import { ReceiptDetails } from '../../redux/actions/financeActions'
 
-function PaymentsDetails() {
+
+function ReceiptsDetails() {
   const dispatch = useDispatch()
-  const paymentDetails = useSelector(state => state.paymentDetails)
-  const { loading, error, payment } = paymentDetails
+  const receiptDetails = useSelector(state => state.receiptDetails)
+  const { loading, error, receipt } = receiptDetails
   const { id } = useParams()
   
   useEffect(() => {
-    dispatch(PaymentDetails(id))
+    dispatch(ReceiptDetails(id))
   }, [dispatch, id ]) 
 
   return (
@@ -23,7 +24,7 @@ function PaymentsDetails() {
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item href="#">
-        <Link to="/finance/payments/">Payments</Link>
+        <Link to="/finance/receipts/">Receipts</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item active>details</Breadcrumb.Item>
       </Breadcrumb>
@@ -46,34 +47,34 @@ function PaymentsDetails() {
                       </div>
                     </Card.Header>
                     <Card.Body className="text-left col-md-8">
-                      <Card.Title className='pb-3'>PAYMENT SLIP</Card.Title>
+                      <Card.Title className='pb-3'>PAYMENT RECEIPT</Card.Title>
                       <Table>
                         <tbody>
                           <tr>
                             <td>date</td>
-                            <td>{payment.date}</td>
-                            <td>Payment number</td>
-                            <td>{payment.paymentNumber}</td>
+                            <td>{receipt.date}</td>
+                            <td>Receipt number</td>
+                            <td>{receipt.receipt_no}</td>
                           </tr>
                           <tr>
-                            <td>Paid to</td>
-                            <td>{payment.paidTo}</td>
+                            <td>Payer</td>
+                            <td>{receipt.payer}</td>
                           </tr>
                           <tr>
-                            <td>User</td>
-                            <td>{payment.user}</td>
+                            <td>Student</td>
+                            <td>{receipt.student}</td>
                           </tr>
                           <tr>
                             <td>Paid for</td>
-                            <td>{payment.paidFor}</td>
+                            <td>{receipt.paid_for}</td>
                           </tr>
                           <tr>
-                            <td>Amount</td>
-                            <td>{payment.amount}</td>
+                            <td>amount</td>
+                            <td>{receipt.amount}</td>
                           </tr>
                           <tr>
-                            <td>Paid by</td>
-                            <td>{payment.paidBy}</td>
+                            <td>Received by</td>
+                            <td>{receipt.received_by}</td>
                           </tr>
                         </tbody>
                       </Table>
@@ -87,4 +88,4 @@ function PaymentsDetails() {
   )
 }
 
-export default PaymentsDetails
+export default ReceiptsDetails

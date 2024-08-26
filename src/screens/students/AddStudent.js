@@ -118,10 +118,10 @@ function AddStudent() {
                   onChange={(e) => setClassLevel(e.target.value)}
                 >
                   <option>Class Level</option>
-                  <option value="form-one">form one</option>
-                  <option value="form-two">form two</option>
-                  <option value="form-three">form three</option>
-                  <option value="form-four">form four</option>
+                  <option value="form one">form one</option>
+                  <option value="form two">form two</option>
+                  <option value="form three">form three</option>
+                  <option value="form four">form four</option>
                 </Form.Select>
               </Col>
             </Row>
@@ -147,8 +147,8 @@ function AddStudent() {
                   onChange={(e) => setGender(e.target.value)}
                 >
                   <option>Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
                 </Form.Select>
               </Col>
             </Row>

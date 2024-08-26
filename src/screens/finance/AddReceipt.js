@@ -108,7 +108,7 @@ function AddReceipt() {
               >
                 <option>Paid For</option>
                 <option value="school fees">School Fees</option>
-                <option value="study tour">Tour</option>
+                <option value="examination fees">Exam fees</option>
                 <option value="allowances">Allowances</option>
               </Form.Select>
               <Form.Group>

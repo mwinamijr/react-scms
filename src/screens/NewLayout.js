@@ -26,12 +26,13 @@ const items = [
   getItem(<Link to="/sis/students">Students</Link>, '3', <UserOutlined />),
   getItem('Employees', 'sub1', <TeamOutlined />, [
     getItem(<Link to="/users">Users</Link>, '4'),
-    getItem('Accountants', '5'),
+    getItem(<Link to="/users/teachers">Teachers</Link>, '32'),
+    getItem(<Link to="/users/accountants">Accountants</Link>, '5'),
   ]),
   getItem('Finance', 'sub2', <CalculatorOutlined />, [
     getItem(<Link to="/finance/receipts">Receipts</Link>, '6'), 
     getItem(<Link to="/finance/payments">Payments</Link>, '24'),
-    getItem(<Link to="/finance/payments">Payroll</Link>, '25'),
+    getItem(<Link to="/finance/payroll">Payroll</Link>, '25'),
     getItem('Reports', 'sub9', null, [
       getItem('Collections', '26'),
       getItem('Invoices', '27')
