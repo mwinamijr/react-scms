@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, Row } from "react-bootstrap";
 import Loader from "./../../components/Loader";
 import Message from "./../../components/Message";
-import { getUserDetails } from "../../redux/slices/userSlice"; // Importing from userSlice
+import { getUserDetails } from "../../features/user/userSlice"; // Importing from userSlice
 
 function UserProfile() {
   const dispatch = useDispatch();

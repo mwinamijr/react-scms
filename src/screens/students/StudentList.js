@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Breadcrumb, Table, Row, Col } from "react-bootstrap";
 import { EditOutlined } from "@ant-design/icons";
 
-import { listStudents } from "../../redux/slices/studentSlice"; // Import the listStudents thunk
+import { listStudents } from "../../features/students/studentSlice"; // Import the listStudents thunk
 import Loader from "./../../components/Loader";
 import Message from "./../../components/Message";
 

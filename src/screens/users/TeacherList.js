@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Breadcrumb, Table } from "react-bootstrap";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { listTeachers } from "../../redux/slices/teacherSlice"; // Use the correct import path for the teacherSlice
+import { listTeachers } from "../../features/user/teacherSlice"; // Use the correct import path for the teacherSlice
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 

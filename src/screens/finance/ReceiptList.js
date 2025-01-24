@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Breadcrumb, Table } from "react-bootstrap";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 
-import { listReceipts } from "../../redux/slices/financeSlice"; // Update to import from financeSlice
+import { listReceipts } from "../../features/finance/financeSlice"; // Update to import from financeSlice
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 

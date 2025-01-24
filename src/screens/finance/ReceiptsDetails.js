@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Breadcrumb, Table } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { fetchReceiptDetails } from "../../redux/slices/financeSlice"; // Update to import from financeSlice
+import { receiptDetails } from "../../features/finance/financeSlice"; // Update to import from financeSlice
 
 function ReceiptsDetails() {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ function ReceiptsDetails() {
   );
 
   useEffect(() => {
-    dispatch(fetchReceiptDetails(id)); // Replace with the appropriate thunk from the slice
+    dispatch(receiptDetails(id)); // Replace with the appropriate thunk from the slice
   }, [dispatch, id]);
 
   return (

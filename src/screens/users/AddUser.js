@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import FormContainer from "../../components/FormContainer";
-import { register, resetError } from "../../redux/slices/userSlice"; // Updated import
+import { register, resetError } from "../../features/user/userSlice"; // Updated import
 
 function AddUser() {
   const [firstName, setFirstName] = useState("");

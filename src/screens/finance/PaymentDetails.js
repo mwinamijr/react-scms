@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Breadcrumb, Table } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { fetchPaymentDetails } from "../../redux/slices/financeSlice"; // Import the appropriate slice action
+import { paymentDetails } from "../../features/finance/financeSlice"; // Import the appropriate slice action
 
 function PaymentsDetails() {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ function PaymentsDetails() {
   );
 
   useEffect(() => {
-    dispatch(fetchPaymentDetails(id)); // Dispatch the action to fetch payment details
+    dispatch(paymentDetails(id)); // Dispatch the action to fetch payment details
   }, [dispatch, id]);
 
   return (

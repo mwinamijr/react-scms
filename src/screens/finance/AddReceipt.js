@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { createReceipt } from "../../redux/slices/financeSlice"; // Import from financeSlice
+import { createReceipt } from "../../features/finance/financeSlice"; // Import from financeSlice
 
 function AddReceipt() {
   const [receiptNumber, setReceiptNumber] = useState("");

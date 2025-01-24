@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, Row } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { getTeacherDetails } from "../../redux/slices/teacherSlice"; // Use the correct import path for the teacherSlice
+import { getTeacherDetails } from "../../features/user/teacherSlice"; // Use the correct import path for the teacherSlice
 
 function TeacherProfile() {
   const dispatch = useDispatch();

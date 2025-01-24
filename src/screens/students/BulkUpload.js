@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 
-import { createBulkStudents } from "../../redux/slices/studentSlice"; // Import createBulkStudents thunk from the slice
+import { bulkCreateStudents } from "../../features/students/studentSlice"; // Import bulkCreateStudents thunk from the slice
 
 function BulkUpload() {
   const [filename, setFilename] = useState("");
@@ -18,8 +18,8 @@ function BulkUpload() {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    // Dispatch createBulkStudents thunk with the filename
-    dispatch(createBulkStudents(filename));
+    // Dispatch bulkCreateStudents thunk with the filename
+    dispatch(bulkCreateStudents(filename));
   };
 
   return (

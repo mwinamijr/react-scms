@@ -4,16 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Row, Col, Tab, Tabs, ListGroup } from "react-bootstrap";
 import Loader from "./../../components/Loader";
 import Message from "./../../components/Message";
-import { studentDetails } from "../../redux/slices/studentSlice"; // Use the studentDetails thunk from the slice
+import { studentDetails } from "../../features/students/studentSlice"; // Use the studentDetails thunk from the slice
 
 function StudentDetailsScreen() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
   // Access student details from Redux store
-  const { loading, error, studentDetails } = useSelector(
-    (state) => state.student
-  );
+  const { loading, error, student } = useSelector((state) => state.student);
 
   const [key, setKey] = useState("info");
 
@@ -39,24 +37,21 @@ function StudentDetailsScreen() {
                 <Card>
                   <Card.Header>
                     <h5>
-                      {studentDetails.first_name} {studentDetails.last_name}
+                      {student.first_name} {student.last_name}
                     </h5>
                     <h5 className="text-muted">
-                      prems#: {studentDetails.prems_number}
+                      prems#: {student.prems_number}
                     </h5>
                   </Card.Header>
                   <ListGroup>
                     <ListGroup.Item>
-                      Addmission number: {studentDetails.addmission_number}
+                      Addmission number: {student.addmission_number}
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      Sex:{" "}
-                      <span className="float-right">
-                        {studentDetails.gender}
-                      </span>
+                      Sex: <span className="float-right">{student.gender}</span>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      Date of birth: {studentDetails.birthday}
+                      Date of birth: {student.birthday}
                     </ListGroup.Item>
                   </ListGroup>
                 </Card>
@@ -74,7 +69,7 @@ function StudentDetailsScreen() {
                       <div>
                         <Row>
                           <Col>Status: active</Col>
-                          <Col>Form: {studentDetails.class_level}</Col>
+                          <Col>Form: {student.class_level}</Col>
                           <Col>Stream: A</Col>
                         </Row>
                         <Row>
@@ -87,9 +82,9 @@ function StudentDetailsScreen() {
                       <h4>Address</h4>
                       <div>
                         <Row>
-                          <Col>Region: {studentDetails.region}</Col>
-                          <Col>City: {studentDetails.city}</Col>
-                          <Col>Street: {studentDetails.street}</Col>
+                          <Col>Region: {student.region}</Col>
+                          <Col>City: {student.city}</Col>
+                          <Col>Street: {student.street}</Col>
                         </Row>
                       </div>
                       <hr />
@@ -97,9 +92,7 @@ function StudentDetailsScreen() {
                       <div>
                         Previous qualifications
                         <Row>
-                          <Col>
-                            Standard VII #: {studentDetails.std_vii_number}
-                          </Col>
+                          <Col>Standard VII #: {student.std_vii_number}</Col>
                         </Row>
                       </div>
                     </Tab>

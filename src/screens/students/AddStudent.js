@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Row, Col, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-import { createStudent } from "../../redux/slices/studentSlice"; // Import createStudent thunk from the slice
+import { createStudent } from "../../features/students/studentSlice"; // Import createStudent thunk from the slice
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 

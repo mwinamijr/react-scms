@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Breadcrumb, Table } from "react-bootstrap";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { listAccountants } from "../../redux/slices/accountantSlice"; // Import the thunk action from the slice
+import { listAccountants } from "../../features/user/accountantSlice"; // Import the thunk action from the slice
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 

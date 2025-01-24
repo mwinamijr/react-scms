@@ -13,7 +13,7 @@ import {
   listUsers,
   deleteUser,
   resetSuccessDelete,
-} from "./../../redux/slices/userSlice"; // Updated import
+} from "./../../features/user/userSlice"; // Updated import
 import Loader from "./../../components/Loader";
 import Message from "./../../components/Message";
 

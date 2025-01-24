@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { createPayment } from "../../redux/slices/financeSlice"; // Import the action from financeSlice
+import { createPayment } from "../../features/finance/financeSlice"; // Import the action from financeSlice
 
 function AddPayment() {
   const [paymentNumber, setPaymentNumber] = useState("");

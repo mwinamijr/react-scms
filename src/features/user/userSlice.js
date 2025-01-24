@@ -1,22 +1,22 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const djangoUrl = 'http://127.0.0.1:8000';
+const djangoUrl = "http://127.0.0.1:8000";
 
 // Thunks for Asynchronous Actions
 export const login = createAsyncThunk(
-  'user/login',
+  "user/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const config = {
-        headers: { 'Content-type': 'application/json' },
+        headers: { "Content-type": "application/json" },
       };
       const { data } = await axios.post(
         `${djangoUrl}/api/users/login/`,
         { email, password },
         config
       );
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -29,14 +29,23 @@ export const login = createAsyncThunk(
 );
 
 export const register = createAsyncThunk(
-  'user/register',
+  "user/register",
   async (
-    { firstName, lastName, email, phone, password, isTeacher, isAdmin, isAccountant },
+    {
+      firstName,
+      lastName,
+      email,
+      phone,
+      password,
+      isTeacher,
+      isAdmin,
+      isAccountant,
+    },
     { rejectWithValue }
   ) => {
     try {
       const config = {
-        headers: { 'Content-type': 'application/json' },
+        headers: { "Content-type": "application/json" },
       };
       const { data } = await axios.post(
         `${djangoUrl}/api/users/register`,
@@ -64,7 +73,7 @@ export const register = createAsyncThunk(
 );
 
 export const getUserDetails = createAsyncThunk(
-  'user/details',
+  "user/details",
   async (userId, { getState, rejectWithValue }) => {
     try {
       const {
@@ -72,11 +81,14 @@ export const getUserDetails = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/${userId}/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/users/${userId}/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -89,7 +101,7 @@ export const getUserDetails = createAsyncThunk(
 );
 
 export const listUsers = createAsyncThunk(
-  'user/list',
+  "user/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -97,7 +109,7 @@ export const listUsers = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
@@ -114,7 +126,7 @@ export const listUsers = createAsyncThunk(
 );
 
 export const deleteUser = createAsyncThunk(
-  'user/delete',
+  "user/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -122,7 +134,7 @@ export const deleteUser = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
@@ -140,18 +152,25 @@ export const deleteUser = createAsyncThunk(
 
 // Slice for User State Management
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: {
     userInfo: null,
     userDetails: null,
     usersList: [],
     loading: false,
     error: null,
+    successDelete: false, // Add a flag for delete success
   },
   reducers: {
     logout(state) {
       state.userInfo = null;
-      localStorage.removeItem('userInfo');
+      localStorage.removeItem("userInfo");
+    },
+    resetSuccessDelete(state) {
+      state.successDelete = false; // Reset the success flag
+    },
+    resetError(state) {
+      state.error = null; // Reset the error state
     },
   },
   extraReducers: (builder) => {
@@ -215,7 +234,10 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.usersList = state.usersList.filter((user) => user.id !== action.payload);
+        state.successDelete = true; // Set success flag
+        state.usersList = state.usersList.filter(
+          (user) => user.id !== action.payload
+        );
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
@@ -225,5 +247,5 @@ const userSlice = createSlice({
 });
 
 // Export Actions and Reducer
-export const { logout } = userSlice.actions;
+export const { logout, resetSuccessDelete, resetError } = userSlice.actions;
 export default userSlice.reducer;
