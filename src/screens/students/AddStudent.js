@@ -147,8 +147,8 @@ function AddStudent() {
                   onChange={(e) => setGender(e.target.value)}
                 >
                   <option>Gender</option>
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </Form.Select>
               </Col>
             </Row>
