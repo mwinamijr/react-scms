@@ -34,8 +34,8 @@ const DashLayout = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  // Access userInfo from the user slice
+  const { userInfo } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!userInfo) {

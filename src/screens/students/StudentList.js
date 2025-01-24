@@ -1,22 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table, Row, Col } from "react-bootstrap";
+import { Breadcrumb, Table, Row, Col, Button } from "react-bootstrap";
 import { EditOutlined } from "@ant-design/icons";
 
-import { listStudents } from "../../features/students/studentSlice"; // Import the listStudents thunk
+import { listStudents } from "../../features/students/studentSlice";
 import Loader from "./../../components/Loader";
 import Message from "./../../components/Message";
 
 function Students() {
   const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1); // Track current page for pagination
 
-  // Access student state from Redux store using the slice
-  const { loading, error, studentList } = useSelector((state) => state.student);
+  // Access student state from Redux store
+  const { loading, error, students, pagination } = useSelector(
+    (state) => state.student
+  );
+  console.log(students);
+  console.log(pagination);
 
   useEffect(() => {
-    dispatch(listStudents()); // Dispatch the listStudents thunk to fetch student data
-  }, [dispatch]);
+    dispatch(listStudents({ page: currentPage })); // Fetch student data for the current page
+  }, [dispatch, currentPage]);
+
+  // Handlers for pagination
+  const handleNextPage = () => {
+    if (pagination.next) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (pagination.previous) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
 
   return (
     <div>
@@ -46,37 +64,59 @@ function Students() {
         ) : error ? (
           <Message variant="danger">{error}</Message>
         ) : (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Adm No:</th>
-                <th>Full Name</th>
-                <th>Sex</th>
-                <th>Class</th>
-                <th>Birthday</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {studentList.map((student) => (
-                <tr key={student.addmission_number}>
-                  <td>{student.addmission_number}</td>
-                  <td>
-                    {student.first_name} {student.middle_name}{" "}
-                    {student.last_name}
-                  </td>
-                  <td>{student.gender}</td>
-                  <td>{student.class_level}</td>
-                  <td>{student.birthday}</td>
-                  <td>
-                    <Link to={`/sis/students/${student.addmission_number}`}>
-                      <EditOutlined />
-                    </Link>
-                  </td>
+          <div>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Adm No:</th>
+                  <th>Full Name</th>
+                  <th>Sex</th>
+                  <th>Class</th>
+                  <th>Birthday</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {students.map((student) => (
+                  <tr key={student.id}>
+                    <td>{student.admission_number}</td>
+                    <td>
+                      {student.first_name} {student.middle_name}{" "}
+                      {student.last_name}
+                    </td>
+                    <td>{student.gender}</td>
+                    <td>{student.class_level}</td>
+                    <td>{student.date_of_birth}</td>
+                    <td>
+                      <Link to={`/sis/students/${student.addmission_number}`}>
+                        <EditOutlined />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <div className="d-flex justify-content-between">
+              <Button
+                variant="light"
+                onClick={handlePreviousPage}
+                disabled={!pagination.previous}
+              >
+                Previous
+              </Button>
+              <span>
+                Page {currentPage} of{" "}
+                {Math.ceil(pagination.count / students.length)}
+              </span>
+              <Button
+                variant="light"
+                onClick={handleNextPage}
+                disabled={!pagination.next}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </div>

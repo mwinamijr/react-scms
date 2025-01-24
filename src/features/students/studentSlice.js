@@ -3,25 +3,15 @@ import axios from "axios";
 
 const djangoUrl = "http://127.0.0.1:8000";
 
-// Thunks for Student Actions
+// Async thunk for fetching the student list with pagination
 export const listStudents = createAsyncThunk(
-  "student/list",
-  async (_, { getState, rejectWithValue }) => {
+  "student/listStudents",
+  async ({ page = 1 }, { rejectWithValue }) => {
     try {
-      const {
-        userLogin: { userInfo },
-      } = getState();
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-      const { data } = await axios.get(
-        `${djangoUrl}/api/sis/students/`,
-        config
+      const response = await axios.get(
+        `${djangoUrl}/api/sis/students/?page=${page}`
       );
-      return data;
+      return response.data; // This should include pagination metadata and the results list
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -121,8 +111,13 @@ export const bulkCreateStudents = createAsyncThunk(
 const studentSlice = createSlice({
   name: "student",
   initialState: {
-    studentList: [],
-    studentDetails: null,
+    students: [],
+    pagination: {
+      count: 0, // Total number of students
+      next: null, // URL for the next page
+      previous: null, // URL for the previous page
+    },
+    student: null,
     loading: false,
     error: null,
   },
@@ -136,7 +131,12 @@ const studentSlice = createSlice({
       })
       .addCase(listStudents.fulfilled, (state, action) => {
         state.loading = false;
-        state.studentList = action.payload;
+        state.students = action.payload.results;
+        state.pagination = {
+          count: action.payload.count,
+          next: action.payload.next,
+          previous: action.payload.previous,
+        }; // Set pagination metadata
       })
       .addCase(listStudents.rejected, (state, action) => {
         state.loading = false;
@@ -149,7 +149,7 @@ const studentSlice = createSlice({
       })
       .addCase(studentDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.studentDetails = action.payload;
+        state.student = action.payload;
       })
       .addCase(studentDetails.rejected, (state, action) => {
         state.loading = false;
@@ -162,7 +162,7 @@ const studentSlice = createSlice({
       })
       .addCase(createStudent.fulfilled, (state, action) => {
         state.loading = false;
-        state.studentDetails = action.payload;
+        state.student = action.payload;
       })
       .addCase(createStudent.rejected, (state, action) => {
         state.loading = false;

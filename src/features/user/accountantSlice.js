@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const djangoUrl = 'http://127.0.0.1:8000';
+const djangoUrl = "http://127.0.0.1:8000";
 
 // Thunks for Accountant Actions
 export const getAccountantDetails = createAsyncThunk(
-  'accountant/details',
+  "accountant/details",
   async (accountantId, { getState, rejectWithValue }) => {
     try {
       const {
@@ -13,11 +13,14 @@ export const getAccountantDetails = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/accountants/${accountantId}/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/users/accountants/${accountantId}/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -30,7 +33,7 @@ export const getAccountantDetails = createAsyncThunk(
 );
 
 export const listAccountants = createAsyncThunk(
-  'accountant/list',
+  "accountant/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -38,11 +41,14 @@ export const listAccountants = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/accountants/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/users/accountants/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -55,7 +61,7 @@ export const listAccountants = createAsyncThunk(
 );
 
 export const deleteAccountant = createAsyncThunk(
-  'accountant/delete',
+  "accountant/delete",
   async (accountantId, { getState, rejectWithValue }) => {
     try {
       const {
@@ -63,11 +69,14 @@ export const deleteAccountant = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(`${djangoUrl}/api/users/accountants/delete/${accountantId}/`, config);
+      await axios.delete(
+        `${djangoUrl}/api/users/accountants/delete/${accountantId}/`,
+        config
+      );
       return accountantId; // Return accountantId to allow removal from state
     } catch (error) {
       return rejectWithValue(
@@ -80,7 +89,7 @@ export const deleteAccountant = createAsyncThunk(
 );
 
 export const updateAccountant = createAsyncThunk(
-  'accountant/update',
+  "accountant/update",
   async (accountant, { getState, rejectWithValue }) => {
     try {
       const {
@@ -88,7 +97,7 @@ export const updateAccountant = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
@@ -110,10 +119,10 @@ export const updateAccountant = createAsyncThunk(
 
 // Slice for Accountant State Management
 const accountantSlice = createSlice({
-  name: 'accountant',
+  name: "accountant",
   initialState: {
-    accountantDetails: null,
-    accountantList: [],
+    accountant: null,
+    accountants: [],
     loading: false,
     error: null,
   },
@@ -127,7 +136,7 @@ const accountantSlice = createSlice({
       })
       .addCase(getAccountantDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.accountantDetails = action.payload;
+        state.accountant = action.payload;
       })
       .addCase(getAccountantDetails.rejected, (state, action) => {
         state.loading = false;
@@ -140,7 +149,7 @@ const accountantSlice = createSlice({
       })
       .addCase(listAccountants.fulfilled, (state, action) => {
         state.loading = false;
-        state.accountantList = action.payload;
+        state.accountants = action.payload;
       })
       .addCase(listAccountants.rejected, (state, action) => {
         state.loading = false;
@@ -153,7 +162,7 @@ const accountantSlice = createSlice({
       })
       .addCase(deleteAccountant.fulfilled, (state, action) => {
         state.loading = false;
-        state.accountantList = state.accountantList.filter(
+        state.accountants = state.accountants.filter(
           (accountant) => accountant.id !== action.payload
         );
       })
@@ -168,7 +177,7 @@ const accountantSlice = createSlice({
       })
       .addCase(updateAccountant.fulfilled, (state, action) => {
         state.loading = false;
-        state.accountantDetails = action.payload;
+        state.accountant = action.payload;
       })
       .addCase(updateAccountant.rejected, (state, action) => {
         state.loading = false;

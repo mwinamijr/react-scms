@@ -48,7 +48,7 @@ export const register = createAsyncThunk(
         headers: { "Content-type": "application/json" },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/users/register`,
+        `${djangoUrl}/api/users/users/register`,
         {
           firstName,
           lastName,
@@ -86,7 +86,7 @@ export const getUserDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/users/${userId}/`,
+        `${djangoUrl}/api/users/users/${userId}/`,
         config
       );
       return data;
@@ -113,7 +113,7 @@ export const listUsers = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/`, config);
+      const { data } = await axios.get(`${djangoUrl}/api/users/users/`, config);
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -138,7 +138,7 @@ export const deleteUser = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(`${djangoUrl}/api/users/delete/${id}/`, config);
+      await axios.delete(`${djangoUrl}/api/users/users/delete/${id}/`, config);
       return id; // Return ID to remove from the list if needed
     } catch (error) {
       return rejectWithValue(
@@ -154,9 +154,11 @@ export const deleteUser = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userInfo: null,
-    userDetails: null,
-    usersList: [],
+    userInfo: localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo"))
+      : null, // Initialize from localStorage
+    user: null,
+    users: [],
     loading: false,
     error: null,
     successDelete: false, // Add a flag for delete success
@@ -208,7 +210,7 @@ const userSlice = createSlice({
       })
       .addCase(getUserDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.userDetails = action.payload;
+        state.user = action.payload;
       })
       .addCase(getUserDetails.rejected, (state, action) => {
         state.loading = false;
@@ -221,7 +223,7 @@ const userSlice = createSlice({
       })
       .addCase(listUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.usersList = action.payload;
+        state.users = action.payload;
       })
       .addCase(listUsers.rejected, (state, action) => {
         state.loading = false;
@@ -235,9 +237,7 @@ const userSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
         state.successDelete = true; // Set success flag
-        state.usersList = state.usersList.filter(
-          (user) => user.id !== action.payload
-        );
+        state.users = state.users.filter((user) => user.id !== action.payload);
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;

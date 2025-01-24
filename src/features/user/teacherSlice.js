@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const djangoUrl = 'http://127.0.0.1:8000';
+const djangoUrl = "http://127.0.0.1:8000";
 
 // Thunks for Teacher Actions
 export const getTeacherDetails = createAsyncThunk(
-  'teacher/details',
+  "teacher/details",
   async (teacherId, { getState, rejectWithValue }) => {
     try {
       const {
@@ -13,11 +13,14 @@ export const getTeacherDetails = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/teachers/${teacherId}/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/users/teachers/${teacherId}/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -30,7 +33,7 @@ export const getTeacherDetails = createAsyncThunk(
 );
 
 export const listTeachers = createAsyncThunk(
-  'teacher/list',
+  "teacher/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -38,11 +41,14 @@ export const listTeachers = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/teachers/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/users/teachers/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -55,7 +61,7 @@ export const listTeachers = createAsyncThunk(
 );
 
 export const deleteTeacher = createAsyncThunk(
-  'teacher/delete',
+  "teacher/delete",
   async (teacherId, { getState, rejectWithValue }) => {
     try {
       const {
@@ -63,11 +69,14 @@ export const deleteTeacher = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(`${djangoUrl}/api/users/teachers/delete/${teacherId}/`, config);
+      await axios.delete(
+        `${djangoUrl}/api/users/teachers/delete/${teacherId}/`,
+        config
+      );
       return teacherId; // Return teacherId to allow removal from state
     } catch (error) {
       return rejectWithValue(
@@ -80,7 +89,7 @@ export const deleteTeacher = createAsyncThunk(
 );
 
 export const updateTeacher = createAsyncThunk(
-  'teacher/update',
+  "teacher/update",
   async (teacher, { getState, rejectWithValue }) => {
     try {
       const {
@@ -88,7 +97,7 @@ export const updateTeacher = createAsyncThunk(
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
@@ -110,10 +119,10 @@ export const updateTeacher = createAsyncThunk(
 
 // Slice for Teacher State Management
 const teacherSlice = createSlice({
-  name: 'teacher',
+  name: "teacher",
   initialState: {
-    teacherDetails: null,
-    teacherList: [],
+    teacher: null,
+    teachers: [],
     loading: false,
     error: null,
   },
@@ -127,7 +136,7 @@ const teacherSlice = createSlice({
       })
       .addCase(getTeacherDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.teacherDetails = action.payload;
+        state.teacher = action.payload;
       })
       .addCase(getTeacherDetails.rejected, (state, action) => {
         state.loading = false;
@@ -140,7 +149,7 @@ const teacherSlice = createSlice({
       })
       .addCase(listTeachers.fulfilled, (state, action) => {
         state.loading = false;
-        state.teacherList = action.payload;
+        state.teachers = action.payload;
       })
       .addCase(listTeachers.rejected, (state, action) => {
         state.loading = false;
@@ -153,7 +162,7 @@ const teacherSlice = createSlice({
       })
       .addCase(deleteTeacher.fulfilled, (state, action) => {
         state.loading = false;
-        state.teacherList = state.teacherList.filter(
+        state.teachers = state.teachers.filter(
           (teacher) => teacher.id !== action.payload
         );
       })
@@ -168,7 +177,7 @@ const teacherSlice = createSlice({
       })
       .addCase(updateTeacher.fulfilled, (state, action) => {
         state.loading = false;
-        state.teacherDetails = action.payload;
+        state.teacher = action.payload;
       })
       .addCase(updateTeacher.rejected, (state, action) => {
         state.loading = false;
