@@ -7,7 +7,14 @@ const djangoUrl = "http://127.0.0.1:8000";
 export const listStudents = createAsyncThunk(
   "student/listStudents",
   async (
-    { first_name = "", middle_name = "", last_name = "", class_level = "", page = 1, pageSize = 30 },
+    {
+      first_name = "",
+      middle_name = "",
+      last_name = "",
+      class_level = "",
+      page = 1,
+      pageSize = 30,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -30,7 +37,7 @@ export const studentDetails = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -58,7 +65,7 @@ export const createStudent = createAsyncThunk(
   async (studentData, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -87,7 +94,7 @@ export const bulkCreateStudents = createAsyncThunk(
   async (filename, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -125,7 +132,7 @@ const studentSlice = createSlice({
     loading: false, // Loading state
     error: null, // Error state
   },
-  
+
   extraReducers: (builder) => {
     builder
       // List Students
@@ -186,7 +193,6 @@ const studentSlice = createSlice({
       });
   },
 });
-
 
 // Export reducer
 export default studentSlice.reducer;

@@ -151,7 +151,7 @@ function Students() {
                     <td>{student.class_level}</td>
                     <td>{student.date_of_birth}</td>
                     <td>
-                      <Link to={`/sis/students/${student.admission_number}`}>
+                      <Link to={`/sis/students/${student.id}`}>
                         <EditOutlined />
                       </Link>
                     </td>
