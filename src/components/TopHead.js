@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UserAddOutlined, MailOutlined } from "@ant-design/icons";
+import { UserAddOutlined, BellOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { logout } from "./../redux/actions/userActions";
@@ -31,7 +31,7 @@ const TopHead = () => {
         {
           label: "Notifications",
           key: "mail",
-          icon: <MailOutlined />,
+          icon: <BellOutlined />,
         },
         {
           label: `${userInfo.first_name} ${userInfo.last_name}`,

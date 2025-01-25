@@ -11,7 +11,7 @@ const store = configureStore({
     teacher: teacherReducer,
     accontant: accountantReducer,
     finance: financeReducer,
-    student: studentReducer,
+    getStudents: studentReducer,
   },
 });
 

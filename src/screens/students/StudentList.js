@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table, Row, Col, Button } from "react-bootstrap";
+import { Breadcrumb, Table, Row, Col, Form, Button } from "react-bootstrap";
 import { EditOutlined } from "@ant-design/icons";
 
 import { listStudents } from "../../features/students/studentSlice";
-import Loader from "./../../components/Loader";
-import Message from "./../../components/Message";
+import Loader from "../../components/Loader";
+import Message from "../../components/Message";
 
 function Students() {
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(1); // Track current page for pagination
+  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [filters, setFilters] = useState({
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    class_level: "",
+  });
 
   // Access student state from Redux store
   const { loading, error, students, pagination } = useSelector(
-    (state) => state.student
+    (state) => state.getStudents
   );
-  console.log(students);
-  console.log(pagination);
 
   useEffect(() => {
-    dispatch(listStudents({ page: currentPage })); // Fetch student data for the current page
-  }, [dispatch, currentPage]);
+    dispatch(listStudents({ ...filters, page: currentPage })); // Fetch students based on filters and current page
+  }, [dispatch, filters, currentPage]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setCurrentPage(1); // Reset to the first page on search
+    dispatch(listStudents({ ...filters, page: 1 }));
+  };
 
   // Handlers for pagination
   const handleNextPage = () => {
@@ -42,7 +57,6 @@ function Students() {
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">Library</Breadcrumb.Item>
         <Breadcrumb.Item active>Students</Breadcrumb.Item>
       </Breadcrumb>
       <div>
@@ -59,6 +73,55 @@ function Students() {
             </Link>
           </Col>
         </Row>
+
+        <Form onSubmit={handleSearch} className="mb-3">
+          <Row>
+            <Col md={3}>
+              <Form.Control
+                type="text"
+                name="first_name"
+                placeholder="First Name"
+                value={filters.first_name}
+                onChange={handleInputChange}
+              />
+            </Col>
+            <Col md={3}>
+              <Form.Control
+                type="text"
+                name="middle_name"
+                placeholder="Middle Name"
+                value={filters.middle_name}
+                onChange={handleInputChange}
+              />
+            </Col>
+            <Col md={3}>
+              <Form.Control
+                type="text"
+                name="last_name"
+                placeholder="Last Name"
+                value={filters.last_name}
+                onChange={handleInputChange}
+              />
+            </Col>
+            <Col md={3}>
+              <Form.Control
+                type="text"
+                name="class_level"
+                placeholder="Class Level"
+                value={filters.class_level}
+                onChange={handleInputChange}
+              />
+            </Col>
+          </Row>
+          <Row className="mt-2">
+            <Col>
+              <Button type="submit" variant="primary" className="w-100">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+
         {loading ? (
           <Loader />
         ) : error ? (
@@ -88,7 +151,7 @@ function Students() {
                     <td>{student.class_level}</td>
                     <td>{student.date_of_birth}</td>
                     <td>
-                      <Link to={`/sis/students/${student.addmission_number}`}>
+                      <Link to={`/sis/students/${student.admission_number}`}>
                         <EditOutlined />
                       </Link>
                     </td>
@@ -96,7 +159,7 @@ function Students() {
                 ))}
               </tbody>
             </Table>
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between align-items-center mt-3">
               <Button
                 variant="light"
                 onClick={handlePreviousPage}
@@ -105,8 +168,8 @@ function Students() {
                 Previous
               </Button>
               <span>
-                Page {currentPage} of{" "}
-                {Math.ceil(pagination.count / students.length)}
+                Page {currentPage} of {Math.ceil(pagination.count / 30)}{" "}
+                {/* Assuming default page size is 30 */}
               </span>
               <Button
                 variant="light"

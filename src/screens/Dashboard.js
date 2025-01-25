@@ -11,7 +11,7 @@ import { listAccountants } from "../features/user/accountantSlice";
 function Dashboard() {
   const dispatch = useDispatch();
 
-  const { students = [] } = useSelector((state) => state.student || {});
+  const { students = [] } = useSelector((state) => state.getStudents || {});
   const { users = [] } = useSelector((state) => state.user || {});
   const { teachers = [] } = useSelector((state) => state.teacher || {});
   const { accountants = [] } = useSelector((state) => state.accountant || {});

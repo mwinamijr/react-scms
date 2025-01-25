@@ -3,15 +3,18 @@ import axios from "axios";
 
 const djangoUrl = "http://127.0.0.1:8000";
 
-// Async thunk for fetching the student list with pagination
+// Async thunk for fetching the student list with advanced search and pagination
 export const listStudents = createAsyncThunk(
   "student/listStudents",
-  async ({ page = 1 }, { rejectWithValue }) => {
+  async (
+    { first_name = "", middle_name = "", last_name = "", class_level = "", page = 1, pageSize = 30 },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.get(
-        `${djangoUrl}/api/sis/students/?page=${page}`
+        `${djangoUrl}/api/sis/students/?first_name=${first_name}&middle_name=${middle_name}&last_name=${last_name}&class_level=${class_level}&page=${page}&page_size=${pageSize}`
       );
-      return response.data; // This should include pagination metadata and the results list
+      return response.data; // Includes pagination metadata and the student results
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -36,7 +39,7 @@ export const studentDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/sis/students/${id}`,
+        `${djangoUrl}/api/sis/students/${id}/`,
         config
       );
       return data;
@@ -93,7 +96,7 @@ export const bulkCreateStudents = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/sis/upload/${filename}/`, // Corrected URL format
+        `${djangoUrl}/api/sis/upload/${filename}/`,
         config
       );
       return data;
@@ -111,17 +114,18 @@ export const bulkCreateStudents = createAsyncThunk(
 const studentSlice = createSlice({
   name: "student",
   initialState: {
-    students: [],
+    students: [], // List of students
     pagination: {
       count: 0, // Total number of students
       next: null, // URL for the next page
       previous: null, // URL for the previous page
     },
-    student: null,
-    loading: false,
-    error: null,
+    search: "", // Search term for dynamic search
+    student: null, // Individual student details
+    loading: false, // Loading state
+    error: null, // Error state
   },
-  reducers: {},
+  
   extraReducers: (builder) => {
     builder
       // List Students
@@ -173,7 +177,7 @@ const studentSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(bulkCreateStudents.fulfilled, (state, action) => {
+      .addCase(bulkCreateStudents.fulfilled, (state) => {
         state.loading = false;
       })
       .addCase(bulkCreateStudents.rejected, (state, action) => {
@@ -183,5 +187,6 @@ const studentSlice = createSlice({
   },
 });
 
-// Export Reducer
+
+// Export reducer
 export default studentSlice.reducer;

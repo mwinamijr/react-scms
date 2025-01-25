@@ -11,9 +11,11 @@ function StudentDetailsScreen() {
   const { id } = useParams();
 
   // Access student details from Redux store
-  const { loading, error, student } = useSelector((state) => state.student);
+  const { loading, error, student } = useSelector((state) => state.getStudents);
 
   const [key, setKey] = useState("info");
+
+  console.log(student);
 
   useEffect(() => {
     dispatch(studentDetails(id)); // Dispatch the studentDetails thunk to get student data
