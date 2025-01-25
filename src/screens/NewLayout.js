@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DesktopOutlined,
@@ -13,7 +13,7 @@ import {
   CalendarOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../features/user/userSlice"; // Import the logout action
 import TopHead from "../components/TopHead";
 
@@ -31,8 +31,10 @@ function getItem(label, key, icon, children, onClick = null) {
 
 const DashLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [openKeys, setOpenKeys] = useState([]); // Track open submenus
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation(); // Get current route location
 
   // Access userInfo from the user slice
   const { userInfo } = useSelector((state) => state.user);
@@ -47,57 +49,82 @@ const DashLayout = (props) => {
     dispatch(logout()); // Dispatch the logout action
   };
 
+  // Menu items
   const items = [
-    getItem(<Link to="/">Dashboard</Link>, "1", <PieChartOutlined />),
-    getItem("Admission", "2", <DesktopOutlined />),
-    getItem(<Link to="/sis/students">Students</Link>, "3", <UserOutlined />),
-    getItem("Employees", "sub1", <TeamOutlined />, [
-      getItem(<Link to="/users">Users</Link>, "4"),
-      getItem(<Link to="/users/teachers">Teachers</Link>, "32"),
-      getItem(<Link to="/users/accountants">Accountants</Link>, "5"),
+    getItem(<Link to="/">Dashboard</Link>, "/", <PieChartOutlined />),
+    getItem("Admission", "/admission", <DesktopOutlined />),
+    getItem(
+      <Link to="/sis/students">Students</Link>,
+      "/sis/students",
+      <UserOutlined />
+    ),
+    getItem("Employees", "employees", <TeamOutlined />, [
+      getItem(<Link to="/users">Users</Link>, "/users"),
+      getItem(<Link to="/users/teachers">Teachers</Link>, "/users/teachers"),
+      getItem(
+        <Link to="/users/accountants">Accountants</Link>,
+        "/users/accountants"
+      ),
     ]),
-    getItem("Finance", "sub2", <CalculatorOutlined />, [
-      getItem(<Link to="/finance/receipts">Receipts</Link>, "6"),
-      getItem(<Link to="/finance/payments">Payments</Link>, "24"),
-      getItem(<Link to="/finance/payroll">Payroll</Link>, "25"),
-      getItem("Reports", "sub9", null, [
-        getItem("Collections", "26"),
-        getItem("Invoices", "27"),
+    getItem("Finance", "finance", <CalculatorOutlined />, [
+      getItem(
+        <Link to="/finance/receipts">Receipts</Link>,
+        "/finance/receipts"
+      ),
+      getItem(
+        <Link to="/finance/payments">Payments</Link>,
+        "/finance/payments"
+      ),
+      getItem(<Link to="/finance/payroll">Payroll</Link>, "/finance/payroll"),
+      getItem("Reports", "finance/reports", null, [
+        getItem("Collections", "/finance/reports/collections"),
+        getItem("Invoices", "/finance/reports/invoices"),
       ]),
     ]),
-    getItem("Exam", "sub5", <FileDoneOutlined />, [
-      getItem("Setting", "sub6", null, [
-        getItem("Exam groups", "15"),
-        getItem("School exams", "16"),
+    getItem("Exam", "exam", <FileDoneOutlined />, [
+      getItem("Setting", "exam/setting", null, [
+        getItem("Exam groups", "/exam/setting/groups"),
+        getItem("School exams", "/exam/setting/school"),
       ]),
-      getItem("Reports", "sub7", null, [
-        getItem("Single Report", "17"),
-        getItem("Combined reports", "18"),
-        getItem("CA Report", "20"),
+      getItem("Reports", "exam/reports", null, [
+        getItem("Single Report", "/exam/reports/single"),
+        getItem("Combined reports", "/exam/reports/combined"),
+        getItem("CA Report", "/exam/reports/ca"),
       ]),
-      getItem("Exam Schedule", "19"),
+      getItem("Exam Schedule", "/exam/schedule"),
     ]),
     getItem("Teaching Records", "teachingR", <FileDoneOutlined />, [
-      getItem("Schemes", "29"),
-      getItem("Subject Teachers", "30"),
-      getItem("Class Journals", "31"),
+      getItem("Schemes", "/teachingR/schemes"),
+      getItem("Subject Teachers", "/teachingR/teachers"),
+      getItem("Class Journals", "/teachingR/journals"),
     ]),
-    getItem("Attendance", "sub8", <FileExcelOutlined />, [
-      getItem("Student Attendance", "21"),
-      getItem("Employee Attendance", "22"),
-      getItem("Attendance report", "23"),
+    getItem("Attendance", "attendance", <FileExcelOutlined />, [
+      getItem("Student Attendance", "/attendance/students"),
+      getItem("Employee Attendance", "/attendance/employees"),
+      getItem("Attendance report", "/attendance/reports"),
     ]),
-    getItem("Email / SMS", "sub3", <MailOutlined />, [
-      getItem(<Link to="/notification/sms">SMS</Link>, "9"),
-      getItem("Compose", "10"),
-      getItem("Submenu", "sub4", null, [
-        getItem("Option 11", "11"),
-        getItem("Option 12", "12"),
-      ]),
+    getItem("Email / SMS", "email", <MailOutlined />, [
+      getItem(<Link to="/notification/sms">SMS</Link>, "/notification/sms"),
+      getItem("Compose", "/notification/compose"),
     ]),
-    getItem("School Calendar", "28", <CalendarOutlined />),
-    getItem("Logout", "13", <UserDeleteOutlined />, null, logoutHandler), // Add logout handler here
+    getItem("School Calendar", "/calendar", <CalendarOutlined />),
+    getItem("Logout", "logout", <UserDeleteOutlined />, null, logoutHandler),
   ];
+
+  // Memoize selectedKeys based on the current location
+  const selectedKeys = useMemo(() => [location.pathname], [location.pathname]);
+
+  // Automatically open the parent menu of the active menu item
+  useEffect(() => {
+    const parentKeys = selectedKeys[0].split("/").slice(1, -1).join("/");
+    setOpenKeys([parentKeys || ""]);
+  }, [selectedKeys]);
+
+  // Handle submenu open/close events to allow only one open submenu
+  const onOpenChange = (keys) => {
+    const latestOpenKey = keys.find((key) => !openKeys.includes(key));
+    setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+  };
 
   return (
     <Layout
@@ -122,7 +149,9 @@ const DashLayout = (props) => {
         </div>
         <Menu
           theme="dark"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={selectedKeys} // Highlight active menu item
+          openKeys={openKeys} // Control which submenus are open
+          onOpenChange={onOpenChange} // Handle submenu open/close
           mode="inline"
           items={items}
         />
