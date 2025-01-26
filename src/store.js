@@ -7,7 +7,7 @@ import studentReducer from "./features/students/studentSlice";
 
 const store = configureStore({
   reducer: {
-    user: userReducer,
+    getUsers: userReducer,
     teacher: teacherReducer,
     accontant: accountantReducer,
     finance: financeReducer,

@@ -12,7 +12,7 @@ import Teachers from "./screens/gettingStarted/Teachers";
 
 function App() {
   // Access userInfo from the user slice
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   return (
     <div className="App">

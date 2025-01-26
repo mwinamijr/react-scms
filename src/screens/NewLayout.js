@@ -37,7 +37,7 @@ const DashLayout = (props) => {
   const location = useLocation(); // Get current route location
 
   // Access userInfo from the user slice
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   useEffect(() => {
     if (!userInfo) {

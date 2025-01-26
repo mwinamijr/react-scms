@@ -37,7 +37,7 @@ export const studentDetails = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -65,7 +65,7 @@ export const createStudent = createAsyncThunk(
   async (studentData, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -94,7 +94,7 @@ export const bulkCreateStudents = createAsyncThunk(
   async (filename, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {

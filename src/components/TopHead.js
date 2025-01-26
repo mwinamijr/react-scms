@@ -9,7 +9,7 @@ const TopHead = () => {
   const dispatch = useDispatch();
 
   // Access userInfo from the user slice
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   const [current, setCurrent] = useState("mail");
   const onClick = (e) => {

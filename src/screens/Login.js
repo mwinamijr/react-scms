@@ -14,7 +14,7 @@ function LoginScreen() {
 
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.getUsers);
   const { error, loading, userInfo } = user;
 
   // Redirect if already logged in

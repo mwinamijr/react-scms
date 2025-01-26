@@ -12,7 +12,7 @@ function Dashboard() {
   const dispatch = useDispatch();
 
   const { students = [] } = useSelector((state) => state.getStudents || {});
-  const { users = [] } = useSelector((state) => state.user || {});
+  const { users = [] } = useSelector((state) => state.getUsers || {});
   const { teachers = [] } = useSelector((state) => state.teacher || {});
   const { accountants = [] } = useSelector((state) => state.accountant || {});
 

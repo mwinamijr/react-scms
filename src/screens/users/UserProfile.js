@@ -10,7 +10,9 @@ function UserProfile() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const { loading, error, user } = useSelector((state) => state.userDetails);
+  const { loading, error, user } = useSelector((state) => state.getUsers);
+
+  console.log(user);
 
   useEffect(() => {
     dispatch(getUserDetails(id));
@@ -29,7 +31,7 @@ function UserProfile() {
               <Loader />
             ) : error ? (
               <Message variant="danger">{error}</Message>
-            ) : (
+            ) : user ? (
               <Row>
                 <Col></Col>
                 <Col>
@@ -42,6 +44,8 @@ function UserProfile() {
                   </div>
                 </Col>
               </Row>
+            ) : (
+              <Message variant="info">No User details found.</Message>
             )}
           </div>
         </Card.Body>

@@ -9,7 +9,7 @@ export const getAccountantDetails = createAsyncThunk(
   async (accountantId, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -37,7 +37,7 @@ export const listAccountants = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -65,7 +65,7 @@ export const deleteAccountant = createAsyncThunk(
   async (accountantId, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -93,7 +93,7 @@ export const updateAccountant = createAsyncThunk(
   async (accountant, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {

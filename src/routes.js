@@ -26,7 +26,7 @@ import AddPayment from "./screens/finance/AddPayment";
 
 const BaseRouter = () => {
   // Access userInfo from the user slice
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   if (userInfo) {
     <Navigate replace to="/" />;

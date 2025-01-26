@@ -74,10 +74,10 @@ export const register = createAsyncThunk(
 
 export const getUserDetails = createAsyncThunk(
   "user/details",
-  async (userId, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -86,7 +86,7 @@ export const getUserDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/users/users/${userId}/`,
+        `${djangoUrl}/api/users/users/${id}/`,
         config
       );
       return data;
@@ -102,10 +102,13 @@ export const getUserDetails = createAsyncThunk(
 
 export const listUsers = createAsyncThunk(
   "user/list",
-  async (_, { getState, rejectWithValue }) => {
+  async (
+    { first_name = "", last_name = "", email = "", page = 1, pageSize = 30 },
+    { getState, rejectWithValue }
+  ) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -113,8 +116,11 @@ export const listUsers = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/users/users/`, config);
-      return data;
+      const response = await axios.get(
+        `${djangoUrl}/api/users/users/?first_name=${first_name}&last_name=${last_name}&email=${email}&page=${page}&page_size=${pageSize}`,
+        config
+      );
+      return response.data; // Includes pagination metadata and the student results
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -130,7 +136,7 @@ export const deleteUser = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        user: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
@@ -159,6 +165,11 @@ const userSlice = createSlice({
       : null, // Initialize from localStorage
     user: null,
     users: [],
+    pagination: {
+      count: 0, // Total number of users
+      next: null, // URL for the next page
+      previous: null, // URL for the previous page
+    },
     loading: false,
     error: null,
     successDelete: false, // Add a flag for delete success
@@ -223,7 +234,12 @@ const userSlice = createSlice({
       })
       .addCase(listUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = action.payload;
+        state.users = action.payload.results;
+        state.pagination = {
+          count: action.payload.count,
+          next: action.payload.next,
+          previous: action.payload.previous,
+        }; // Set pagination metadata
       })
       .addCase(listUsers.rejected, (state, action) => {
         state.loading = false;
