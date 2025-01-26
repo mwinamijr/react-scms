@@ -12,7 +12,9 @@ function TeacherList() {
   const dispatch = useDispatch();
 
   // Access teacher state from the store using the teacher slice
-  const { loading, error, teacherList } = useSelector((state) => state.teacher);
+  const { loading, error, teachers } = useSelector(
+    (state) => state.getTeachers
+  );
 
   useEffect(() => {
     dispatch(listTeachers()); // Dispatch the listTeachers action from the slice
@@ -45,11 +47,11 @@ function TeacherList() {
               </tr>
             </thead>
             <tbody>
-              {teacherList.map((teacher) => (
+              {teachers.map((teacher) => (
                 <tr key={teacher.id}>
                   <td>{teacher.empId}</td>
                   <td>
-                    {teacher.user.first_name} {teacher.user.last_name}
+                    {teacher.first_name} {teacher.last_name}
                   </td>{" "}
                   {/* Assuming user object has full name */}
                   <td>{teacher.short_name}</td>

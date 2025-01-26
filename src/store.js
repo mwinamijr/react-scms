@@ -9,7 +9,7 @@ import parentReducer from "./features/user/parentSlice";
 const store = configureStore({
   reducer: {
     getUsers: userReducer,
-    teacher: teacherReducer,
+    getTeachers: teacherReducer,
     accontant: accountantReducer,
     finance: financeReducer,
     getStudents: studentReducer,

@@ -6,7 +6,7 @@ const djangoUrl = "http://127.0.0.1:8000";
 // Thunks for Teacher Actions
 export const getTeacherDetails = createAsyncThunk(
   "teacher/details",
-  async (teacherId, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -18,7 +18,7 @@ export const getTeacherDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/users/teachers/${teacherId}/`,
+        `${djangoUrl}/api/users/teachers/${id}/`,
         config
       );
       return data;

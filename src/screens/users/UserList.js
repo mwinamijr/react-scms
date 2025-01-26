@@ -143,40 +143,49 @@ function UserList() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.empId}</td>
-                    <td>
-                      {user.email
-                        ? user.email
-                        : user.first_name + user.last_name}
-                    </td>
-                    <td>
-                      {user.isAdmin ? <CheckOutlined /> : <CloseOutlined />}
-                    </td>
-                    <td>
-                      {user.isTeacher ? <CheckOutlined /> : <CloseOutlined />}
-                    </td>
-                    <td>
-                      {user.isAccountant ? (
-                        <CheckOutlined />
-                      ) : (
-                        <CloseOutlined />
-                      )}
-                    </td>
-                    <td>
-                      <Link to={`/users/${user.id}`}>
-                        <EyeOutlined />
-                      </Link>
-                      <span> </span>
-                      <Link to={`/users/${user.id}/edit`}>
-                        <EditOutlined />
-                      </Link>
-                      <span> </span>
-                      <DeleteOutlined onClick={() => deleteHandler(user.id)} />
-                    </td>
-                  </tr>
-                ))}
+                {users.map(
+                  (user) =>
+                    !user.isParent ? (
+                      <tr key={user.id}>
+                        <td>{user.empId}</td>
+                        <td>
+                          {user.email
+                            ? user.email
+                            : `${user.first_name} ${user.last_name}`}
+                        </td>
+                        <td>
+                          {user.isAdmin ? <CheckOutlined /> : <CloseOutlined />}
+                        </td>
+                        <td>
+                          {user.isTeacher ? (
+                            <CheckOutlined />
+                          ) : (
+                            <CloseOutlined />
+                          )}
+                        </td>
+                        <td>
+                          {user.isAccountant ? (
+                            <CheckOutlined />
+                          ) : (
+                            <CloseOutlined />
+                          )}
+                        </td>
+                        <td>
+                          <Link to={`/users/${user.id}`}>
+                            <EyeOutlined />
+                          </Link>
+                          <span> </span>
+                          <Link to={`/users/${user.id}/edit`}>
+                            <EditOutlined />
+                          </Link>
+                          <span> </span>
+                          <DeleteOutlined
+                            onClick={() => deleteHandler(user.id)}
+                          />
+                        </td>
+                      </tr>
+                    ) : null // Render nothing if the user is a parent
+                )}
               </tbody>
             </Table>
             <div className="d-flex justify-content-between align-items-center mt-3">

@@ -7,12 +7,20 @@ import { listStudents } from "../features/students/studentSlice";
 import { listUsers } from "../features/user/userSlice";
 import { listTeachers } from "../features/user/teacherSlice";
 import { listAccountants } from "../features/user/accountantSlice";
+import { listParents } from "../features/user/parentSlice";
 
 function Dashboard() {
   const dispatch = useDispatch();
 
-  const { students = [] } = useSelector((state) => state.getStudents || {});
-  const { users = [] } = useSelector((state) => state.getUsers || {});
+  const { pagination: studentPagination = {} } = useSelector(
+    (state) => state.getStudents || {}
+  );
+  const { pagination: userPagination = {} } = useSelector(
+    (state) => state.getUsers || {}
+  );
+  const { pagination: parentPagination = {} } = useSelector(
+    (state) => state.getParents || {}
+  );
   const { teachers = [] } = useSelector((state) => state.teacher || {});
   const { accountants = [] } = useSelector((state) => state.accountant || {});
 
@@ -21,49 +29,65 @@ function Dashboard() {
     dispatch(listUsers());
     dispatch(listTeachers());
     dispatch(listAccountants());
+    dispatch(listParents());
   }, [dispatch]);
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      <Row>
+      <h1 className="mb-4">Dashboard</h1>
+      <Row className="gy-4">
         <Col>
-          <Card>
+          <Card className="h-100 shadow-sm">
             <Card.Header>
               <Link to="/sis/students">Students</Link>
             </Card.Header>
-            <Card.Body>{students.length}</Card.Body>
-            <Card.Footer>
-              <Link to="/sis/students/add" className="btn btn-light my-3">
-                Add Student
-              </Link>
-            </Card.Footer>
+            <Card.Body className="text-center">
+              <h3>{studentPagination.count || 0}</h3>
+            </Card.Body>
           </Card>
         </Col>
         <Col>
-          <Card>
+          <Card className="h-100 shadow-sm">
             <Card.Header>
               <Link to="/users/teachers">Teachers</Link>
             </Card.Header>
-            <Card.Body>{teachers.length}</Card.Body>
+            <Card.Body className="text-center">
+              <h3>{teachers.length}</h3>
+            </Card.Body>
           </Card>
         </Col>
         <Col>
-          <Card>
+          <Card className="h-100 shadow-sm">
+            <Card.Header>
+              <Link to="/users/parents">Parents</Link>
+            </Card.Header>
+            <Card.Body className="text-center">
+              <h3>{parentPagination.count || 0}</h3>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="gy-4 mt-4">
+        <Col>
+          <Card className="h-100 shadow-sm">
             <Card.Header>
               <Link to="/users/accountants">Accountants</Link>
             </Card.Header>
-            <Card.Body>{accountants.length}</Card.Body>
+            <Card.Body className="text-center">
+              <h3>{accountants.length}</h3>
+            </Card.Body>
           </Card>
         </Col>
         <Col>
-          <Card>
+          <Card className="h-100 shadow-sm">
             <Card.Header>
               <Link to="/users">Users</Link>
             </Card.Header>
-            <Card.Body>{users.length}</Card.Body>
-            <Card.Footer>
-              <Link to="/users/add" className="btn btn-dark my-3">
+            <Card.Body className="text-center">
+              <h3>{userPagination.count || 0}</h3>
+            </Card.Body>
+            <Card.Footer className="text-center">
+              <Link to="/users/add" className="btn btn-dark">
                 Add User
               </Link>
             </Card.Footer>

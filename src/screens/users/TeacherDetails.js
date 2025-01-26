@@ -4,21 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, Row } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { getTeacherDetails } from "../../features/user/teacherSlice"; // Use the correct import path for the teacherSlice
+import { getTeacherDetails } from "../../features/user/teacherSlice";
 
 function TeacherProfile() {
   const dispatch = useDispatch();
-
-  // Access teacher details from the store
-  const { loading, error, teacherDetails } = useSelector(
-    (state) => state.teacher
-  );
-
-  // Extract teacher id from URL params
   const { id } = useParams();
 
-  // Dispatch getTeacherDetails action to fetch teacher data
+  const { loading, error, teacher } = useSelector((state) => state.getTeachers);
+
   useEffect(() => {
+    console.log("Dispatching getTeacherDetails with id:", id); // Debug log
     dispatch(getTeacherDetails(id));
   }, [dispatch, id]);
 
@@ -30,36 +25,32 @@ function TeacherProfile() {
       <Card>
         <Card.Header>Teacher Profile</Card.Header>
         <Card.Body>
-          <div>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message variant="danger">{error}</Message>
-            ) : (
-              <Row>
-                <Col></Col>
-                <Col>
-                  <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
-                    <div className="col-md-10 px-0">
-                      {/* Display teacher details */}
-                      <span>
-                        {teacherDetails.id}: {teacherDetails.user.first_name}{" "}
-                        {teacherDetails.user.last_name}
-                      </span>
-                      <br />
-                      <span>Email: {teacherDetails.user.email}</span>{" "}
-                      {/* Assuming teacher object has email */}
-                      <br />
-                      <span>Phone: {teacherDetails.phone}</span>{" "}
-                      {/* Assuming teacher object has phone */}
-                      <br />
-                      <span>Salary: {teacherDetails.salary}</span>
-                    </div>
+          {loading ? (
+            <Loader />
+          ) : error ? (
+            <Message variant="danger">{error}</Message>
+          ) : teacher ? (
+            <Row>
+              <Col></Col>
+              <Col>
+                <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
+                  <div className="col-md-10 px-0">
+                    <span>
+                      {teacher.id}: {teacher.first_name} {teacher.last_name}
+                    </span>
+                    <br />
+                    <span>Email: {teacher.email}</span>
+                    <br />
+                    <span>Phone: {teacher.phone_number}</span>
+                    <br />
+                    <span>Salary: {teacher.salary}</span>
                   </div>
-                </Col>
-              </Row>
-            )}
-          </div>
+                </div>
+              </Col>
+            </Row>
+          ) : (
+            <Message variant="info">No teacher found</Message>
+          )}
         </Card.Body>
       </Card>
     </div>
