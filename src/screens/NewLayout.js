@@ -59,12 +59,15 @@ const DashLayout = (props) => {
       <UserOutlined />
     ),
     getItem("Employees", "employees", <TeamOutlined />, [
-      getItem(<Link to="/users">Users</Link>, "/users"),
       getItem(<Link to="/users/teachers">Teachers</Link>, "/users/teachers"),
       getItem(
         <Link to="/users/accountants">Accountants</Link>,
         "/users/accountants"
       ),
+    ]),
+    getItem("Users", "users", <TeamOutlined />, [
+      getItem(<Link to="/users">Users</Link>, "/users"),
+      getItem(<Link to="/users/parents">Parents</Link>, "/users/parents"),
     ]),
     getItem("Finance", "finance", <CalculatorOutlined />, [
       getItem(

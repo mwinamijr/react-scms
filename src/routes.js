@@ -10,6 +10,8 @@ import TeacherDetails from "./screens/users/TeacherDetails";
 import AccountantList from "./screens/users/AccountantList";
 import AccountantDetails from "./screens/users/AccountantDetails";
 import UserProfile from "./screens/users/UserProfile";
+import ParentList from "./screens/users/ParentList";
+import ParentDetails from "./screens/users/ParentDetails";
 import Assignment from "./screens/notification/Sms";
 import Payments from "./screens/finance/PaymentList";
 import Receipts from "./screens/finance/ReceiptList";
@@ -55,6 +57,8 @@ const BaseRouter = () => {
         </Route>
         <Route path="users" element={<UserList />} />
         <Route path="users/add" element={<AddUser />} />
+        <Route path="users/parents" element={<ParentList />} />
+        <Route path="users/parents/:id" element={<ParentDetails />} />
         <Route path="users/teachers" element={<TeacherList />} />
         <Route path="users/teachers/:id" element={<TeacherDetails />} />
         <Route path="users/accountants/" element={<AccountantList />} />
