@@ -119,7 +119,7 @@ export const bulkCreateStudents = createAsyncThunk(
 
 // Slice for Student State Management
 const studentSlice = createSlice({
-  name: "student",
+  name: "students",
   initialState: {
     students: [], // List of students
     pagination: {
@@ -131,6 +131,17 @@ const studentSlice = createSlice({
     student: null, // Individual student details
     loading: false, // Loading state
     error: null, // Error state
+    createdStudent: null,
+    successCreate: false,
+    loadingCreate: false,
+    errorCreate: null,
+  },
+  reducers: {
+    resetCreateState: (state) => {
+      state.successCreate = false;
+      state.createdStudent = null;
+      state.errorCreate = null;
+    },
   },
 
   extraReducers: (builder) => {
@@ -168,16 +179,17 @@ const studentSlice = createSlice({
       })
       // Create Student
       .addCase(createStudent.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.loadingCreate = true;
+        state.errorCreate = null;
       })
       .addCase(createStudent.fulfilled, (state, action) => {
-        state.loading = false;
-        state.student = action.payload;
+        state.loadingCreate = false;
+        state.successCreate = true;
+        state.createdStudent = action.payload;
       })
       .addCase(createStudent.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        state.loadingCreate = false;
+        state.errorCreate = action.payload;
       })
       // Bulk Create Students
       .addCase(bulkCreateStudents.pending, (state) => {
@@ -193,6 +205,8 @@ const studentSlice = createSlice({
       });
   },
 });
+
+export const { resetCreateState } = studentSlice.actions;
 
 // Export reducer
 export default studentSlice.reducer;

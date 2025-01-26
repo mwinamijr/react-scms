@@ -1,10 +1,14 @@
+import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Row, Col, Form, Button } from "react-bootstrap";
+import { Card, Row, Col, Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-import { createStudent } from "../../features/students/studentSlice"; // Import createStudent thunk from the slice
+import {
+  createStudent,
+  resetCreateState,
+} from "../../features/students/studentSlice";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 
@@ -26,18 +30,12 @@ function AddStudent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Access the studentCreate state from Redux store
-  const {
-    loading: loadingCreate,
-    error: errorCreate,
-    success: successCreate,
-    student: createdStudent,
-  } = useSelector((state) => state.student);
+  const { loadingCreate, errorCreate, successCreate } = useSelector(
+    (state) => state.getStudents
+  );
 
   const submitHandler = (e) => {
     e.preventDefault();
-
-    // Dispatch createStudent thunk with the input values
     dispatch(
       createStudent({
         firstName,
@@ -59,200 +57,200 @@ function AddStudent() {
 
   useEffect(() => {
     if (successCreate) {
+      dispatch(resetCreateState());
       navigate("/sis/students");
     }
-  }, [dispatch, createdStudent, successCreate, navigate]);
+  }, [dispatch, successCreate, navigate]);
 
   return (
-    <div>
-      <Link to="/sis/students/" className="btn btn-light my-3">
+    <Container className="mt-4">
+      <Link to="/sis/students/" className="btn btn-secondary mb-3">
         Go Back
       </Link>
-      <Card>
-        <Card.Title>Add new student</Card.Title>
+      <Card className="shadow">
+        <Card.Header className="text-white text-center">
+          <h5>Add New Student</h5>
+        </Card.Header>
         <Card.Body>
           {errorCreate && <Message variant="danger">{errorCreate}</Message>}
           {loadingCreate && <Loader />}
           <Form onSubmit={submitHandler}>
-            <Row>
-              <Col>
+            {/* Personal Information */}
+            <Row className="mb-3">
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>First Name</Form.Label>
                   <Form.Control
-                    id="firstName"
-                    placeholder="First Name"
-                    required
                     type="text"
+                    placeholder="Enter first name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    required
                   />
                 </Form.Group>
               </Col>
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>Middle Name</Form.Label>
                   <Form.Control
-                    id="middleName"
-                    placeholder="Middle Name"
                     type="text"
+                    placeholder="Enter middle name"
                     value={middleName}
                     onChange={(e) => setMiddleName(e.target.value)}
                   />
                 </Form.Group>
               </Col>
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>Last Name</Form.Label>
                   <Form.Control
-                    id="lastName"
-                    placeholder="Last Name"
-                    required
                     type="text"
+                    placeholder="Enter last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    required
                   />
                 </Form.Group>
               </Col>
             </Row>
-            <br />
-            <Row>
-              <Col>
+
+            {/* Academic Details */}
+            <Row className="mb-3">
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>Admission Number</Form.Label>
                   <Form.Control
-                    id="admissionNumber"
                     type="number"
-                    placeholder="Admission Number"
-                    required
+                    placeholder="Enter admission number"
                     value={admissionNumber}
                     onChange={(e) => setAdmissionNumber(e.target.value)}
+                    required
                   />
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Select
-                  id="classLevel"
-                  value={classLevel}
-                  onChange={(e) => setClassLevel(e.target.value)}
-                >
-                  <option>Class Level</option>
-                  <option value="form one">form one</option>
-                  <option value="form two">form two</option>
-                  <option value="form three">form three</option>
-                  <option value="form four">form four</option>
-                </Form.Select>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Class Level</Form.Label>
+                  <Form.Select
+                    value={classLevel}
+                    onChange={(e) => setClassLevel(e.target.value)}
+                  >
+                    <option value="">Choose class level</option>
+                    <option value="form one">Form One</option>
+                    <option value="form two">Form Two</option>
+                    <option value="form three">Form Three</option>
+                    <option value="form four">Form Four</option>
+                  </Form.Select>
+                </Form.Group>
               </Col>
             </Row>
-            <br />
-            <Row>
-              <Col>
+
+            {/* Additional Information */}
+            <Row className="mb-3">
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>Birthday</Form.Label>
                   <DatePicker
-                    id="birthday"
-                    format="yyyy/MM/dd"
+                    className="form-control"
                     selected={birthday}
-                    value={birthday}
                     onChange={(date) => setBirthday(date)}
                   />
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Select
-                  id="gender"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                >
-                  <option>Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Gender</Form.Label>
+                  <Form.Select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="">Choose gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </Form.Select>
+                </Form.Group>
               </Col>
             </Row>
-            <br />
-            <Row>
-              <Col>
+
+            {/* Contact Information */}
+            <Row className="mb-3">
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>Region</Form.Label>
                   <Form.Control
-                    id="region"
-                    placeholder="Region"
+                    type="text"
+                    placeholder="Enter region"
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
                   />
                 </Form.Group>
               </Col>
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>City</Form.Label>
                   <Form.Control
-                    id="city"
-                    placeholder="City"
+                    type="text"
+                    placeholder="Enter city"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                   />
                 </Form.Group>
               </Col>
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>Street</Form.Label>
                   <Form.Control
-                    id="street"
-                    placeholder="Street"
+                    type="text"
+                    placeholder="Enter street"
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
                   />
                 </Form.Group>
               </Col>
             </Row>
-            <br />
-            <Row>
-              <Col>
+
+            <Row className="mb-3">
+              <Col md={6}>
                 <Form.Group>
-                  <Form.Label>STD VII NUMBER</Form.Label>
+                  <Form.Label>STD VII Number</Form.Label>
                   <Form.Control
-                    id="stdViiNumber"
-                    placeholder="STD VII NUMBER"
                     type="text"
+                    placeholder="Enter STD VII Number"
                     value={stdViiNumber}
                     onChange={(e) => setStdViiNumber(e.target.value)}
                   />
                 </Form.Group>
               </Col>
-              <Col>
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>Prems Number</Form.Label>
                   <Form.Control
-                    id="premsNumber"
-                    placeholder="Prems Number"
                     type="text"
+                    placeholder="Enter Prems Number"
                     value={premsNumber}
                     onChange={(e) => setPremsNumber(e.target.value)}
                   />
                 </Form.Group>
               </Col>
             </Row>
-            <br />
-            <Form.Group>
+
+            <Form.Group className="mb-3">
               <Form.Label>Parent Phone</Form.Label>
               <Form.Control
-                id="parentPhone"
-                placeholder="Parent phone number"
                 type="text"
+                placeholder="Enter parent phone number"
                 value={parentContact}
                 onChange={(e) => setParentContact(e.target.value)}
               />
             </Form.Group>
-            <br />
-            <Form.Group>
-              <Button className="primary" type="submit">
-                Add student
-              </Button>
-            </Form.Group>
+
+            <Button type="submit" variant="primary" className="w-100">
+              Add Student
+            </Button>
           </Form>
         </Card.Body>
       </Card>
-    </div>
+    </Container>
   );
 }
 

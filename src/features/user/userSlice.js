@@ -41,14 +41,18 @@ export const register = createAsyncThunk(
       isAdmin,
       isAccountant,
     },
-    { rejectWithValue }
+    { rejectWithValue, getState }
   ) => {
     try {
+      const {
+        getUsers: { userInfo },
+      } = getState();
       const config = {
         headers: { "Content-type": "application/json" },
+        Authorization: `Bearer ${userInfo.token}`,
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/users/users/register`,
+        `${djangoUrl}/api/users/users/`,
         {
           firstName,
           lastName,

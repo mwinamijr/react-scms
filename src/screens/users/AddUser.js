@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Form, Button, InputGroup } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import FormContainer from "../../components/FormContainer";
-import { register, resetError } from "../../features/user/userSlice"; // Updated import
+import { register, resetError } from "../../features/user/userSlice";
 
 function AddUser() {
   const [firstName, setFirstName] = useState("");
@@ -20,23 +20,17 @@ function AddUser() {
   const [message, setMessage] = useState("");
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const userRegister = useSelector((state) => state.user);
-  const { error, loading, userInfo } = userRegister;
+  const { error, loading } = useSelector((state) => state.getUsers);
 
   useEffect(() => {
-    if (userInfo) {
-      navigate("/users");
-    }
     if (error) {
-      dispatch(resetError()); // Reset error after user info is set or error is handled
+      dispatch(resetError());
     }
-  }, [userInfo, error, navigate, dispatch]);
+  }, [error, dispatch]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
@@ -55,102 +49,120 @@ function AddUser() {
   };
 
   return (
-    <div>
-      <Link to="/users/" className="btn btn-light my-3">
+    <div className="mt-4">
+      <Link to="/users/" className="btn btn-light mb-4">
         Go Back
       </Link>
       <FormContainer>
-        <h1>Sign Up</h1>
+        <h1 className="text-center mb-4">Register User</h1>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
-          <InputGroup>
-            <InputGroup.Text>Full Names</InputGroup.Text>
-            <Form.Control
-              required
-              type="name"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <Form.Control
-              required
-              type="name"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </InputGroup>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="firstName">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter first name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="lastName">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
-          <Form.Group controlId="email">
+          <Form.Group controlId="email" className="mb-3">
             <Form.Label>Email Address</Form.Label>
             <Form.Control
-              required
               type="email"
-              placeholder="Enter Email"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </Form.Group>
 
-          <Form.Group controlId="phone">
-            <Form.Label>Phone number</Form.Label>
+          <Form.Group controlId="phone" className="mb-3">
+            <Form.Label>Phone Number</Form.Label>
             <Form.Control
-              required
               type="text"
               placeholder="Enter phone number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
               required
-              type="password"
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
 
-          <Form.Group controlId="passwordConfirm">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              required
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="confirmPassword">
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Form.Group controlId="roles" className="mb-4">
+            <Form.Label>User Roles</Form.Label>
+            <div className="d-flex gap-3">
+              <Form.Check
+                id="admin"
+                type="checkbox"
+                label="Admin"
+                checked={isAdmin}
+                onChange={(e) => setIsAdmin(e.target.checked)}
+              />
+              <Form.Check
+                id="accountant"
+                type="checkbox"
+                label="Accountant"
+                checked={isAccountant}
+                onChange={(e) => setIsAccountant(e.target.checked)}
+              />
+              <Form.Check
+                id="teacher"
+                type="checkbox"
+                label="Teacher"
+                checked={isTeacher}
+                onChange={(e) => setIsTeacher(e.target.checked)}
+              />
+            </div>
           </Form.Group>
 
-          <InputGroup>
-            <InputGroup.Text>
-              Please choose user types to register
-            </InputGroup.Text>
-            <Form.Check
-              type="checkbox"
-              label="admin"
-              checked={isAdmin}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-            />
-            <Form.Check
-              type="checkbox"
-              label="accountant"
-              checked={isAccountant}
-              onChange={(e) => setIsAccountant(e.target.checked)}
-            />
-            <Form.Check
-              type="checkbox"
-              label="teacher"
-              checked={isTeacher}
-              onChange={(e) => setIsTeacher(e.target.checked)}
-            />
-          </InputGroup>
-          <Button type="submit" variant="primary">
+          <Button type="submit" variant="primary" className="w-100">
             Register
           </Button>
         </Form>
