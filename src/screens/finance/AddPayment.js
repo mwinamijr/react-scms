@@ -1,140 +1,133 @@
-import React, { useEffect, useState } from "react";
-import { Card, Form, Button, Breadcrumb } from "react-bootstrap";
+import React, { useEffect } from "react";
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  Breadcrumb,
+  Typography,
+  Select,
+  message as AntMessage,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import Loader from "../../components/Loader";
-import Message from "../../components/Message";
-import { createPayment } from "../../features/finance/financeSlice"; // Import the action from financeSlice
+import { createPayment } from "../../features/finance/financeSlice";
+
+const { Title, Text } = Typography;
+const { Option } = Select;
 
 function AddPayment() {
-  const [paymentNumber, setPaymentNumber] = useState("");
-  const [user, setUser] = useState("");
-  const [paidTo, setPaidTo] = useState("");
-  const [paidFor, setPaidFor] = useState("");
-  const [amount, setAmount] = useState(0);
-
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Access payment creation status from Redux store
   const { loadingCreate, errorCreate, successCreate } = useSelector(
     (state) => state.finance
   );
 
   const { userInfo } = useSelector((state) => state.getUsers);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-
-    dispatch(createPayment({ paymentNumber, paidTo, user, paidFor, amount })); // Dispatch the action
-  };
-
   useEffect(() => {
     if (successCreate) {
-      navigate("/finance/payments"); // Redirect if payment creation is successful
+      navigate("/finance/payments");
+      AntMessage.success("Payment created successfully!");
     }
   }, [dispatch, successCreate, navigate]);
+
+  const submitHandler = (values) => {
+    dispatch(createPayment(values));
+  };
 
   return (
     <div>
       <Breadcrumb>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/finance/payments/">Payments</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>Add Payment</Breadcrumb.Item>
+        <Breadcrumb.Item>Add Payment</Breadcrumb.Item>
       </Breadcrumb>
-      <Link to="/finance/payments/" className="btn btn-light my-3">
+      <Button type="link" onClick={() => navigate("/finance/payments/")}>
         Go Back
-      </Link>
+      </Button>
       {userInfo.isAccountant || userInfo.isAdmin ? (
         <Card>
-          <Card.Header className="text-center">
-            <div className="receipt-bg">
-              <h3>
-                Hayatul Islamiya Secondary <br />
-                P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523{" "}
-                <br />
-                A/C Number:- NMB: , NBC: <br />
-              </h3>
-            </div>
-          </Card.Header>
-          <Card.Body className="text-left col-md-8">
-            <Card.Title className="pb-3">PAYMENT INVOICE</Card.Title>
-            {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-            {loadingCreate && <Loader />}
-            <Form onSubmit={submitHandler}>
-              <Form.Group>
-                <Form.Label>Payment Number</Form.Label>
-                <Form.Control
-                  id="paymentNumber"
-                  placeholder="Payment Number"
-                  required
-                  type="number"
-                  value={paymentNumber}
-                  onChange={(e) => setPaymentNumber(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Label>Paid To</Form.Label>
-                <Form.Control
-                  id="paidTo"
-                  placeholder="Paid to"
-                  required
-                  type="text"
-                  value={paidTo}
-                  onChange={(e) => setPaidTo(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>User</Form.Label>
-                <Form.Control
-                  id="user"
-                  placeholder="User"
-                  type="text"
-                  value={user}
-                  onChange={(e) => setUser(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Select
-                label="Paid For"
-                id="paidFor"
-                type="text"
-                value={paidFor}
-                onChange={(e) => setPaidFor(e.target.value)}
+          <Title level={4} className="text-center">
+            Hayatul Islamiya Secondary <br />
+            P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523{" "}
+            <br />
+            A/C Number:- NMB: , NBC:
+          </Title>
+          <Card title="Payment Invoice" bordered>
+            {errorCreate && <Text type="danger">{errorCreate}</Text>}
+            {loadingCreate && <AntMessage>Loading...</AntMessage>}
+            <Form
+              layout="vertical"
+              form={form}
+              onFinish={submitHandler}
+              className="mt-3"
+            >
+              <Form.Item
+                label="Payment Number"
+                name="paymentNumber"
+                rules={[
+                  { required: true, message: "Please input Payment Number!" },
+                ]}
               >
-                <option>Paid For</option>
-                <option value="salary">Salary</option>
-                <option value="tour">Tour</option>
-                <option value="allowances">Allowances</option>
-              </Form.Select>
-              <Form.Group>
-                <Form.Label>Amount</Form.Label>
-                <Form.Control
-                  id="amount"
-                  placeholder="Amount"
-                  required
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Button className="primary" type="submit">
+                <Input placeholder="Enter Payment Number" />
+              </Form.Item>
+              <Form.Item
+                label="Paid To"
+                name="paidTo"
+                rules={[{ required: true, message: "Please input Paid To!" }]}
+              >
+                <Input placeholder="Enter the recipient name" />
+              </Form.Item>
+              <Form.Item label="User" name="user">
+                <Input placeholder="Enter user name" />
+              </Form.Item>
+              <Form.Item
+                label="Paid For"
+                name="paidFor"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a reason for payment!",
+                  },
+                ]}
+              >
+                <Select placeholder="Select Payment Reason">
+                  <Option value="salary">Salary</Option>
+                  <Option value="tour">Tour</Option>
+                  <Option value="allowances">Allowances</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Amount"
+                name="amount"
+                rules={[
+                  { required: true, message: "Please input the amount!" },
+                ]}
+              >
+                <Input type="number" placeholder="Enter payment amount" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
                   Submit Payment
                 </Button>
-              </Form.Group>
+              </Form.Item>
             </Form>
-          </Card.Body>
+          </Card>
         </Card>
       ) : (
-        <Message>
-          You are not authorized to view this page. Please contact the Admin for
-          further details.
-        </Message>
+        <Card>
+          <Text type="danger">
+            You are not authorized to view this page. Please contact the Admin
+            for further details.
+          </Text>
+        </Card>
       )}
     </div>
   );

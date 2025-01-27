@@ -1,149 +1,174 @@
-import React, { useEffect, useState } from "react";
-import { Card, Form, Button, Breadcrumb } from "react-bootstrap";
+import React, { useEffect } from "react";
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  Breadcrumb,
+  Typography,
+  Select,
+  message as AntMessage,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import Loader from "../../components/Loader";
-import Message from "../../components/Message";
-import { createReceipt } from "../../features/finance/financeSlice"; // Import from financeSlice
+import { createReceipt } from "../../features/finance/financeSlice";
+import { listStudents } from "../../features/students/studentSlice"; // Action to fetch students
+
+const { Title, Text } = Typography;
+const { Option } = Select;
 
 function AddReceipt() {
-  const [receiptNumber, setReceiptNumber] = useState("");
-  const [student, setStudent] = useState("");
-  const [payer, setPayer] = useState("");
-  const [paidFor, setPaidFor] = useState("");
-  const [amount, setAmount] = useState(0);
-
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Access state from financeSlice
+  // Redux state
   const { loadingCreate, errorCreate, successCreate } = useSelector(
     (state) => state.finance
   );
-
   const { userInfo } = useSelector((state) => state.getUsers);
-  console.log(userInfo);
+  const { students } = useSelector((state) => state.getStudents); // Access student list
+  console.log(students);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+  // Fetch student list on component mount
+  useEffect(() => {
+    dispatch(listStudents());
+  }, [dispatch]);
 
-    dispatch(
-      createReceipt({
-        receiptNumber,
-        payer,
-        student,
-        paidFor,
-        amount,
-      })
-    );
+  // Handle form submission
+  const submitHandler = (values) => {
+    dispatch(createReceipt(values));
   };
 
   useEffect(() => {
     if (successCreate) {
       navigate("/finance/receipts");
+      AntMessage.success("Receipt created successfully!");
     }
   }, [dispatch, navigate, successCreate]);
 
   return (
     <div>
       <Breadcrumb>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/finance/receipts/">Receipts</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>Add Receipt</Breadcrumb.Item>
+        <Breadcrumb.Item>Add Receipt</Breadcrumb.Item>
       </Breadcrumb>
-      <Link to="/finance/receipts/" className="btn btn-light my-3">
+
+      <Button type="link" onClick={() => navigate("/finance/receipts/")}>
         Go Back
-      </Link>
+      </Button>
+
       {userInfo.isAccountant || userInfo.isAdmin ? (
         <Card>
-          <Card.Header className="text-center">
-            <div className="receipt-bg">
-              <h3>
-                Hayatul Islamiya Secondary <br />
-                P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752 506523{" "}
-                <br />
-                A/C Number:- NMB: , NBC: <br />
-              </h3>
-            </div>
-          </Card.Header>
-          <Card.Body className="text-left col-md-8">
-            <Card.Title className="pb-3">PAYMENT RECEIPT</Card.Title>
-            {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-            {loadingCreate && <Loader />}
-            <Form onSubmit={submitHandler}>
-              <Form.Group>
-                <Form.Label>Receipt Number</Form.Label>
-                <Form.Control
-                  id="receiptNumber"
-                  placeholder="Receipt Number"
-                  required
-                  type="number"
-                  value={receiptNumber}
-                  onChange={(e) => setReceiptNumber(e.target.value)}
-                />
-              </Form.Group>
+          <Title level={4} className="text-center">
+            Hayatul Islamiya Secondary <br />
+            P.O. Box 507, Babati - Manyara <br />
+            Phone: 0788 030052, 0752 506523 <br />
+            A/C Number: NMB, NBC
+          </Title>
+          <Card title="Payment Receipt" bordered className="mt-3">
+            {errorCreate && <Text type="danger">{errorCreate}</Text>}
 
-              <Form.Group>
-                <Form.Label>Payer</Form.Label>
-                <Form.Control
-                  id="payer"
-                  placeholder="Payer"
-                  required
-                  type="text"
-                  value={payer}
-                  onChange={(e) => setPayer(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Student</Form.Label>
-                <Form.Control
-                  id="student"
-                  placeholder="Student"
-                  required
-                  type="text"
-                  value={student}
-                  onChange={(e) => setStudent(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Select
-                label="Paid For"
-                id="paidFor"
-                value={paidFor}
-                onChange={(e) => setPaidFor(e.target.value)}
+            <Form
+              layout="vertical"
+              form={form}
+              onFinish={submitHandler}
+              className="mt-3"
+            >
+              <Form.Item
+                label="Receipt Number"
+                name="receiptNumber"
+                rules={[
+                  { required: true, message: "Please input Receipt Number!" },
+                ]}
               >
-                <option>Paid For</option>
-                <option value="school fees">School Fees</option>
-                <option value="examination fees">Exam Fees</option>
-                <option value="allowances">Allowances</option>
-              </Form.Select>
-              <Form.Group>
-                <Form.Label>Amount</Form.Label>
-                <Form.Control
-                  id="amount"
-                  placeholder="Amount"
-                  required
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Button className="primary" type="submit">
-                  Submit Payment
+                <Input placeholder="Enter Receipt Number" />
+              </Form.Item>
+
+              <Form.Item
+                label="Payer"
+                name="payer"
+                rules={[
+                  { required: true, message: "Please input Payer name!" },
+                ]}
+              >
+                <Input placeholder="Enter the name of the payer" />
+              </Form.Item>
+
+              <Form.Item
+                label="Student"
+                name="student"
+                rules={[
+                  { required: true, message: "Please select a student!" },
+                ]}
+              >
+                <Select
+                  showSearch
+                  placeholder="Search and select a student"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children.toLowerCase().includes(input.toLowerCase())
+                  }
+                >
+                  {students.map((student) => (
+                    <Option key={student.id} value={student.id}>
+                      {student.first_name} {student.last_name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Paid For"
+                name="paidFor"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a reason for payment!",
+                  },
+                ]}
+              >
+                <Select placeholder="Select Paid For">
+                  <Option value="school fees">School Fees</Option>
+                  <Option value="examination fees">Examination Fees</Option>
+                  <Option value="allowances">Allowances</Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Amount"
+                name="amount"
+                rules={[
+                  { required: true, message: "Please input the amount!" },
+                ]}
+              >
+                <Input type="number" placeholder="Enter the payment amount" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loadingCreate}
+                >
+                  Submit Receipt
                 </Button>
-              </Form.Group>
+              </Form.Item>
             </Form>
-          </Card.Body>
+          </Card>
         </Card>
       ) : (
-        <Message>
-          You are not authorized to view this page. Please contact the Admin for
-          further details
-        </Message>
+        <Card>
+          <Text type="danger">
+            You are not authorized to view this page. Please contact the Admin
+            for further details.
+          </Text>
+        </Card>
       )}
     </div>
   );
