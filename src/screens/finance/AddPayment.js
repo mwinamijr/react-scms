@@ -17,13 +17,11 @@ function AddPayment() {
   const navigate = useNavigate();
 
   // Access payment creation status from Redux store
-  const {
-    loading: loadingCreate,
-    error: errorCreate,
-    success: successCreate,
-  } = useSelector((state) => state.finance.paymentCreate);
+  const { loadingCreate, errorCreate, successCreate } = useSelector(
+    (state) => state.finance
+  );
 
-  const { userInfo } = useSelector((state) => state.userLogin);
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -51,7 +49,7 @@ function AddPayment() {
       <Link to="/finance/payments/" className="btn btn-light my-3">
         Go Back
       </Link>
-      {userInfo.user_type.isAccountant || userInfo.isAdmin ? (
+      {userInfo.isAccountant || userInfo.isAdmin ? (
         <Card>
           <Card.Header className="text-center">
             <div className="receipt-bg">

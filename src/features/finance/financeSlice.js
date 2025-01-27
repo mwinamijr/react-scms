@@ -385,7 +385,12 @@ const financeSlice = createSlice({
       })
       .addCase(listPayments.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentList = action.payload;
+        state.paymentList = action.payload.results;
+        state.pagination = {
+          count: action.payload.count,
+          next: action.payload.next,
+          previous: action.payload.previous,
+        }; // Set pagination metadata
       })
       .addCase(listPayments.rejected, (state, action) => {
         state.loading = false;

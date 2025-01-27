@@ -17,8 +17,9 @@ function AddReceipt() {
   const navigate = useNavigate();
 
   // Access state from financeSlice
-  const { loading, error, loadingCreate, errorCreate, successCreate } =
-    useSelector((state) => state.finance.getReaceipts);
+  const { loadingCreate, errorCreate, successCreate } = useSelector(
+    (state) => state.finance
+  );
 
   const { userInfo } = useSelector((state) => state.getUsers);
   console.log(userInfo);

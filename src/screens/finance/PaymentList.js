@@ -11,13 +11,10 @@ import Message from "../../components/Message";
 function Payments() {
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   // Access payments from the Redux store
-  const { loading, error, payments } = useSelector(
-    (state) => state.finance.paymentList
-  );
+  const { loading, error, paymentList } = useSelector((state) => state.finance);
 
   useEffect(() => {
     dispatch(listPayments()); // Dispatch the action to fetch payments
@@ -56,7 +53,7 @@ function Payments() {
                   </tr>
                 </thead>
                 <tbody>
-                  {payments.map((payment) => (
+                  {paymentList.map((payment) => (
                     <tr key={payment.payment_no}>
                       <td>{payment.payment_no}</td>
                       <td>{payment.paid_to}</td>
