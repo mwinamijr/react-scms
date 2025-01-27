@@ -1,23 +1,26 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const djangoUrl = 'http://127.0.0.1:8000';
+const djangoUrl = "http://127.0.0.1:8000";
 
 // Thunks for Receipt Actions
 export const listReceipts = createAsyncThunk(
-  'receipt/list',
+  "receipt/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/finance/receipts/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/finance/receipts/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -30,19 +33,22 @@ export const listReceipts = createAsyncThunk(
 );
 
 export const receiptDetails = createAsyncThunk(
-  'receipt/details',
+  "receipt/details",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/finance/receipts/${id}`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/finance/receipts/${id}`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -55,19 +61,23 @@ export const receiptDetails = createAsyncThunk(
 );
 
 export const createReceipt = createAsyncThunk(
-  'receipt/create',
+  "receipt/create",
   async (receiptData, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.post(`${djangoUrl}/api/finance/receipts/`, receiptData, config);
+      const { data } = await axios.post(
+        `${djangoUrl}/api/finance/receipts/`,
+        receiptData,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -80,15 +90,15 @@ export const createReceipt = createAsyncThunk(
 );
 
 export const updateReceipt = createAsyncThunk(
-  'receipt/update',
+  "receipt/update",
   async ({ id, receiptData }, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
@@ -109,19 +119,22 @@ export const updateReceipt = createAsyncThunk(
 );
 
 export const deleteReceipt = createAsyncThunk(
-  'receipt/delete',
+  "receipt/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.delete(`${djangoUrl}/api/finance/receipts/${id}/`, config);
+      const { data } = await axios.delete(
+        `${djangoUrl}/api/finance/receipts/${id}/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -135,19 +148,22 @@ export const deleteReceipt = createAsyncThunk(
 
 // Thunks for Payment Actions
 export const listPayments = createAsyncThunk(
-  'payment/list',
+  "payment/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/finance/payments/`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/finance/payments/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -160,19 +176,22 @@ export const listPayments = createAsyncThunk(
 );
 
 export const paymentDetails = createAsyncThunk(
-  'payment/details',
+  "payment/details",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get(`${djangoUrl}/api/finance/payments/${id}`, config);
+      const { data } = await axios.get(
+        `${djangoUrl}/api/finance/payments/${id}`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -185,19 +204,23 @@ export const paymentDetails = createAsyncThunk(
 );
 
 export const createPayment = createAsyncThunk(
-  'payment/create',
+  "payment/create",
   async (paymentData, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.post(`${djangoUrl}/api/finance/payments/`, paymentData, config);
+      const { data } = await axios.post(
+        `${djangoUrl}/api/finance/payments/`,
+        paymentData,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -210,15 +233,15 @@ export const createPayment = createAsyncThunk(
 );
 
 export const updatePayment = createAsyncThunk(
-  'payment/update',
+  "payment/update",
   async ({ id, paymentData }, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
@@ -239,19 +262,22 @@ export const updatePayment = createAsyncThunk(
 );
 
 export const deletePayment = createAsyncThunk(
-  'payment/delete',
+  "payment/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        getUsers: { userInfo },
       } = getState();
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.delete(`${djangoUrl}/api/finance/payments/${id}/`, config);
+      const { data } = await axios.delete(
+        `${djangoUrl}/api/finance/payments/${id}/`,
+        config
+      );
       return data;
     } catch (error) {
       return rejectWithValue(
@@ -265,7 +291,7 @@ export const deletePayment = createAsyncThunk(
 
 // Slice for Finance State Management
 const financeSlice = createSlice({
-  name: 'finance',
+  name: "finance",
   initialState: {
     receiptList: [],
     receiptDetails: null,
@@ -273,6 +299,14 @@ const financeSlice = createSlice({
     paymentDetails: null,
     loading: false,
     error: null,
+    pagination: {
+      count: 0, // Total number of receipts
+      next: null, // URL for the next page
+      previous: null, // URL for the previous page
+    },
+    successCreate: false,
+    loadingCreate: false,
+    errorCreate: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -284,7 +318,12 @@ const financeSlice = createSlice({
       })
       .addCase(listReceipts.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptList = action.payload;
+        state.receiptList = action.payload.results;
+        state.pagination = {
+          count: action.payload.count,
+          next: action.payload.next,
+          previous: action.payload.previous,
+        }; // Set pagination metadata
       })
       .addCase(listReceipts.rejected, (state, action) => {
         state.loading = false;

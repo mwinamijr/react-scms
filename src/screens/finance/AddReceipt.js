@@ -17,14 +17,11 @@ function AddReceipt() {
   const navigate = useNavigate();
 
   // Access state from financeSlice
-  const {
-    loading: loadingCreate,
-    error: errorCreate,
-    success: successCreate,
-  } = useSelector((state) => state.finance.receiptCreate);
+  const { loading, error, loadingCreate, errorCreate, successCreate } =
+    useSelector((state) => state.finance.getReaceipts);
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.getUsers);
+  console.log(userInfo);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -60,7 +57,7 @@ function AddReceipt() {
       <Link to="/finance/receipts/" className="btn btn-light my-3">
         Go Back
       </Link>
-      {userInfo.user_type.isAccountant || userInfo.isAdmin ? (
+      {userInfo.isAccountant || userInfo.isAdmin ? (
         <Card>
           <Card.Header className="text-center">
             <div className="receipt-bg">

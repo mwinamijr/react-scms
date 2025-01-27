@@ -11,8 +11,7 @@ import Message from "../../components/Message";
 function Receipts() {
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.getUsers);
 
   // Access state from the finance slice
   const { receiptList, loading, error } = useSelector((state) => state.finance);
