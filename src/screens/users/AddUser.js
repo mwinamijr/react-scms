@@ -1,174 +1,141 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Input, Row, Col, Button, Card, Checkbox, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
-import Message from "../../components/Message";
-import FormContainer from "../../components/FormContainer";
 import { register, resetError } from "../../features/user/userSlice";
 
-function AddUser() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isAccountant, setIsAccountant] = useState(false);
-  const [isTeacher, setIsTeacher] = useState(false);
-  const [message, setMessage] = useState("");
-
+const AddUser = () => {
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   const { error, loading } = useSelector((state) => state.getUsers);
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   useEffect(() => {
     if (error) {
+      messageApi.error(error);
       dispatch(resetError());
     }
-  }, [error, dispatch]);
+  }, [error, dispatch, messageApi]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-    } else {
-      const userData = {
-        firstName,
-        lastName,
-        email,
-        phone,
-        password,
-        isAdmin,
-        isAccountant,
-        isTeacher,
-      };
-      dispatch(register(userData));
+  const submitHandler = (values) => {
+    if (values.password !== values.confirmPassword) {
+      messageApi.error("Passwords do not match!");
+      return;
     }
+
+    const { firstName, lastName, email, phone, password, roles } = values;
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      password,
+      isAdmin: roles.includes("Admin"),
+      isAccountant: roles.includes("Accountant"),
+      isTeacher: roles.includes("Teacher"),
+    };
+
+    dispatch(register(userData));
   };
 
   return (
     <div className="mt-4">
-      <Link to="/users/" className="btn btn-light mb-4">
+      {contextHolder}
+      <Link to="/users/" className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
-      <FormContainer>
-        <h1 className="text-center mb-4">Register User</h1>
-        {message && <Message variant="danger">{message}</Message>}
-        {error && <Message variant="danger">{error}</Message>}
+      <Card title="Register User" className="shadow">
         {loading && <Loader />}
-        <Form onSubmit={submitHandler}>
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="firstName">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter first name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </Form.Group>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={submitHandler}
+          initialValues={{ roles: [] }}
+        >
+          <Row gutter={16}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="First Name"
+                name="firstName"
+                rules={[{ required: true, message: "First Name is required" }]}
+              >
+                <Input placeholder="Enter first name" />
+              </Form.Item>
             </Col>
-            <Col md={6}>
-              <Form.Group controlId="lastName">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter last name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Form.Group controlId="email" className="mb-3">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="phone" className="mb-3">
-            <Form.Label>Phone Number</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter phone number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group controlId="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group controlId="confirmPassword">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Confirm password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-              </Form.Group>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                rules={[{ required: true, message: "Last Name is required" }]}
+              >
+                <Input placeholder="Enter last name" />
+              </Form.Item>
             </Col>
           </Row>
-
-          <Form.Group controlId="roles" className="mb-4">
-            <Form.Label>User Roles</Form.Label>
-            <div className="d-flex gap-3">
-              <Form.Check
-                id="admin"
-                type="checkbox"
-                label="Admin"
-                checked={isAdmin}
-                onChange={(e) => setIsAdmin(e.target.checked)}
-              />
-              <Form.Check
-                id="accountant"
-                type="checkbox"
-                label="Accountant"
-                checked={isAccountant}
-                onChange={(e) => setIsAccountant(e.target.checked)}
-              />
-              <Form.Check
-                id="teacher"
-                type="checkbox"
-                label="Teacher"
-                checked={isTeacher}
-                onChange={(e) => setIsTeacher(e.target.checked)}
-              />
-            </div>
-          </Form.Group>
-
-          <Button type="submit" variant="primary" className="w-100">
-            Register
-          </Button>
+          <Form.Item
+            label="Email Address"
+            name="email"
+            rules={[
+              { required: true, message: "Email is required" },
+              { type: "email", message: "Enter a valid email address" },
+            ]}
+          >
+            <Input placeholder="Enter email" />
+          </Form.Item>
+          <Form.Item
+            label="Phone Number"
+            name="phone"
+            rules={[{ required: true, message: "Phone number is required" }]}
+          >
+            <Input placeholder="Enter phone number" />
+          </Form.Item>
+          <Row gutter={16}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: "Password is required" }]}
+              >
+                <Input.Password placeholder="Enter password" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Confirm Password"
+                name="confirmPassword"
+                rules={[{ required: true, message: "Confirm your password" }]}
+              >
+                <Input.Password placeholder="Confirm password" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item label="User Roles" name="roles">
+            <Checkbox.Group>
+              <Row>
+                <Col>
+                  <Checkbox value="Admin">Admin</Checkbox>
+                </Col>
+                <Col>
+                  <Checkbox value="Accountant">Accountant</Checkbox>
+                </Col>
+                <Col>
+                  <Checkbox value="Teacher">Teacher</Checkbox>
+                </Col>
+              </Row>
+            </Checkbox.Group>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Register
+            </Button>
+          </Form.Item>
         </Form>
-      </FormContainer>
+      </Card>
     </div>
   );
-}
+};
 
 export default AddUser;

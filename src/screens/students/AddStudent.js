@@ -1,32 +1,28 @@
-import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Row, Col, Form, Button, Container } from "react-bootstrap";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  Card,
+  Typography,
+  Row,
+  Col,
+  message,
+} from "antd";
 import { Link, useNavigate } from "react-router-dom";
-
 import {
   createStudent,
   resetCreateState,
 } from "../../features/students/studentSlice";
-import Loader from "../../components/Loader";
-import Message from "../../components/Message";
+
+const { Title } = Typography;
+const { Option } = Select;
 
 function AddStudent() {
-  const [firstName, setFirstName] = useState("");
-  const [middleName, setMiddleName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [admissionNumber, setAdmissionNumber] = useState(0);
-  const [classLevel, setClassLevel] = useState("");
-  const [birthday, setBirthday] = useState(new Date());
-  const [region, setRegion] = useState("");
-  const [city, setCity] = useState("");
-  const [street, setStreet] = useState("");
-  const [stdViiNumber, setStdViiNumber] = useState("");
-  const [premsNumber, setPremsNumber] = useState("");
-  const [gender, setGender] = useState("");
-  const [parentContact, setParentContact] = useState("");
-
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,223 +30,182 @@ function AddStudent() {
     (state) => state.getStudents
   );
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      createStudent({
-        firstName,
-        middleName,
-        lastName,
-        admissionNumber,
-        classLevel,
-        birthday,
-        region,
-        city,
-        street,
-        parentContact,
-        stdViiNumber,
-        premsNumber,
-        gender,
-      })
-    );
-  };
-
   useEffect(() => {
     if (successCreate) {
       dispatch(resetCreateState());
+      message.success("Student added successfully!");
       navigate("/sis/students");
     }
   }, [dispatch, successCreate, navigate]);
 
+  const submitHandler = (values) => {
+    const formattedValues = {
+      ...values,
+      birthday: values.birthday.toISOString(), // Convert date to ISO format
+    };
+    dispatch(createStudent(formattedValues));
+  };
+
   return (
-    <Container className="mt-4">
-      <Link to="/sis/students/" className="btn btn-secondary mb-3">
-        Go Back
+    <div className="container">
+      <Link to="/sis/students/" className="mb-3">
+        <Button type="link">Go Back</Button>
       </Link>
-      <Card className="shadow">
-        <Card.Header className="text-white text-center">
-          <h5>Add New Student</h5>
-        </Card.Header>
-        <Card.Body>
-          {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-          {loadingCreate && <Loader />}
-          <Form onSubmit={submitHandler}>
-            {/* Personal Information */}
-            <Row className="mb-3">
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter first name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Middle Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter middle name"
-                    value={middleName}
-                    onChange={(e) => setMiddleName(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
 
-            {/* Academic Details */}
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Admission Number</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Enter admission number"
-                    value={admissionNumber}
-                    onChange={(e) => setAdmissionNumber(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Class Level</Form.Label>
-                  <Form.Select
-                    value={classLevel}
-                    onChange={(e) => setClassLevel(e.target.value)}
-                  >
-                    <option value="">Choose class level</option>
-                    <option value="form one">Form One</option>
-                    <option value="form two">Form Two</option>
-                    <option value="form three">Form Three</option>
-                    <option value="form four">Form Four</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
+      <Card className="shadow" bordered>
+        <Title level={3} className="text-center">
+          Add New Student
+        </Title>
 
-            {/* Additional Information */}
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Birthday</Form.Label>
-                  <DatePicker
-                    className="form-control"
-                    selected={birthday}
-                    onChange={(date) => setBirthday(date)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Gender</Form.Label>
-                  <Form.Select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                  >
-                    <option value="">Choose gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={submitHandler}
+          className="mt-3"
+        >
+          {/* Personal Information */}
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                label="First Name"
+                name="firstName"
+                rules={[{ required: true, message: "First Name is required" }]}
+              >
+                <Input placeholder="Enter first name" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="Middle Name" name="middleName">
+                <Input placeholder="Enter middle name" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                rules={[{ required: true, message: "Last Name is required" }]}
+              >
+                <Input placeholder="Enter last name" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-            {/* Contact Information */}
-            <Row className="mb-3">
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Region</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter region"
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>City</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Street</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter street"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+          {/* Academic Details */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Admission Number"
+                name="admissionNumber"
+                rules={[
+                  { required: true, message: "Admission Number is required" },
+                ]}
+              >
+                <Input type="number" placeholder="Enter admission number" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Class Level"
+                name="classLevel"
+                rules={[{ required: true, message: "Class Level is required" }]}
+              >
+                <Select placeholder="Choose class level">
+                  <Option value="form one">Form One</Option>
+                  <Option value="form two">Form Two</Option>
+                  <Option value="form three">Form Three</Option>
+                  <Option value="form four">Form Four</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>STD VII Number</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter STD VII Number"
-                    value={stdViiNumber}
-                    onChange={(e) => setStdViiNumber(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label>Prems Number</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter Prems Number"
-                    value={premsNumber}
-                    onChange={(e) => setPremsNumber(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+          {/* Additional Information */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Birthday"
+                name="birthday"
+                rules={[{ required: true, message: "Birthday is required" }]}
+              >
+                <DatePicker className="w-full" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Gender"
+                name="gender"
+                rules={[{ required: true, message: "Gender is required" }]}
+              >
+                <Select placeholder="Choose gender">
+                  <Option value="Male">Male</Option>
+                  <Option value="Female">Female</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Parent Phone</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter parent phone number"
-                value={parentContact}
-                onChange={(e) => setParentContact(e.target.value)}
-              />
-            </Form.Group>
+          {/* Contact Information */}
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item label="Region" name="region">
+                <Input placeholder="Enter region" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="City" name="city">
+                <Input placeholder="Enter city" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="Street" name="street">
+                <Input placeholder="Enter street" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-            <Button type="submit" variant="primary" className="w-100">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item label="STD VII Number" name="stdViiNumber">
+                <Input placeholder="Enter STD VII Number" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Prems Number" name="premsNumber">
+                <Input placeholder="Enter Prems Number" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            label="Parent Phone"
+            name="parentContact"
+            rules={[
+              {
+                required: true,
+                message: "Parent Contact is required",
+              },
+            ]}
+          >
+            <Input placeholder="Enter parent phone number" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loadingCreate}
+              block
+            >
               Add Student
             </Button>
-          </Form>
-        </Card.Body>
+          </Form.Item>
+
+          {errorCreate && (
+            <div style={{ color: "red", marginTop: "16px" }}>{errorCreate}</div>
+          )}
+        </Form>
       </Card>
-    </Container>
+    </div>
   );
 }
 
