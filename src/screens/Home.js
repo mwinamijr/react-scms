@@ -1,83 +1,120 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Typography, Button, Row, Col, Card } from "antd";
+
+const { Title, Paragraph } = Typography;
 
 function Home() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    // Capture the PWA install prompt
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
+  const handleInstall = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      setDeferredPrompt(null);
+    }
+  };
+
   return (
-    <div className="col-lg-8 mx-auto p-3 py-md-5">
-      <header className="d-flex align-items-center pb-3 mb-5 border-bottom">
-        <span className="fs-5">HISMS</span>
-      </header>
+    <div style={{ padding: "16px" }}>
+      <Row gutter={[16, 16]} justify="center">
+        <Col xs={24} sm={20} md={16} lg={12}>
+          <Card>
+            <Title level={2} className="text-center">
+              Hayatul Islamiya School Management System
+            </Title>
+            <Paragraph className="text-center">
+              Huu ni mfumo wa uendeshaji na utoaji wa taarifa mbalimbali
+              zinazohusu shule na uendeshaji. Mfumo huu unatumika na walimu wa
+              shule hii kupata na kuhifadhi taarifa za maendeleo ya shule na
+              wanafunzi. Pia ni kiunganisha kati ya shule na wazazi katika kutoa
+              na kupata taarifa za maendeleo ya wanafunzi moja kwa moja.
+            </Paragraph>
+            <div style={{ textAlign: "center" }}>
+              <Button type="primary" size="large">
+                <Link to="/login">Ingia</Link>
+              </Button>
+            </div>
+          </Card>
+        </Col>
+      </Row>
 
-      <main>
-        <div className="text-center">
-          <h1>Hayatul Islamiya School Management System</h1>
-          <p className="fs-5 text-center">
-            Huu ni mfumo wa uendeshaji na utoaji wa taarifa mbalimbali
-            zinazohusu shule na uendeshaji. Mfumo huu unatumika na walimu wa
-            shule hii kupata na kuhifadhi taarifa za maendeleo ya shule na
-            wanafunzi. Pia ni kiunganisha kati ya shule na wazazi katika kutoa
-            na kupata taarifa za maendeleo ya wanafunzi moja kwa moja.
-          </p>
-
-          <div className="mb-5">
-            <Link to="/login" className="btn btn-primary btn-lg px-4">
-              Ingia
-            </Link>
-          </div>
-        </div>
-
-        <hr className="col-3 col-md-2 mb-5" />
-
-        <div className="row g-5">
-          <div className="col-md-6">
-            <h2 className="text-center">Namna ya kutumia mfumo huu</h2>
-            <p>
+      <Row gutter={[16, 16]} justify="center" className="mt-5">
+        <Col xs={24} md={12}>
+          <Card>
+            <Title level={3} className="text-center">
+              Namna ya kutumia mfumo huu
+            </Title>
+            <Paragraph>
               Soma maelekezo ya kutumia mfumo huu kulingana na aina ya mtumiaji.
-            </p>
-            <ul className="list-unstyled">
+            </Paragraph>
+            <ul>
               <li>
                 <Link to="/getting-started/teachers">Walimu</Link>
-              </li>{" "}
-              <hr className="mb-0 mt-0" />
+              </li>
               <li>
                 <Link to="/getting-started/parents">Wazazi</Link>
-              </li>{" "}
-              <hr className="mb-0 mt-0" />
+              </li>
               <li>
                 <Link to="/getting-started/developers">Developers</Link>
-              </li>{" "}
-              <hr className="mb-0 mt-0" />
+              </li>
             </ul>
-          </div>
+          </Card>
+        </Col>
+        <Col xs={24} md={12}>
+          <Card>
+            <Title level={3} className="text-center">
+              Developers
+            </Title>
+            <Paragraph>
+              All developers are welcome to join this open-source project. This
+              project gives opportunities to developers with JavaScript, React,
+              and Redux skills to contribute and help build the platform.
+            </Paragraph>
+            <ul>
+              <li>
+                <a
+                  href="https://github.com/mwinamijr/react-scms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  React School Management System - Github Repository
+                </a>
+              </li>
+              <li>
+                For instructions on contributing, check the{" "}
+                <Link to="/getting-started/developers">developers manual</Link>.
+              </li>
+            </ul>
+          </Card>
+        </Col>
+      </Row>
 
-          <div className="col-md-6">
-            <h2 className="text-center">Developers</h2>
-            <p className="text-left">
-              All developers are welcome to join in on this open Source project,
-              This projects gives opportunity to all developers who can
-              contribute anything, so all developers with JavaScript, React and
-              Redux are wecome to join in and help on this project.
-            </p>
-            <hr className="mb-0 mt-0" />
-            <ul className="list-unstyled">
-              <li className="">
-                <Link to="https://github.com/mwinamijr/react-scms">
-                  React School Management System
-                </Link>{" "}
-                Github repository
-              </li>{" "}
-              <hr className="mb-0 mt-0" />
-              <li className="">
-                For instructions on how to contribute to this project check out
-                the developers manual
-                <Link to="/getting-started/developers"> here</Link>
-              </li>{" "}
-              <hr className="mb-0 mt-0" />
-            </ul>
-          </div>
+      {deferredPrompt && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <Button type="primary" onClick={handleInstall}>
+            Install App
+          </Button>
         </div>
-      </main>
-      <footer className="pt-5 my-5 text-center text-muted border-top pb-3">
+      )}
+
+      <footer style={{ textAlign: "center", marginTop: "40px" }}>
         Hayatul Islamiya © 2022 - {new Date().getFullYear()} Created by
         Techdometz
       </footer>

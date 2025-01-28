@@ -1,74 +1,103 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Link, Navigate } from "react-router-dom";
+import {
+  Form,
+  Input,
+  Button,
+  Typography,
+  Alert,
+  Spin,
+  Row,
+  Col,
+  Card,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
-import FormContainer from "../components/FormContainer";
-import { login } from "../features/user/userSlice"; // Import the login action
+import { login } from "../features/user/userSlice";
+
+const { Title } = Typography;
 
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
-
   const user = useSelector((state) => state.getUsers);
   const { error, loading, userInfo } = user;
 
-  // Redirect if already logged in
   useEffect(() => {
     if (userInfo) {
-      // Redirect to the homepage (or any other page you want)
       return <Navigate replace to="/" />;
     }
   }, [userInfo]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    // Dispatch the login action with email and password
+  const submitHandler = () => {
     dispatch(login({ email, password }));
   };
-  console.log(userInfo);
 
   return (
-    <div>
-      <div className="container">
-        <Link to="/" className="btn btn-light my-3">
-          Go Back
-        </Link>
-      </div>
-      <FormContainer>
-        <h1>Sign In</h1>
-        {error && <Message variant="danger">{error}</Message>}
-        {loading && <Loader />}
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId="email">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Group>
+    <div style={{ padding: "16px" }}>
+      <Row justify="center">
+        <Col xs={24} sm={20} md={12} lg={8}>
+          <Card>
+            <Title level={2} className="text-center">
+              Sign In
+            </Title>
+            {error && <Alert message={error} type="error" showIcon />}
+            {loading && (
+              <Spin
+                size="large"
+                style={{ margin: "20px auto", display: "block" }}
+              />
+            )}
 
-          <Form.Group controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-          <br />
-          <Button type="submit" variant="primary">
-            Sign In
-          </Button>
-        </Form>
-      </FormContainer>
+            <Form
+              layout="vertical"
+              onFinish={submitHandler}
+              style={{ marginTop: "20px" }}
+            >
+              <Form.Item
+                label="Email Address"
+                name="email"
+                rules={[
+                  { required: true, message: "Please enter your email!" },
+                  { type: "email", message: "Please enter a valid email!" },
+                ]}
+              >
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[
+                  { required: true, message: "Please enter your password!" },
+                ]}
+              >
+                <Input.Password
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" block>
+                  Sign In
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <Typography.Text>
+              New here? <Link to="/register">Register Now</Link>
+            </Typography.Text>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 }
