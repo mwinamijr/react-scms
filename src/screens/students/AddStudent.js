@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   message,
+  Divider,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -18,7 +19,7 @@ import {
   resetCreateState,
 } from "../../features/students/studentSlice";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 
 function AddStudent() {
@@ -48,14 +49,15 @@ function AddStudent() {
 
   return (
     <div className="container">
-      <Link to="/sis/students/" className="mb-3">
-        <Button type="link">Go Back</Button>
+      <Link to="/sis/students/">
+        <Button type="link">← Back to Students</Button>
       </Link>
 
-      <Card className="shadow" bordered>
+      <Card bordered className="shadow-lg mt-3">
         <Title level={3} className="text-center">
           Add New Student
         </Title>
+        <Divider />
 
         <Form
           layout="vertical"
@@ -63,9 +65,10 @@ function AddStudent() {
           onFinish={submitHandler}
           className="mt-3"
         >
-          {/* Personal Information */}
-          <Row gutter={16}>
-            <Col span={8}>
+          {/* Personal Information Section */}
+          <Title level={5}>Personal Information</Title>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={8}>
               <Form.Item
                 label="First Name"
                 name="firstName"
@@ -74,12 +77,12 @@ function AddStudent() {
                 <Input placeholder="Enter first name" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item label="Middle Name" name="middleName">
                 <Input placeholder="Enter middle name" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item
                 label="Last Name"
                 name="lastName"
@@ -90,9 +93,12 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Academic Details */}
-          <Row gutter={16}>
-            <Col span={12}>
+          {/* Academic Details Section */}
+          <Title level={5} className="mt-4">
+            Academic Details
+          </Title>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Admission Number"
                 name="admissionNumber"
@@ -103,7 +109,7 @@ function AddStudent() {
                 <Input type="number" placeholder="Enter admission number" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Class Level"
                 name="classLevel"
@@ -119,9 +125,12 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Additional Information */}
-          <Row gutter={16}>
-            <Col span={12}>
+          {/* Additional Information Section */}
+          <Title level={5} className="mt-4">
+            Additional Information
+          </Title>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Birthday"
                 name="birthday"
@@ -130,7 +139,7 @@ function AddStudent() {
                 <DatePicker className="w-full" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Gender"
                 name="gender"
@@ -144,32 +153,34 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Contact Information */}
-          <Row gutter={16}>
-            <Col span={8}>
+          {/* Contact Information Section */}
+          <Title level={5} className="mt-4">
+            Contact Information
+          </Title>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={8}>
               <Form.Item label="Region" name="region">
                 <Input placeholder="Enter region" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item label="City" name="city">
                 <Input placeholder="Enter city" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} md={8}>
               <Form.Item label="Street" name="street">
                 <Input placeholder="Enter street" />
               </Form.Item>
             </Col>
           </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
               <Form.Item label="STD VII Number" name="stdViiNumber">
                 <Input placeholder="Enter STD VII Number" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item label="Prems Number" name="premsNumber">
                 <Input placeholder="Enter Prems Number" />
               </Form.Item>
@@ -179,16 +190,12 @@ function AddStudent() {
           <Form.Item
             label="Parent Phone"
             name="parentContact"
-            rules={[
-              {
-                required: true,
-                message: "Parent Contact is required",
-              },
-            ]}
+            rules={[{ required: true, message: "Parent Contact is required" }]}
           >
             <Input placeholder="Enter parent phone number" />
           </Form.Item>
 
+          {/* Submit Button */}
           <Form.Item>
             <Button
               type="primary"
@@ -200,8 +207,11 @@ function AddStudent() {
             </Button>
           </Form.Item>
 
+          {/* Error Message */}
           {errorCreate && (
-            <div style={{ color: "red", marginTop: "16px" }}>{errorCreate}</div>
+            <Text type="danger" className="mt-3">
+              {errorCreate}
+            </Text>
           )}
         </Form>
       </Card>

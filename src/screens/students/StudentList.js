@@ -11,8 +11,14 @@ import {
   Pagination,
   Form,
   message,
+  Space,
+  Spin,
 } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  UserAddOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { listStudents } from "../../features/students/studentSlice";
 
 const Students = () => {
@@ -51,26 +57,29 @@ const Students = () => {
   const totalPages = pagination ? Math.ceil(pagination.count / 30) : 1;
 
   return (
-    <div>
+    <div className="students-page">
       <Breadcrumb className="mb-4">
         <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+          <Link to="/dashboard">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Students</Breadcrumb.Item>
       </Breadcrumb>
+
       <h1 className="text-center mb-4">Students</h1>
-      <Row gutter={[16, 16]} className="mb-3">
-        <Col xs={12} sm={6}>
-          <Button type="primary" block>
+
+      <Row gutter={[16, 16]} className="mb-4">
+        <Col xs={24} sm={12} lg={6}>
+          <Button type="primary" icon={<UserAddOutlined />} block>
             <Link to="/sis/students/add">Add Student</Link>
           </Button>
         </Col>
-        <Col xs={12} sm={6}>
-          <Button type="default" block>
-            <Link to="/sis/students/upload">Bulk Upload Students</Link>
+        <Col xs={24} sm={12} lg={6}>
+          <Button type="default" icon={<UploadOutlined />} block>
+            <Link to="/sis/students/upload">Bulk Upload</Link>
           </Button>
         </Col>
       </Row>
+
       <Form layout="vertical" onFinish={handleSearch}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} md={6}>
@@ -114,12 +123,19 @@ const Students = () => {
             </Form.Item>
           </Col>
         </Row>
-        <Button type="primary" htmlType="submit" block>
-          Search
-        </Button>
+        <Row>
+          <Col xs={24}>
+            <Button type="primary" htmlType="submit" block>
+              Search
+            </Button>
+          </Col>
+        </Row>
       </Form>
+
       {loading ? (
-        <p>Loading...</p>
+        <Space size="middle">
+          <Spin tip="Loading student details..." />
+        </Space>
       ) : error ? (
         message.error(error)
       ) : (
@@ -128,7 +144,8 @@ const Students = () => {
             dataSource={students}
             rowKey={(record) => record.id}
             pagination={false}
-            className="mt-3"
+            className="mt-4"
+            responsive="true"
           >
             <Table.Column
               title="Adm No"
@@ -157,9 +174,11 @@ const Students = () => {
               title="Actions"
               key="actions"
               render={(record) => (
-                <Link to={`/sis/students/${record.id}`}>
-                  <EditOutlined />
-                </Link>
+                <Space size="middle">
+                  <Link to={`/sis/students/${record.id}`}>
+                    <EditOutlined />
+                  </Link>
+                </Space>
               )}
             />
           </Table>

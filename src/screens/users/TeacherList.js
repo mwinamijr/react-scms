@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table, Space, Typography, Button } from "antd";
+import { Breadcrumb, Table, Space, Typography } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { listTeachers } from "../../features/user/teacherSlice";
@@ -73,7 +73,7 @@ const TeacherList = () => {
       {/* Breadcrumb Navigation */}
       <Breadcrumb style={{ marginBottom: 16 }}>
         <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+          <Link to="/dashboard">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Teachers</Breadcrumb.Item>
       </Breadcrumb>

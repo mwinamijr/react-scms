@@ -31,12 +31,12 @@ const BaseRouter = () => {
   const { userInfo } = useSelector((state) => state.getUsers);
 
   if (userInfo) {
-    <Navigate replace to="/" />;
+    <Navigate replace to="/dashboard" />;
   }
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="finance/">
           <Route path="receipts/" element={<Receipts />} />

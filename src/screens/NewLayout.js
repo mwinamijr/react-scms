@@ -12,12 +12,13 @@ import {
   FileDoneOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Grid } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../features/user/userSlice"; // Import the logout action
 import TopHead from "../components/TopHead";
 
 const { Content, Footer, Sider } = Layout;
+const { useBreakpoint } = Grid; // For responsive behavior
 
 function getItem(label, key, icon, children, onClick = null) {
   return {
@@ -35,6 +36,7 @@ const DashLayout = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation(); // Get current route location
+  const screens = useBreakpoint(); // Access responsive breakpoints
 
   // Access userInfo from the user slice
   const { userInfo } = useSelector((state) => state.getUsers);
@@ -47,11 +49,12 @@ const DashLayout = (props) => {
 
   const logoutHandler = () => {
     dispatch(logout()); // Dispatch the logout action
+    navigate("/"); // Redirect to home screen after logout
   };
 
   // Menu items
   const items = [
-    getItem(<Link to="/">Dashboard</Link>, "/", <PieChartOutlined />),
+    getItem(<Link to="/">Dashboard</Link>, "/dashboard", <PieChartOutlined />),
     getItem("Admission", "/admission", <DesktopOutlined />),
     getItem(
       <Link to="/sis/students">Students</Link>,
@@ -129,40 +132,47 @@ const DashLayout = (props) => {
     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
   };
 
+  // Automatically collapse sidebar on small screens
+  useEffect(() => {
+    if (!screens.md) setCollapsed(true);
+  }, [screens]);
+
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        breakpoint="md" // Auto-collapse on small screens
+        collapsedWidth={80} // Minimize sidebar width
       >
         <div
           style={{
             height: 32,
             margin: 16,
+            color: "white",
+            fontSize: collapsed ? "100%" : "120%",
+            textAlign: "center",
             background: "rgba(255, 255, 255, 0.2)",
           }}
-          className="text-center"
         >
-          <span style={{ color: "white", fontSize: "120%" }}>HISMS</span>
+          {collapsed ? "HIS" : "Hayatul Islamiya"}
         </div>
         <Menu
           theme="dark"
-          selectedKeys={selectedKeys} // Highlight active menu item
-          openKeys={openKeys} // Control which submenus are open
-          onOpenChange={onOpenChange} // Handle submenu open/close
+          selectedKeys={selectedKeys}
+          openKeys={openKeys}
+          onOpenChange={onOpenChange}
           mode="inline"
           items={items}
         />
       </Sider>
       <Layout className="site-layout">
         <TopHead style={{ float: "right" }} />
-        <Content style={{ margin: "0 16px" }}>
-          <div style={{ padding: 24, minHeight: 360 }}>{props.children}</div>
+        <Content style={{ margin: "16px" }}>
+          <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
+            {props.children}
+          </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Hayatul Islamiya © 2022 - {new Date().getFullYear()} Created by

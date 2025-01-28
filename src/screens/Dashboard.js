@@ -12,6 +12,7 @@ import { listParents } from "../features/user/parentSlice";
 function Dashboard() {
   const dispatch = useDispatch();
 
+  // Selectors for fetching data from Redux store
   const { pagination: studentPagination = {} } = useSelector(
     (state) => state.getStudents || {}
   );
@@ -24,6 +25,7 @@ function Dashboard() {
   const { teachers = [] } = useSelector((state) => state.teacher || {});
   const { accountants = [] } = useSelector((state) => state.accountant || {});
 
+  // Dispatch actions to fetch data when the component mounts
   useEffect(() => {
     dispatch(listStudents());
     dispatch(listUsers());
@@ -32,62 +34,83 @@ function Dashboard() {
     dispatch(listParents());
   }, [dispatch]);
 
+  // Render responsive dashboard cards
   return (
-    <div>
+    <div className="dashboard-container">
       <h1 className="mb-4">Dashboard</h1>
+
       <Row className="gy-4">
-        <Col>
+        {/* Students Card */}
+        <Col xs={12} md={6} lg={4}>
           <Card className="h-100 shadow-sm">
             <Card.Header>
-              <Link to="/sis/students">Students</Link>
+              <Link to="/sis/students" className="text-decoration-none">
+                Students
+              </Link>
             </Card.Header>
             <Card.Body className="text-center">
-              <h3>{studentPagination.count || 0}</h3>
+              <h3 className="display-4">{studentPagination.count || 0}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col>
+
+        {/* Teachers Card */}
+        <Col xs={12} md={6} lg={4}>
           <Card className="h-100 shadow-sm">
             <Card.Header>
-              <Link to="/users/teachers">Teachers</Link>
+              <Link to="/users/teachers" className="text-decoration-none">
+                Teachers
+              </Link>
             </Card.Header>
             <Card.Body className="text-center">
-              <h3>{teachers.length}</h3>
+              <h3 className="display-4">{teachers.length}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col>
+
+        {/* Parents Card */}
+        <Col xs={12} md={6} lg={4}>
           <Card className="h-100 shadow-sm">
             <Card.Header>
-              <Link to="/users/parents">Parents</Link>
+              <Link to="/users/parents" className="text-decoration-none">
+                Parents
+              </Link>
             </Card.Header>
             <Card.Body className="text-center">
-              <h3>{parentPagination.count || 0}</h3>
+              <h3 className="display-4">{parentPagination.count || 0}</h3>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+
       <Row className="gy-4 mt-4">
-        <Col>
+        {/* Accountants Card */}
+        <Col xs={12} md={6} lg={4}>
           <Card className="h-100 shadow-sm">
             <Card.Header>
-              <Link to="/users/accountants">Accountants</Link>
+              <Link to="/users/accountants" className="text-decoration-none">
+                Accountants
+              </Link>
             </Card.Header>
             <Card.Body className="text-center">
-              <h3>{accountants.length}</h3>
+              <h3 className="display-4">{accountants.length}</h3>
             </Card.Body>
           </Card>
         </Col>
-        <Col>
+
+        {/* Users Card */}
+        <Col xs={12} md={6} lg={4}>
           <Card className="h-100 shadow-sm">
             <Card.Header>
-              <Link to="/users">Users</Link>
+              <Link to="/users" className="text-decoration-none">
+                Users
+              </Link>
             </Card.Header>
             <Card.Body className="text-center">
-              <h3>{userPagination.count || 0}</h3>
+              <h3 className="display-4">{userPagination.count || 0}</h3>
             </Card.Body>
             <Card.Footer className="text-center">
-              <Link to="/users/add" className="btn btn-dark">
+              <Link to="/users/add" className="btn btn-dark w-100">
                 Add User
               </Link>
             </Card.Footer>

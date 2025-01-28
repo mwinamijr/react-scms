@@ -26,7 +26,7 @@ function LoginScreen() {
 
   useEffect(() => {
     if (userInfo) {
-      return <Navigate replace to="/" />;
+      return <Navigate replace to="/dashboard" />;
     }
   }, [userInfo]);
 
