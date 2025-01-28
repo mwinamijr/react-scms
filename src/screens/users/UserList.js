@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table, Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Table,
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  Typography,
+  Space,
+  Pagination,
+  message,
+} from "antd";
 import {
   EyeOutlined,
   EditOutlined,
@@ -13,13 +25,13 @@ import {
   listUsers,
   deleteUser,
   resetSuccessDelete,
-} from "./../../features/user/userSlice"; // Updated import
-import Loader from "./../../components/Loader";
-import Message from "./../../components/Message";
+} from "./../../features/user/userSlice";
 
-function UserList() {
+const { Title } = Typography;
+
+const UserList = () => {
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     first_name: "",
     last_name: "",
@@ -28,12 +40,13 @@ function UserList() {
 
   const { loading, error, users, successDelete, pagination } = useSelector(
     (state) => state.getUsers
-  ); // Using the user slice state
+  );
 
   useEffect(() => {
     dispatch(listUsers({ ...filters, page: currentPage }));
 
     if (successDelete) {
+      message.success("User deleted successfully");
       dispatch(resetSuccessDelete());
     }
   }, [dispatch, successDelete, filters, currentPage]);
@@ -49,170 +62,159 @@ function UserList() {
     setFilters({ ...filters, [name]: value });
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
     setCurrentPage(1); // Reset to the first page on search
     dispatch(listUsers({ ...filters, page: 1 }));
   };
 
-  // Handlers for pagination
-  const handleNextPage = () => {
-    if (pagination.next) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (pagination.previous) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
+  const columns = [
+    {
+      title: "Adm No",
+      dataIndex: "empId",
+      key: "empId",
+    },
+    {
+      title: "Full Name or Email",
+      key: "fullName",
+      render: (text, record) =>
+        record.email || `${record.first_name} ${record.last_name}`,
+    },
+    {
+      title: "Admin",
+      key: "isAdmin",
+      render: (text, record) =>
+        record.isAdmin ? <CheckOutlined /> : <CloseOutlined />,
+    },
+    {
+      title: "Teacher",
+      key: "isTeacher",
+      render: (text, record) =>
+        record.isTeacher ? <CheckOutlined /> : <CloseOutlined />,
+    },
+    {
+      title: "Accountant",
+      key: "isAccountant",
+      render: (text, record) =>
+        record.isAccountant ? <CheckOutlined /> : <CloseOutlined />,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space size="middle">
+          <Link to={`/users/${record.id}`}>
+            <EyeOutlined style={{ color: "blue" }} />
+          </Link>
+          <Link to={`/users/${record.id}/edit`}>
+            <EditOutlined style={{ color: "green" }} />
+          </Link>
+          <DeleteOutlined
+            style={{ color: "red", cursor: "pointer" }}
+            onClick={() => deleteHandler(record.id)}
+          />
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div>
-      <Breadcrumb>
+      {/* Breadcrumb */}
+      <Breadcrumb style={{ marginBottom: 16 }}>
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>Users</Breadcrumb.Item>
+        <Breadcrumb.Item>Users</Breadcrumb.Item>
       </Breadcrumb>
-      <div>
-        <h1 className="text-center">Users</h1>
-        <Row>
-          <Col>
-            <Link to="/users/add" className="btn btn-light my-3">
-              Add User
-            </Link>
-          </Col>
-        </Row>
 
-        <Form onSubmit={handleSearch} className="mb-3">
-          <Row>
-            <Col md={4}>
-              <Form.Control
-                type="text"
+      {/* Title */}
+      <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
+        Users
+      </Title>
+
+      {/* Add User Button */}
+      <Row justify="end" style={{ marginBottom: 16 }}>
+        <Col>
+          <Link to="/users/add">
+            <Button type="primary">Add User</Button>
+          </Link>
+        </Col>
+      </Row>
+
+      {/* Search Filters */}
+      <Form
+        layout="vertical"
+        onFinish={handleSearch}
+        style={{ marginBottom: 24 }}
+      >
+        <Row gutter={16}>
+          <Col xs={24} md={8}>
+            <Form.Item label="First Name">
+              <Input
                 name="first_name"
-                placeholder="First Name"
+                placeholder="Enter first name"
                 value={filters.first_name}
                 onChange={handleInputChange}
               />
-            </Col>
-            <Col md={4}>
-              <Form.Control
-                type="text"
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8}>
+            <Form.Item label="Last Name">
+              <Input
                 name="last_name"
-                placeholder="Last Name"
+                placeholder="Enter last name"
                 value={filters.last_name}
                 onChange={handleInputChange}
               />
-            </Col>
-            <Col md={4}>
-              <Form.Control
-                type="text"
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8}>
+            <Form.Item label="Email">
+              <Input
                 name="email"
-                placeholder="Email"
+                placeholder="Enter email"
                 value={filters.email}
                 onChange={handleInputChange}
               />
-            </Col>
-          </Row>
-          <Row className="mt-2">
-            <Col>
-              <Button type="submit" variant="primary" className="w-100">
-                Search
-              </Button>
-            </Col>
-          </Row>
-        </Form>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button type="primary" htmlType="submit">
+              Search
+            </Button>
+          </Col>
+        </Row>
+      </Form>
 
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="danger">{error}</Message>
-        ) : (
-          <div>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Adm No:</th>
-                  <th>Full Name or Email</th>
-                  <th>Ad</th>
-                  <th>Tea</th>
-                  <th>Acc</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(
-                  (user) =>
-                    !user.isParent ? (
-                      <tr key={user.id}>
-                        <td>{user.empId}</td>
-                        <td>
-                          {user.email
-                            ? user.email
-                            : `${user.first_name} ${user.last_name}`}
-                        </td>
-                        <td>
-                          {user.isAdmin ? <CheckOutlined /> : <CloseOutlined />}
-                        </td>
-                        <td>
-                          {user.isTeacher ? (
-                            <CheckOutlined />
-                          ) : (
-                            <CloseOutlined />
-                          )}
-                        </td>
-                        <td>
-                          {user.isAccountant ? (
-                            <CheckOutlined />
-                          ) : (
-                            <CloseOutlined />
-                          )}
-                        </td>
-                        <td>
-                          <Link to={`/users/${user.id}`}>
-                            <EyeOutlined />
-                          </Link>
-                          <span> </span>
-                          <Link to={`/users/${user.id}/edit`}>
-                            <EditOutlined />
-                          </Link>
-                          <span> </span>
-                          <DeleteOutlined
-                            onClick={() => deleteHandler(user.id)}
-                          />
-                        </td>
-                      </tr>
-                    ) : null // Render nothing if the user is a parent
-                )}
-              </tbody>
-            </Table>
-            <div className="d-flex justify-content-between align-items-center mt-3">
-              <Button
-                variant="light"
-                onClick={handlePreviousPage}
-                disabled={!pagination.previous}
-              >
-                Previous
-              </Button>
-              <span>
-                Page {currentPage} of {Math.ceil(pagination.count / 30)}{" "}
-                {/* Assuming default page size is 30 */}
-              </span>
-              <Button
-                variant="light"
-                onClick={handleNextPage}
-                disabled={!pagination.next}
-              >
-                Next
-              </Button>
-            </div>
+      {/* Users Table */}
+      {loading ? (
+        <div style={{ textAlign: "center" }}>Loading...</div>
+      ) : error ? (
+        <div style={{ textAlign: "center", color: "red" }}>{error}</div>
+      ) : (
+        <>
+          <Table
+            dataSource={users.filter((user) => !user.isParent)}
+            columns={columns}
+            rowKey="id"
+            pagination={false}
+            bordered
+          />
+          <div style={{ marginTop: 16, textAlign: "center" }}>
+            <Pagination
+              current={currentPage}
+              pageSize={30}
+              total={pagination.count}
+              onChange={(page) => setCurrentPage(page)}
+              showSizeChanger={false}
+            />
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default UserList;

@@ -8,6 +8,7 @@ import {
   Tabs,
   Descriptions,
   Divider,
+  Table,
   Typography,
   Button,
 } from "antd";
@@ -108,6 +109,26 @@ const StudentDetailsScreen = () => {
                       </Descriptions.Item>
                     </Descriptions>
                   </TabPane>
+                  {student.sibling ? (
+                    <Descriptions title="siblings">
+                      <Table
+                        dataSource={student.sibling}
+                        rowKey={(record) => record.id}
+                        pagination={false}
+                        className="mt-3"
+                      >
+                        <Table.Column
+                          title="Full Name"
+                          key="fullName"
+                          render={(record) =>
+                            `${record.first_name} ${record.middle_name} ${record.last_name}`
+                          }
+                        />
+                      </Table>
+                    </Descriptions>
+                  ) : (
+                    <p>No siblings</p>
+                  )}
 
                   {/* Payments Tab */}
                   <TabPane tab="Payments" key="2">

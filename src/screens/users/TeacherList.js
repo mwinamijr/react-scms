@@ -1,80 +1,108 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table } from "react-bootstrap";
+import { Breadcrumb, Table, Space, Typography, Button } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { listTeachers } from "../../features/user/teacherSlice"; // Use the correct import path for the teacherSlice
-import Loader from "../../components/Loader";
-import Message from "../../components/Message";
+import { listTeachers } from "../../features/user/teacherSlice";
 
-function TeacherList() {
+const { Title } = Typography;
+
+const TeacherList = () => {
   const dispatch = useDispatch();
 
-  // Access teacher state from the store using the teacher slice
+  // Access teacher state from the store
   const { loading, error, teachers } = useSelector(
     (state) => state.getTeachers
   );
 
   useEffect(() => {
-    dispatch(listTeachers()); // Dispatch the listTeachers action from the slice
+    dispatch(listTeachers()); // Dispatch the action to fetch teachers
   }, [dispatch]);
+
+  // Define columns for the Ant Design Table
+  const columns = [
+    {
+      title: "Emp ID",
+      dataIndex: "empId",
+      key: "empId",
+    },
+    {
+      title: "Full Name",
+      key: "fullName",
+      render: (text, record) => `${record.first_name} ${record.last_name}`,
+    },
+    {
+      title: "Short Name",
+      dataIndex: "short_name",
+      key: "short_name",
+    },
+    {
+      title: "Salary",
+      dataIndex: "salary",
+      key: "salary",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space size="middle">
+          <Link to={`/users/teachers/${record.id}`}>
+            <EyeOutlined style={{ color: "blue" }} />
+          </Link>
+          <Link to={`/users/teachers/${record.id}/edit`}>
+            <EditOutlined style={{ color: "green" }} />
+          </Link>
+          <DeleteOutlined
+            style={{ color: "red", cursor: "pointer" }}
+            onClick={() => handleDelete(record.id)}
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  // Handle delete action
+  const handleDelete = (id) => {
+    console.log("Delete teacher with ID:", id);
+    // Add delete logic here
+  };
 
   return (
     <div>
-      <Breadcrumb>
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb style={{ marginBottom: 16 }}>
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>Teachers</Breadcrumb.Item>
+        <Breadcrumb.Item>Teachers</Breadcrumb.Item>
       </Breadcrumb>
 
-      <div>
-        <h1 className="text-center">Teachers</h1>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="danger">{error}</Message>
-        ) : (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Emp Id</th>
-                <th>Full Name</th>
-                <th>Short Name</th>
-                <th>Salary</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teachers.map((teacher) => (
-                <tr key={teacher.id}>
-                  <td>{teacher.empId}</td>
-                  <td>
-                    {teacher.first_name} {teacher.last_name}
-                  </td>{" "}
-                  {/* Assuming user object has full name */}
-                  <td>{teacher.short_name}</td>
-                  <td>{teacher.salary}</td>
-                  <td>
-                    <Link to={`/users/teachers/${teacher.id}`}>
-                      <EyeOutlined />
-                    </Link>
-                    <span> </span>
-                    <Link to={`/users/teachers/${teacher.id}`}>
-                      <EditOutlined />
-                    </Link>
-                    <span> </span>
-                    <DeleteOutlined />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </div>
+      {/* Title */}
+      <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
+        Teachers
+      </Title>
+
+      {/* Content */}
+      {loading ? (
+        <div style={{ textAlign: "center" }}>
+          <Typography.Text>Loading...</Typography.Text>
+        </div>
+      ) : error ? (
+        <div style={{ textAlign: "center" }}>
+          <Typography.Text type="danger">{error}</Typography.Text>
+        </div>
+      ) : (
+        <Table
+          dataSource={teachers}
+          columns={columns}
+          rowKey="id"
+          bordered
+          pagination={{ pageSize: 10 }}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default TeacherList;
