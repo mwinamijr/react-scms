@@ -5,7 +5,7 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getTeacherDetails } from "../../features/user/teacherSlice";
 
-import { Card, Descriptions, Avatar, Tag, Typography } from "antd";
+import { Card, Descriptions, Avatar, Tag, Typography, Button } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -48,6 +48,15 @@ const TeacherProfile = () => {
                 {teacher.first_name} {teacher.middle_name} {teacher.last_name}
               </Title>
               <Text type="secondary">@{teacher.username}</Text>
+              <Link to={`/users/teachers/${id}/edit`}>
+                <Button type="primary" className="mr-2">
+                  Edit Profile
+                </Button>
+              </Link>
+
+              <Link to={`/users/teachers/${id}/print`}>
+                <Button type="default">Print Profile</Button>
+              </Link>
             </div>
 
             {/* Basic Information */}

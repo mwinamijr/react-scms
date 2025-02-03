@@ -3,6 +3,21 @@ import axios from "axios";
 
 const djangoUrl = "http://127.0.0.1:8000";
 
+const getErrorMessage = (error) => {
+  if (error.response) {
+    if (error.response.data) {
+      if (typeof error.response.data === "string") {
+        return error.response.data; // Handle string errors
+      } else if (error.response.data.detail) {
+        return error.response.data.detail; // Handle DRF 'detail' key
+      } else {
+        return JSON.stringify(error.response.data); // Convert object errors to string
+      }
+    }
+  }
+  return error.message || "An unknown error occurred";
+};
+
 // Thunks for Teacher Actions
 export const getTeacherDetails = createAsyncThunk(
   "teacher/details",
@@ -23,11 +38,7 @@ export const getTeacherDetails = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -51,18 +62,14 @@ export const listTeachers = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
 
 export const deleteTeacher = createAsyncThunk(
   "teacher/delete",
-  async (teacherId, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -74,23 +81,19 @@ export const deleteTeacher = createAsyncThunk(
         },
       };
       await axios.delete(
-        `${djangoUrl}/api/users/teachers/delete/${teacherId}/`,
+        `${djangoUrl}/api/users/teachers/delete/${id}/`,
         config
       );
-      return teacherId; // Return teacherId to allow removal from state
+      return id; // Return teacherId to allow removal from state
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
 
 export const updateTeacher = createAsyncThunk(
   "teacher/update",
-  async (teacher, { getState, rejectWithValue }) => {
+  async ({ id, ...values }, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -102,17 +105,13 @@ export const updateTeacher = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `${djangoUrl}/api/users/teachers/update/${teacher.id}/`,
-        teacher,
+        `${djangoUrl}/api/users/teachers/${id}/`,
+        values,
         config
       );
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
