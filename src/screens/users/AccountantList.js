@@ -1,76 +1,128 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table } from "react-bootstrap";
-import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Breadcrumb,
+  Table,
+  Space,
+  Typography,
+  Spin,
+  Row,
+  Col,
+  Button,
+} from "antd";
+import {
+  EyeOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 
-import { listAccountants } from "../../features/user/accountantSlice"; // Import the thunk action from the slice
-import Loader from "../../components/Loader";
-import Message from "../../components/Message";
+import { listAccountants } from "../../features/user/accountantSlice";
 
-function AccountantList() {
+const { Title } = Typography;
+
+const AccountantList = () => {
   const dispatch = useDispatch();
 
-  const { loading, error, accountantList } = useSelector(
-    (state) => state.accountant
+  // Access teacher state from the store
+  const { loading, error, accountants } = useSelector(
+    (state) => state.getAccountants
   );
 
   useEffect(() => {
-    dispatch(listAccountants()); // Dispatch the action from the accountantSlice
+    dispatch(listAccountants()); // Dispatch the action to fetch accountants
   }, [dispatch]);
+
+  // Define columns for the Ant Design Table
+  const columns = [
+    {
+      title: "Emp ID",
+      dataIndex: "empId",
+      key: "empId",
+    },
+    {
+      title: "Full Name",
+      key: "fullName",
+      render: (text, record) => `${record.first_name} ${record.last_name}`,
+    },
+    {
+      title: "Salary",
+      dataIndex: "salary",
+      key: "salary",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space size="middle">
+          <Link to={`/users/accountants/${record.id}`}>
+            <EyeOutlined style={{ color: "blue" }} />
+          </Link>
+          <Link to={`/users/accountants/${record.id}/edit`}>
+            <EditOutlined style={{ color: "green" }} />
+          </Link>
+          <DeleteOutlined
+            style={{ color: "red", cursor: "pointer" }}
+            onClick={() => handleDelete(record.id)}
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  // Handle delete action
+  const handleDelete = (id) => {
+    console.log("Delete teacher with ID:", id);
+    // Add delete logic here
+  };
 
   return (
     <div>
-      <Breadcrumb>
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb style={{ marginBottom: 16 }}>
         <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+          <Link to="/dashboard">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>Accountants</Breadcrumb.Item>
+        <Breadcrumb.Item>Accountants</Breadcrumb.Item>
       </Breadcrumb>
 
-      <div>
-        <h1 className="text-center">Accountants</h1>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="danger">{error}</Message>
-        ) : (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Emp Id</th>
-                <th>Full Name</th>
-                <th>Salary</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {accountantList.map((accountant) => (
-                <tr key={accountant.id}>
-                  <td>{accountant.empId}</td>
-                  <td>
-                    {accountant.user.first_name} {accountant.user.last_name}
-                  </td>
-                  <td>{accountant.salary}</td>
-                  <td>
-                    <Link to={`/users/accountants/${accountant.id}`}>
-                      <EyeOutlined />
-                    </Link>
-                    <span> </span>
-                    <Link to={`/users/accountants/${accountant.id}`}>
-                      <EditOutlined />
-                    </Link>
-                    <span> </span>
-                    <DeleteOutlined />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </div>
+      {/* Title */}
+      <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
+        Accountants
+      </Title>
+      <Row gutter={[16, 16]} className="mb-4">
+        <Col xs={24} sm={12} lg={6}></Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Button type="default" icon={<UserAddOutlined />} block>
+            <Link to="/users/accountants/add">Add Accountant</Link>
+          </Button>
+        </Col>
+      </Row>
+
+      {/* Content */}
+      {loading ? (
+        <div style={{ textAlign: "center" }}>
+          <Spin
+            size="large"
+            style={{ margin: "20px auto", display: "block" }}
+          />
+        </div>
+      ) : error ? (
+        <div style={{ textAlign: "center" }}>
+          <Typography.Text type="danger">{error}</Typography.Text>
+        </div>
+      ) : (
+        <Table
+          dataSource={accountants}
+          columns={columns}
+          rowKey="id"
+          bordered
+          pagination={{ pageSize: 10 }}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default AccountantList;

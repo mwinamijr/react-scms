@@ -10,7 +10,7 @@ const store = configureStore({
   reducer: {
     getUsers: userReducer,
     getTeachers: teacherReducer,
-    accontant: accountantReducer,
+    getAccountants: accountantReducer,
     finance: financeReducer,
     getStudents: studentReducer,
     getParents: parentReducer,

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Input, Button, message } from "antd";
+import Message from "../../components/Message";
 import {
   getTeacherDetails,
   updateTeacher,
@@ -45,8 +46,11 @@ const EditTeacherProfile = () => {
 
   return (
     <div className="edit-profile-container">
+      <Link to="/users/teachers/" className="btn btn-light my-3">
+        Go Back
+      </Link>
       <h2>Edit Teacher Profile</h2>
-      {error && <p className="error-message">{error}</p>}
+      {error && <Message variant="danger">{error}</Message>}
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item
           name="first_name"

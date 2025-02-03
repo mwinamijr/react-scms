@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import Dashboard from "./screens/Dashboard";
 import UserList from "./screens/users/UserList";
-import AddUser from "./screens/users/AddUser";
+import AddAccountant from "./screens/users/AddAccountant";
 import TeacherList from "./screens/users/TeacherList";
 import TeacherDetails from "./screens/users/TeacherDetails";
 import AccountantList from "./screens/users/AccountantList";
@@ -58,7 +58,6 @@ const BaseRouter = () => {
           <Route path="students/upload" element={<BulkUpload />} />
         </Route>
         <Route path="users" element={<UserList />} />
-        <Route path="users/add" element={<AddUser />} />
         <Route path="users/parents" element={<ParentList />} />
         <Route path="users/parents/:id" element={<ParentDetails />} />
         <Route path="users/teachers" element={<TeacherList />} />
@@ -73,6 +72,7 @@ const BaseRouter = () => {
         />
         <Route path="users/accountants/" element={<AccountantList />} />
         <Route path="users/accountants/:id" element={<AccountantDetails />} />
+        <Route path="users/accountants/add" element={<AddAccountant />} />
         <Route path="users/:id" element={<UserProfile />} />
 
         <Route path="/notification/sms/" element={<Assignment />} />

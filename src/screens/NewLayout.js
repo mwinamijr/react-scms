@@ -129,7 +129,11 @@ const DashLayout = (props) => {
 
   // Automatically collapse sidebar on small screens
   useEffect(() => {
-    if (!screens.md) setCollapsed(true);
+    if (screens.md === false) {
+      setCollapsed(true); // Collapse only on small screens
+    } else {
+      setCollapsed(false); // Ensure it stays open on larger screens
+    }
   }, [screens]);
 
   return (
