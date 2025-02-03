@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
   Input,
@@ -21,17 +21,19 @@ function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.getUsers);
   const { error, loading, userInfo } = user;
 
   useEffect(() => {
     if (userInfo) {
-      return <Navigate replace to="/dashboard" />;
+      navigate("/dashboard"); // Redirect to dashboard screen aif the user is already logged in
     }
-  }, [userInfo]);
+  }, [userInfo, navigate]);
 
   const submitHandler = () => {
     dispatch(login({ email, password }));
+    navigate("/dashboard"); // Redirect to dashboard screen after login
   };
 
   return (

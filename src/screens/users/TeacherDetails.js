@@ -1,19 +1,26 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Col, Row } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getTeacherDetails } from "../../features/user/teacherSlice";
 
-function TeacherProfile() {
+import { Card, Descriptions, Avatar, Tag, Typography } from "antd";
+import {
+  UserOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  DollarCircleOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
+
+const TeacherProfile = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-
   const { loading, error, teacher } = useSelector((state) => state.getTeachers);
 
   useEffect(() => {
-    console.log("Dispatching getTeacherDetails with id:", id); // Debug log
     dispatch(getTeacherDetails(id));
   }, [dispatch, id]);
 
@@ -22,39 +29,136 @@ function TeacherProfile() {
       <Link to="/users/teachers/" className="btn btn-light my-3">
         Go Back
       </Link>
-      <Card>
-        <Card.Header>Teacher Profile</Card.Header>
-        <Card.Body>
-          {loading ? (
-            <Loader />
-          ) : error ? (
-            <Message variant="danger">{error}</Message>
-          ) : teacher ? (
-            <Row>
-              <Col></Col>
-              <Col>
-                <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
-                  <div className="col-md-10 px-0">
-                    <span>
-                      {teacher.id}: {teacher.first_name} {teacher.last_name}
-                    </span>
-                    <br />
-                    <span>Email: {teacher.email}</span>
-                    <br />
-                    <span>Phone: {teacher.phone_number}</span>
-                    <br />
-                    <span>Salary: {teacher.salary}</span>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          ) : (
-            <Message variant="info">No teacher found</Message>
-          )}
-        </Card.Body>
+
+      <Card title="Teacher Profile">
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">{error}</Message>
+        ) : teacher ? (
+          <div className="profile-container">
+            {/* Profile Header */}
+            <div className="profile-header">
+              <Avatar
+                size={120}
+                src={teacher.image}
+                icon={!teacher.image && <UserOutlined />}
+              />
+              <Title level={3} className="profile-name">
+                {teacher.first_name} {teacher.middle_name} {teacher.last_name}
+              </Title>
+              <Text type="secondary">@{teacher.username}</Text>
+            </div>
+
+            {/* Basic Information */}
+            <Descriptions title="Basic Information" bordered column={2}>
+              <Descriptions.Item label="Full Name">
+                {teacher.first_name} {teacher.middle_name} {teacher.last_name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Gender">
+                {teacher.gender}
+              </Descriptions.Item>
+              <Descriptions.Item label="Date of Birth">
+                {teacher.date_of_birth}
+              </Descriptions.Item>
+              <Descriptions.Item label="National ID">
+                {teacher.national_id}
+              </Descriptions.Item>
+            </Descriptions>
+
+            {/* Contact Information */}
+            <Descriptions
+              title="Contact Information"
+              bordered
+              column={2}
+              className="mt-3"
+            >
+              <Descriptions.Item label="Email">
+                <MailOutlined /> {teacher.email || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Phone">
+                <PhoneOutlined /> {teacher.phone_number || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Alternative Email">
+                {teacher.alt_email || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Address">
+                {teacher.address || "N/A"}
+              </Descriptions.Item>
+            </Descriptions>
+
+            {/* Employment & Salary Details */}
+            <Descriptions
+              title="Employment & Salary Details"
+              bordered
+              column={2}
+              className="mt-3"
+            >
+              <Descriptions.Item label="Employee ID">
+                {teacher.empId}
+              </Descriptions.Item>
+              <Descriptions.Item label="Designation">
+                {teacher.designation || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Salary">
+                <DollarCircleOutlined />{" "}
+                {teacher.salary ? `$${teacher.salary}` : "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Unpaid Salary">
+                <DollarCircleOutlined style={{ color: "red" }} /> $
+                {teacher.unpaid_salary}
+              </Descriptions.Item>
+            </Descriptions>
+
+            {/* Subject Specialization */}
+            <Card title="Subject Specialization" className="mt-3">
+              {teacher.subject_specialization_display.length > 0 ? (
+                teacher.subject_specialization_display.map((subject, index) => (
+                  <Tag color="blue" key={index}>
+                    {subject}
+                  </Tag>
+                ))
+              ) : (
+                <Text>No subjects assigned</Text>
+              )}
+            </Card>
+          </div>
+        ) : (
+          <Message variant="info">No teacher found</Message>
+        )}
+      </Card>
+      <Card title="Payments History" className="mt-3">
+        {teacher.payments && teacher.payments.length > 0 ? (
+          <table className="payment-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teacher.payments.map((payment) => (
+                <tr key={payment.id}>
+                  <td>{new Date(payment.date).toLocaleDateString()}</td>
+                  <td>${payment.amount}</td>
+                  <td>
+                    <Tag color={payment.status === "Paid" ? "green" : "red"}>
+                      {payment.status}
+                    </Tag>
+                  </td>
+                  <td>{payment.description || "N/A"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <Text>No payments found</Text>
+        )}
       </Card>
     </div>
   );
-}
+};
 
 export default TeacherProfile;

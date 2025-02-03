@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   DesktopOutlined,
   MailOutlined,
@@ -38,15 +38,6 @@ const DashLayout = (props) => {
   const location = useLocation(); // Get current route location
   const screens = useBreakpoint(); // Access responsive breakpoints
 
-  // Access userInfo from the user slice
-  const { userInfo } = useSelector((state) => state.getUsers);
-
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login"); // Redirect to login page if user is logged out
-    }
-  }, [userInfo, navigate]);
-
   const logoutHandler = () => {
     dispatch(logout()); // Dispatch the logout action
     navigate("/"); // Redirect to home screen after logout
@@ -54,7 +45,11 @@ const DashLayout = (props) => {
 
   // Menu items
   const items = [
-    getItem(<Link to="/">Dashboard</Link>, "/dashboard", <PieChartOutlined />),
+    getItem(
+      <Link to="/dashboard">Dashboard</Link>,
+      "/dashboard",
+      <PieChartOutlined />
+    ),
     getItem("Admission", "/admission", <DesktopOutlined />),
     getItem(
       <Link to="/sis/students">Students</Link>,
@@ -156,7 +151,7 @@ const DashLayout = (props) => {
             background: "rgba(255, 255, 255, 0.2)",
           }}
         >
-          {collapsed ? "HIS" : "Hayatul Islamiya"}
+          {collapsed ? "HISMS" : "Hayatul SIMS"}
         </div>
         <Menu
           theme="dark"

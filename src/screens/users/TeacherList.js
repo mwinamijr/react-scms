@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table, Space, Typography } from "antd";
+import { Breadcrumb, Table, Space, Typography, Spin } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { listTeachers } from "../../features/user/teacherSlice";
@@ -86,7 +86,10 @@ const TeacherList = () => {
       {/* Content */}
       {loading ? (
         <div style={{ textAlign: "center" }}>
-          <Typography.Text>Loading...</Typography.Text>
+          <Spin
+            size="large"
+            style={{ margin: "20px auto", display: "block" }}
+          />
         </div>
       ) : error ? (
         <div style={{ textAlign: "center" }}>

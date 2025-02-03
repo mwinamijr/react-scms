@@ -1,20 +1,12 @@
-import React from 'react'
-import { Spinner } from 'react-bootstrap'
+import React from "react";
+import { Spin } from "antd";
 
 function Loader() {
-    return (
-        <Spinner
-            animation='border'
-            role='status'
-            style={{
-                height: '100px',
-                width: '100px',
-                margin: 'auto',
-                display: 'block'
-            }}
-        >
-        </Spinner>
-    )
+  return (
+    <div style={{ textAlign: "center" }}>
+      <Spin size="large" style={{ margin: "20px auto", display: "block" }} />
+    </div>
+  );
 }
 
-export default Loader
+export default Loader;
