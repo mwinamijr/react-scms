@@ -82,7 +82,7 @@ const AddAccountant = () => {
 
   return (
     <div className="mt-4">
-      <Link to="/users/" className="ant-btn ant-btn-link mb-4">
+      <Link to="/users/accountants" className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
 

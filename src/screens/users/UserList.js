@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,7 +11,7 @@ import {
   Button,
   Typography,
   Space,
-  Pagination,
+  Popconfirm,
   message,
 } from "antd";
 import {
@@ -21,6 +21,8 @@ import {
   CheckOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
+import Loader from "../../components/Loader";
+import Message from "../../components/Message";
 import {
   listUsers,
   deleteUser,
@@ -31,40 +33,44 @@ const { Title } = Typography;
 
 const UserList = () => {
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [form] = Form.useForm();
   const [filters, setFilters] = useState({
     first_name: "",
     last_name: "",
     email: "",
   });
 
-  const { loading, error, users, successDelete, pagination } = useSelector(
+  const { loading, error, users, successDelete } = useSelector(
     (state) => state.getUsers
   );
 
+  // ✅ Memoized function to fetch users when searching
+  const fetchUsers = useCallback(() => {
+    dispatch(listUsers(filters));
+  }, [dispatch, filters]);
+
+  // ✅ Fetch users on mount & after deletion
   useEffect(() => {
-    dispatch(listUsers({ ...filters, page: currentPage }));
+    fetchUsers(); // Only fetch when component mounts
 
     if (successDelete) {
       message.success("User deleted successfully");
       dispatch(resetSuccessDelete());
     }
-  }, [dispatch, successDelete, filters, currentPage]);
+  }, [fetchUsers, successDelete, dispatch]);
 
-  const deleteHandler = (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      dispatch(deleteUser(id));
-    }
+  const handleDelete = (id) => {
+    dispatch(deleteUser(id));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ Explicitly trigger search (prevents auto API calls)
   const handleSearch = () => {
-    setCurrentPage(1); // Reset to the first page on search
-    dispatch(listUsers({ ...filters, page: 1 }));
+    fetchUsers();
   };
 
   const columns = [
@@ -108,10 +114,14 @@ const UserList = () => {
           <Link to={`/users/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
-          <DeleteOutlined
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => deleteHandler(record.id)}
-          />
+          <Popconfirm
+            title="Are you sure to delete this user?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+          </Popconfirm>
         </Space>
       ),
     },
@@ -143,13 +153,14 @@ const UserList = () => {
 
       {/* Search Filters */}
       <Form
+        form={form}
         layout="vertical"
         onFinish={handleSearch}
         style={{ marginBottom: 24 }}
       >
         <Row gutter={16}>
-          <Col xs={24} md={8}>
-            <Form.Item label="First Name">
+          <Col xs={24} md={6}>
+            <Form.Item>
               <Input
                 name="first_name"
                 placeholder="Enter first name"
@@ -158,8 +169,8 @@ const UserList = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={8}>
-            <Form.Item label="Last Name">
+          <Col xs={24} md={6}>
+            <Form.Item>
               <Input
                 name="last_name"
                 placeholder="Enter last name"
@@ -168,8 +179,8 @@ const UserList = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={8}>
-            <Form.Item label="Email">
+          <Col xs={24} md={6}>
+            <Form.Item>
               <Input
                 name="email"
                 placeholder="Enter email"
@@ -178,10 +189,8 @@ const UserList = () => {
               />
             </Form.Item>
           </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Button type="primary" htmlType="submit">
+          <Col xs={24} md={6}>
+            <Button type="primary" htmlType="submit" block>
               Search
             </Button>
           </Col>
@@ -190,28 +199,19 @@ const UserList = () => {
 
       {/* Users Table */}
       {loading ? (
-        <div style={{ textAlign: "center" }}>Loading...</div>
+        <div style={{ textAlign: "center" }}>
+          <Loader />
+        </div>
       ) : error ? (
-        <div style={{ textAlign: "center", color: "red" }}>{error}</div>
+        <Message variant="danger">{error}</Message>
       ) : (
-        <>
-          <Table
-            dataSource={users.filter((user) => !user.isParent)}
-            columns={columns}
-            rowKey="id"
-            pagination={false}
-            bordered
-          />
-          <div style={{ marginTop: 16, textAlign: "center" }}>
-            <Pagination
-              current={currentPage}
-              pageSize={30}
-              total={pagination.count}
-              onChange={(page) => setCurrentPage(page)}
-              showSizeChanger={false}
-            />
-          </div>
-        </>
+        <Table
+          dataSource={users.filter((user) => !user.isParent)}
+          columns={columns}
+          rowKey="id"
+          pagination={{ pageSize: 20 }}
+          bordered
+        />
       )}
     </div>
   );

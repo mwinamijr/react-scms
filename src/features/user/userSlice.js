@@ -3,6 +3,21 @@ import axios from "axios";
 
 const djangoUrl = "http://127.0.0.1:8000";
 
+const getErrorMessage = (error) => {
+  if (error.response) {
+    if (error.response.data) {
+      if (typeof error.response.data === "string") {
+        return error.response.data; // Handle string errors
+      } else if (error.response.data.detail) {
+        return error.response.data.detail; // Handle DRF 'detail' key
+      } else {
+        return JSON.stringify(error.response.data); // Convert object errors to string
+      }
+    }
+  }
+  return error.message || "An unknown error occurred";
+};
+
 // Thunks for Asynchronous Actions
 export const login = createAsyncThunk(
   "user/login",
@@ -19,11 +34,7 @@ export const login = createAsyncThunk(
       localStorage.setItem("userInfo", JSON.stringify(data));
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -67,11 +78,7 @@ export const register = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -95,11 +102,7 @@ export const getUserDetails = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -107,7 +110,7 @@ export const getUserDetails = createAsyncThunk(
 export const listUsers = createAsyncThunk(
   "user/list",
   async (
-    { first_name = "", last_name = "", email = "", page = 1, pageSize = 30 },
+    { first_name = "", last_name = "", email = "" },
     { getState, rejectWithValue }
   ) => {
     try {
@@ -121,16 +124,12 @@ export const listUsers = createAsyncThunk(
         },
       };
       const response = await axios.get(
-        `${djangoUrl}/api/users/users/?first_name=${first_name}&last_name=${last_name}&email=${email}&page=${page}&page_size=${pageSize}`,
+        `${djangoUrl}/api/users/users/?first_name=${first_name}&last_name=${last_name}&email=${email}`,
         config
       );
       return response.data; // Includes pagination metadata and the student results
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -151,11 +150,7 @@ export const deleteUser = createAsyncThunk(
       await axios.delete(`${djangoUrl}/api/users/users/delete/${id}/`, config);
       return id; // Return ID to remove from the list if needed
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -169,11 +164,6 @@ const userSlice = createSlice({
       : null, // Initialize from localStorage
     user: null,
     users: [],
-    pagination: {
-      count: 0, // Total number of users
-      next: null, // URL for the next page
-      previous: null, // URL for the previous page
-    },
     loading: false,
     error: null,
     successDelete: false, // Add a flag for delete success
@@ -238,12 +228,7 @@ const userSlice = createSlice({
       })
       .addCase(listUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = action.payload.results;
-        state.pagination = {
-          count: action.payload.count,
-          next: action.payload.next,
-          previous: action.payload.previous,
-        }; // Set pagination metadata
+        state.users = action.payload;
       })
       .addCase(listUsers.rejected, (state, action) => {
         state.loading = false;
