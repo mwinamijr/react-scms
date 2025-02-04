@@ -147,7 +147,7 @@ export const deleteUser = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(`${djangoUrl}/api/users/users/delete/${id}/`, config);
+      await axios.delete(`${djangoUrl}/api/users/users/${id}/`, config);
       return id; // Return ID to remove from the list if needed
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));

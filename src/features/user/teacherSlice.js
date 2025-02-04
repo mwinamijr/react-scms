@@ -180,7 +180,6 @@ const teacherSlice = createSlice({
     successCreate: false,
     loadingCreate: false,
     errorCreate: null,
-    bulkCreated: null,
   },
   reducers: {
     resetCreateState: (state) => {
@@ -264,9 +263,8 @@ const teacherSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(bulkCreateTeachers.fulfilled, (state, action) => {
+      .addCase(bulkCreateTeachers.fulfilled, (state) => {
         state.loading = false;
-        state.bulkCreated = action.payload;
       })
       .addCase(bulkCreateTeachers.rejected, (state, action) => {
         state.loading = false;
