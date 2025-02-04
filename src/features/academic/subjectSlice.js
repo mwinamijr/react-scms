@@ -18,9 +18,9 @@ const getErrorMessage = (error) => {
   return error.message || "An unknown error occurred";
 };
 
-// Thunks for Teacher Actions
-export const getTeacherDetails = createAsyncThunk(
-  "teacher/details",
+// Thunks for Subject Actions
+export const getSubjectDetails = createAsyncThunk(
+  "subject/details",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -33,7 +33,7 @@ export const getTeacherDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/users/teachers/${id}/`,
+        `${djangoUrl}/api/academic/subjects/${id}/`,
         config
       );
       return data;
@@ -43,8 +43,8 @@ export const getTeacherDetails = createAsyncThunk(
   }
 );
 
-export const listTeachers = createAsyncThunk(
-  "teacher/list",
+export const listSubjects = createAsyncThunk(
+  "subject/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -57,7 +57,7 @@ export const listTeachers = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/users/teachers/`,
+        `${djangoUrl}/api/academic/subjects/`,
         config
       );
       return data;
@@ -67,9 +67,9 @@ export const listTeachers = createAsyncThunk(
   }
 );
 
-export const createTeacher = createAsyncThunk(
-  "teacher/create",
-  async (teacherData, { getState, rejectWithValue }) => {
+export const createSubject = createAsyncThunk(
+  "subject/create",
+  async (subjectData, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -81,8 +81,8 @@ export const createTeacher = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/users/teachers/`,
-        teacherData,
+        `${djangoUrl}/api/academic/subjects/`,
+        subjectData,
         config
       );
       return data;
@@ -92,8 +92,8 @@ export const createTeacher = createAsyncThunk(
   }
 );
 
-export const deleteTeacher = createAsyncThunk(
-  "teacher/delete",
+export const deleteSubject = createAsyncThunk(
+  "subject/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -105,19 +105,16 @@ export const deleteTeacher = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(
-        `${djangoUrl}/api/users/teachers/delete/${id}/`,
-        config
-      );
-      return id; // Return teacherId to allow removal from state
+      await axios.delete(`${djangoUrl}/api/academic/subjects/${id}/`, config);
+      return id; // Return subjectId to allow removal from state
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }
   }
 );
 
-export const updateTeacher = createAsyncThunk(
-  "teacher/update",
+export const updateSubject = createAsyncThunk(
+  "subject/update",
   async ({ id, ...values }, { getState, rejectWithValue }) => {
     try {
       const {
@@ -130,7 +127,7 @@ export const updateTeacher = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `${djangoUrl}/api/users/teachers/${id}/`,
+        `${djangoUrl}/api/academic/subjects/${id}/`,
         values,
         config
       );
@@ -141,15 +138,15 @@ export const updateTeacher = createAsyncThunk(
   }
 );
 
-// Slice for Teacher State Management
-const teacherSlice = createSlice({
-  name: "teacher",
+// Slice for Subject State Management
+const subjectSlice = createSlice({
+  name: "subject",
   initialState: {
-    teacher: null,
-    teachers: [],
+    subject: null,
+    subjects: [],
     loading: false,
     error: null,
-    createdTeacher: null,
+    createdSubject: null,
     successCreate: false,
     loadingCreate: false,
     errorCreate: null,
@@ -157,77 +154,77 @@ const teacherSlice = createSlice({
   reducers: {
     resetCreateState: (state) => {
       state.successCreate = false;
-      state.createdTeacher = null;
+      state.createdSubject = null;
       state.errorCreate = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Get Teacher Details
-      .addCase(getTeacherDetails.pending, (state) => {
+      // Get Subject Details
+      .addCase(getSubjectDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getTeacherDetails.fulfilled, (state, action) => {
+      .addCase(getSubjectDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.teacher = action.payload;
+        state.subject = action.payload;
       })
-      .addCase(getTeacherDetails.rejected, (state, action) => {
+      .addCase(getSubjectDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // List Teachers
-      .addCase(listTeachers.pending, (state) => {
+      // List Subjects
+      .addCase(listSubjects.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(listTeachers.fulfilled, (state, action) => {
+      .addCase(listSubjects.fulfilled, (state, action) => {
         state.loading = false;
-        state.teachers = action.payload;
+        state.subjects = action.payload;
       })
-      .addCase(listTeachers.rejected, (state, action) => {
+      .addCase(listSubjects.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Create Teacher
-      .addCase(createTeacher.pending, (state) => {
+      // Create Subject
+      .addCase(createSubject.pending, (state) => {
         state.loadingCreate = true;
         state.errorCreate = null;
       })
-      .addCase(createTeacher.fulfilled, (state, action) => {
+      .addCase(createSubject.fulfilled, (state, action) => {
         state.loadingCreate = false;
         state.successCreate = true;
-        state.createdTeacher = action.payload;
+        state.createdSubject = action.payload;
       })
-      .addCase(createTeacher.rejected, (state, action) => {
+      .addCase(createSubject.rejected, (state, action) => {
         state.loadingCreate = false;
         state.errorCreate = action.payload;
       })
-      // Delete Teacher
-      .addCase(deleteTeacher.pending, (state) => {
+      // Delete Subject
+      .addCase(deleteSubject.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteTeacher.fulfilled, (state, action) => {
+      .addCase(deleteSubject.fulfilled, (state, action) => {
         state.loading = false;
-        state.teachers = state.teachers.filter(
-          (teacher) => teacher.id !== action.payload
+        state.subjects = state.subjects.filter(
+          (subject) => subject.id !== action.payload
         );
       })
-      .addCase(deleteTeacher.rejected, (state, action) => {
+      .addCase(deleteSubject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Update Teacher
-      .addCase(updateTeacher.pending, (state) => {
+      // Update Subject
+      .addCase(updateSubject.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateTeacher.fulfilled, (state, action) => {
+      .addCase(updateSubject.fulfilled, (state, action) => {
         state.loading = false;
-        state.teacher = action.payload;
+        state.subject = action.payload;
       })
-      .addCase(updateTeacher.rejected, (state, action) => {
+      .addCase(updateSubject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -235,5 +232,5 @@ const teacherSlice = createSlice({
 });
 
 // Export Reducer
-export const { resetCreateState } = teacherSlice.actions;
-export default teacherSlice.reducer;
+export const { resetCreateState } = subjectSlice.actions;
+export default subjectSlice.reducer;

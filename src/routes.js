@@ -7,9 +7,11 @@ import UserList from "./screens/users/UserList";
 import AddAccountant from "./screens/users/AddAccountant";
 import TeacherList from "./screens/users/TeacherList";
 import TeacherDetails from "./screens/users/TeacherDetails";
-import AccountantList from "./screens/users/AccountantList";
+import AddTeacher from "./screens/users/AddTeacher";
+import TeacherBulkUpload from "./screens/users/TeacherBulkUpload";
 import EditTeacherProfile from "./screens/users/EditTeacherProfile";
 import PrintTeacherProfile from "./screens/users/PrintTeacherProfile";
+import AccountantList from "./screens/users/AccountantList";
 import AccountantDetails from "./screens/users/AccountantDetails";
 import UserProfile from "./screens/users/UserProfile";
 import ParentList from "./screens/users/ParentList";
@@ -61,6 +63,8 @@ const BaseRouter = () => {
         <Route path="users/parents" element={<ParentList />} />
         <Route path="users/parents/:id" element={<ParentDetails />} />
         <Route path="users/teachers" element={<TeacherList />} />
+        <Route path="users/teachers/add" element={<AddTeacher />} />
+        <Route path="users/teachers/upload" element={<TeacherBulkUpload />} />
         <Route path="users/teachers/:id" element={<TeacherDetails />} />
         <Route
           path="/users/teachers/:id/edit"

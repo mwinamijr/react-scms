@@ -1,8 +1,23 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Breadcrumb, Table, Space, Typography, Spin } from "antd";
-import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Breadcrumb,
+  Table,
+  Space,
+  Typography,
+  Spin,
+  Row,
+  Col,
+  Button,
+} from "antd";
+import {
+  EyeOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  UserAddOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 
 import { listTeachers } from "../../features/user/teacherSlice";
 
@@ -82,6 +97,39 @@ const TeacherList = () => {
       <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
         Teachers
       </Title>
+
+      <Row gutter={[16, 16]} className="mb-4">
+        <Col xs={24} sm={12} lg={6}>
+          <Button type="default" block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <UserAddOutlined />
+              <Link to="/users/teachers/add">Add Teacher</Link>
+            </span>
+          </Button>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Button type="default" block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <UploadOutlined />
+              <Link to="/users/teachers/upload">Bulk Upload</Link>
+            </span>
+          </Button>
+        </Col>
+      </Row>
 
       {/* Content */}
       {loading ? (
