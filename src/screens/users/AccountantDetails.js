@@ -5,7 +5,17 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getAccountantDetails } from "../../features/user/accountantSlice";
 
-import { Card, Descriptions, Avatar, Tag, Typography, Button } from "antd";
+import {
+  Card,
+  Descriptions,
+  Avatar,
+  Tag,
+  Typography,
+  Button,
+  Col,
+  Row,
+  Space,
+} from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -28,7 +38,7 @@ const AccountantProfile = () => {
 
   return (
     <div>
-      <Link to="/users/accountants/" className="btn btn-light my-3">
+      <Link to="/users/accountants/" className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
 
@@ -40,26 +50,35 @@ const AccountantProfile = () => {
         ) : accountant ? (
           <div className="profile-container">
             {/* Profile Header */}
+
             <div className="profile-header">
               <Avatar
                 size={120}
                 src={accountant.image}
                 icon={!accountant.image && <UserOutlined />}
+                className="profile-avatar"
               />
               <Title level={3} className="profile-name">
                 {accountant.first_name} {accountant.middle_name}{" "}
                 {accountant.last_name}
               </Title>
-              <Text type="secondary">@{accountant.username}</Text>
-              <Link to={`/users/accountants/${id}/edit`}>
-                <Button type="primary" className="mr-2">
-                  Edit Profile
-                </Button>
-              </Link>
+              <Text type="secondary" className="profile-username">
+                @{accountant.username}
+              </Text>
 
-              <Link to={`/users/accountants/${id}/print`}>
-                <Button type="default">Print Profile</Button>
-              </Link>
+              <Row justify="center" className="profile-actions">
+                <Col>
+                  <Space>
+                    <Link to={`/users/accountants/${id}/edit`}>
+                      <Button type="primary">Edit Profile</Button>
+                    </Link>
+
+                    <Link to={`/users/accountants/${id}/print`}>
+                      <Button type="default">Print Profile</Button>
+                    </Link>
+                  </Space>
+                </Col>
+              </Row>
             </div>
 
             {/* Basic Information */}
@@ -76,6 +95,12 @@ const AccountantProfile = () => {
               </Descriptions.Item>
               <Descriptions.Item label="National ID">
                 {accountant.national_id}
+              </Descriptions.Item>
+              <Descriptions.Item label="TIN Number">
+                {accountant.tin_number}
+              </Descriptions.Item>
+              <Descriptions.Item label="NSSF Number">
+                {accountant.nssf_number}
               </Descriptions.Item>
             </Descriptions>
 
@@ -127,8 +152,9 @@ const AccountantProfile = () => {
           <Message variant="info">No accountant found</Message>
         )}
       </Card>
-      <Card title="Payments History" className="mt-3">
-        {accountant.payments && accountant.payments.length > 0 ? (
+
+      <Card title="Payments History" className="mt-3" loading={loading}>
+        {accountant?.payments?.length > 0 ? (
           <table className="payment-table">
             <thead>
               <tr>

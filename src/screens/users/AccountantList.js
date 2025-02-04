@@ -1,23 +1,14 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Breadcrumb,
-  Table,
-  Space,
-  Typography,
-  Spin,
-  Row,
-  Col,
-  Button,
-} from "antd";
+import { Breadcrumb, Table, Space, Typography, Row, Col, Button } from "antd";
 import {
   EyeOutlined,
   EditOutlined,
   DeleteOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-
+import Message from "../../components/Message";
 import { listAccountants } from "../../features/user/accountantSlice";
 
 const { Title } = Typography;
@@ -100,26 +91,15 @@ const AccountantList = () => {
       </Row>
 
       {/* Content */}
-      {loading ? (
-        <div style={{ textAlign: "center" }}>
-          <Spin
-            size="large"
-            style={{ margin: "20px auto", display: "block" }}
-          />
-        </div>
-      ) : error ? (
-        <div style={{ textAlign: "center" }}>
-          <Typography.Text type="danger">{error}</Typography.Text>
-        </div>
-      ) : (
-        <Table
-          dataSource={accountants}
-          columns={columns}
-          rowKey="id"
-          bordered
-          pagination={{ pageSize: 10 }}
-        />
-      )}
+      {error && <Message variant="danger">{error}</Message>}
+      <Table
+        dataSource={accountants}
+        columns={columns}
+        rowKey="id"
+        bordered
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
     </div>
   );
 };

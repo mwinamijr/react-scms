@@ -5,7 +5,17 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getTeacherDetails } from "../../features/user/teacherSlice";
 
-import { Card, Descriptions, Avatar, Tag, Typography, Button } from "antd";
+import {
+  Card,
+  Descriptions,
+  Avatar,
+  Tag,
+  Typography,
+  Button,
+  Col,
+  Row,
+  Space,
+} from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -26,7 +36,7 @@ const TeacherProfile = () => {
 
   return (
     <div>
-      <Link to="/users/teachers/" className="btn btn-light my-3">
+      <Link to="/users/teachers/" className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
 
@@ -38,31 +48,43 @@ const TeacherProfile = () => {
         ) : teacher ? (
           <div className="profile-container">
             {/* Profile Header */}
+
             <div className="profile-header">
               <Avatar
                 size={120}
                 src={teacher.image}
                 icon={!teacher.image && <UserOutlined />}
+                className="profile-avatar"
               />
               <Title level={3} className="profile-name">
                 {teacher.first_name} {teacher.middle_name} {teacher.last_name}
               </Title>
-              <Text type="secondary">@{teacher.username}</Text>
-              <Link to={`/users/teachers/${id}/edit`}>
-                <Button type="primary" className="mr-2">
-                  Edit Profile
-                </Button>
-              </Link>
+              <Text type="secondary" className="profile-username">
+                @{teacher.username}
+              </Text>
 
-              <Link to={`/users/teachers/${id}/print`}>
-                <Button type="default">Print Profile</Button>
-              </Link>
+              <Row justify="center" className="profile-actions">
+                <Col>
+                  <Space>
+                    <Link to={`/users/teachers/${id}/edit`}>
+                      <Button type="primary">Edit Profile</Button>
+                    </Link>
+
+                    <Link to={`/users/teachers/${id}/print`}>
+                      <Button type="default">Print Profile</Button>
+                    </Link>
+                  </Space>
+                </Col>
+              </Row>
             </div>
 
             {/* Basic Information */}
             <Descriptions title="Basic Information" bordered column={2}>
               <Descriptions.Item label="Full Name">
                 {teacher.first_name} {teacher.middle_name} {teacher.last_name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Short Name">
+                {teacher.short_name}
               </Descriptions.Item>
               <Descriptions.Item label="Gender">
                 {teacher.gender}
@@ -72,6 +94,12 @@ const TeacherProfile = () => {
               </Descriptions.Item>
               <Descriptions.Item label="National ID">
                 {teacher.national_id}
+              </Descriptions.Item>
+              <Descriptions.Item label="TIN Number">
+                {teacher.tin_number}
+              </Descriptions.Item>
+              <Descriptions.Item label="NSSF Number">
+                {teacher.nssf_number}
               </Descriptions.Item>
             </Descriptions>
 
@@ -136,8 +164,9 @@ const TeacherProfile = () => {
           <Message variant="info">No teacher found</Message>
         )}
       </Card>
-      <Card title="Payments History" className="mt-3">
-        {teacher.payments && teacher.payments.length > 0 ? (
+
+      <Card title="Payments History" className="mt-3" loading={loading}>
+        {teacher?.payments?.length > 0 ? (
           <table className="payment-table">
             <thead>
               <tr>

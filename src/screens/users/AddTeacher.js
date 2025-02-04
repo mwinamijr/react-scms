@@ -19,6 +19,7 @@ import {
   createTeacher,
   resetCreateState,
 } from "../../features/user/teacherSlice";
+import { listSubjects } from "../../features/academic/subjectSlice"; // Import subject list action
 import dayjs from "dayjs";
 
 const { Option } = Select;
@@ -28,9 +29,20 @@ const AddTeacher = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Get subjects from Redux store
+  const {
+    subjects,
+    loading: subjectsLoading,
+    error: subjectsError,
+  } = useSelector((state) => state.getSubjects);
   const { loadingCreate, errorCreate, successCreate } = useSelector(
     (state) => state.getTeachers
   );
+
+  useEffect(() => {
+    dispatch(listSubjects()); // Fetch subjects on mount
+  }, [dispatch]);
 
   useEffect(() => {
     if (successCreate) {
@@ -59,7 +71,7 @@ const AddTeacher = () => {
     } = values;
 
     const email = `${firstName}.${lastName}@hayatul.com`.toLowerCase();
-    const formattedDate = dayjs(birthday).format("YYYY-MM-DD"); // Format date
+    const formattedDate = dayjs(birthday).format("YYYY-MM-DD");
 
     const teacherData = {
       first_name: firstName,
@@ -74,9 +86,9 @@ const AddTeacher = () => {
       salary,
       nida,
       address,
-      date_of_birth: formattedDate, // Use formatted date
+      date_of_birth: formattedDate,
       password,
-      subject_specialization: subjects, // Include subject specialization
+      subject_specialization: subjects, // Pass selected subjects
     };
 
     dispatch(createTeacher(teacherData));
@@ -90,10 +102,11 @@ const AddTeacher = () => {
 
       {loadingCreate && <Loader />}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+      {subjectsError && <Message variant="danger">{subjectsError}</Message>}
 
       <Card title="Register Teacher" className="shadow">
         <Form form={form} layout="vertical" onFinish={submitHandler}>
-          {/* Personal Information Section */}
+          {/* Personal Information */}
           <Title level={5}>Personal Information</Title>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
@@ -129,7 +142,7 @@ const AddTeacher = () => {
             <Input placeholder="Enter phone number" />
           </Form.Item>
 
-          {/* Additional Information Section */}
+          {/* Additional Information */}
           <Title level={5} className="mt-4">
             Additional Information
           </Title>
@@ -209,19 +222,20 @@ const AddTeacher = () => {
               { required: true, message: "Please select at least one subject" },
             ]}
           >
-            <Select mode="multiple" placeholder="Select subjects">
-              <Option value="Basic mathematics">Mathematics</Option>
-              <Option value="English">English</Option>
-              <Option value="Science">Science</Option>
-              <Option value="History">History</Option>
-              <Option value="Geography">Geography</Option>
-              <Option value="Physics">Physics</Option>
-              <Option value="Chemistry">Chemistry</Option>
-              <Option value="Biology">Biology</Option>
-              <Option value="Computer Science">Computer Science</Option>
+            <Select
+              mode="multiple"
+              placeholder="Select subjects"
+              loading={subjectsLoading}
+            >
+              {subjects.map((subject) => (
+                <Option key={subject.id} value={subject.name}>
+                  {subject.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 
+          {/* Submit Button */}
           <Form.Item>
             <Button
               type="primary"

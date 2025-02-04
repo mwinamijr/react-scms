@@ -21,7 +21,7 @@ const getErrorMessage = (error) => {
 // Thunks for Accountant Actions
 export const getAccountantDetails = createAsyncThunk(
   "accountant/details",
-  async (accountantId, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -33,7 +33,7 @@ export const getAccountantDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/users/accountants/${accountantId}/`,
+        `${djangoUrl}/api/users/accountants/${id}/`,
         config
       );
       return data;
@@ -118,7 +118,7 @@ export const deleteAccountant = createAsyncThunk(
 
 export const updateAccountant = createAsyncThunk(
   "accountant/update",
-  async (accountant, { getState, rejectWithValue }) => {
+  async ({ id, ...values }, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -130,8 +130,8 @@ export const updateAccountant = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `${djangoUrl}/api/users/accountants/update/${accountant.id}/`,
-        accountant,
+        `${djangoUrl}/api/users/accountants/${id}/`,
+        values,
         config
       );
       return data;
