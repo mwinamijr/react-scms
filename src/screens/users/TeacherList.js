@@ -6,10 +6,11 @@ import {
   Table,
   Space,
   Typography,
-  Spin,
   Row,
   Col,
   Button,
+  message,
+  Popconfirm,
 } from "antd";
 import {
   EyeOutlined,
@@ -19,7 +20,8 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 
-import { listTeachers } from "../../features/user/teacherSlice";
+import Message from "../../components/Message";
+import { listTeachers, deleteTeacher } from "../../features/user/teacherSlice";
 
 const { Title } = Typography;
 
@@ -68,10 +70,12 @@ const TeacherList = () => {
           <Link to={`/users/teachers/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
-          <DeleteOutlined
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDelete(record.id)}
-          />
+          <Popconfirm
+            title="Delete this teacher?"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+          </Popconfirm>
         </Space>
       ),
     },
@@ -79,8 +83,9 @@ const TeacherList = () => {
 
   // Handle delete action
   const handleDelete = (id) => {
-    console.log("Delete teacher with ID:", id);
-    // Add delete logic here
+    dispatch(deleteTeacher(id))
+      .unwrap()
+      .then(() => message.success("Teacher deleted successfully"));
   };
 
   return (
@@ -132,26 +137,16 @@ const TeacherList = () => {
       </Row>
 
       {/* Content */}
-      {loading ? (
-        <div style={{ textAlign: "center" }}>
-          <Spin
-            size="large"
-            style={{ margin: "20px auto", display: "block" }}
-          />
-        </div>
-      ) : error ? (
-        <div style={{ textAlign: "center" }}>
-          <Typography.Text type="danger">{error}</Typography.Text>
-        </div>
-      ) : (
-        <Table
-          dataSource={teachers}
-          columns={columns}
-          rowKey="id"
-          bordered
-          pagination={{ pageSize: 10 }}
-        />
-      )}
+      {error && <Message variant="danger">{error}</Message>}
+
+      <Table
+        dataSource={teachers}
+        columns={columns}
+        rowKey="id"
+        bordered
+        pagination={{ pageSize: 10 }}
+        loading={loading}
+      />
     </div>
   );
 };

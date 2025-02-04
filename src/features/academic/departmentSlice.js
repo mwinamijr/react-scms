@@ -18,9 +18,9 @@ const getErrorMessage = (error) => {
   return error.message || "An unknown error occurred";
 };
 
-// Thunks for Subject Actions
-export const getSubjectDetails = createAsyncThunk(
-  "subject/details",
+// Thunks for Department Actions
+export const getDepartmentDetails = createAsyncThunk(
+  "department/details",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -33,7 +33,7 @@ export const getSubjectDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/academic/subjects/${id}/`,
+        `${djangoUrl}/api/academic/departments/${id}/`,
         config
       );
       return data;
@@ -43,8 +43,8 @@ export const getSubjectDetails = createAsyncThunk(
   }
 );
 
-export const listSubjects = createAsyncThunk(
-  "subject/list",
+export const listDepartments = createAsyncThunk(
+  "department/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -57,7 +57,7 @@ export const listSubjects = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/academic/subjects/`,
+        `${djangoUrl}/api/academic/departments/`,
         config
       );
       return data;
@@ -67,9 +67,9 @@ export const listSubjects = createAsyncThunk(
   }
 );
 
-export const createSubject = createAsyncThunk(
-  "subject/create",
-  async (subjectData, { getState, rejectWithValue }) => {
+export const createDepartment = createAsyncThunk(
+  "department/create",
+  async (departmentData, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -81,8 +81,8 @@ export const createSubject = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/academic/subjects/`,
-        subjectData,
+        `${djangoUrl}/api/academic/departments/`,
+        departmentData,
         config
       );
       return data;
@@ -92,32 +92,8 @@ export const createSubject = createAsyncThunk(
   }
 );
 
-export const bulkCreateSubjects = createAsyncThunk(
-  "subject/bulkCreate",
-  async (filename, { getState, rejectWithValue }) => {
-    try {
-      const {
-        getUsers: { userInfo },
-      } = getState();
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-      const { data } = await axios.post(
-        `${djangoUrl}/api/academic/subjects/bulk-upload/${filename}/`,
-        config
-      );
-      return data;
-    } catch (error) {
-      return rejectWithValue(getErrorMessage(error));
-    }
-  }
-);
-
-export const deleteSubject = createAsyncThunk(
-  "subject/delete",
+export const deleteDepartment = createAsyncThunk(
+  "department/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -129,16 +105,19 @@ export const deleteSubject = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(`${djangoUrl}/api/academic/subjects/${id}/`, config);
-      return id; // Return subjectId to allow removal from state
+      await axios.delete(
+        `${djangoUrl}/api/academic/departments/${id}/`,
+        config
+      );
+      return id; // Return departmentId to allow removal from state
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }
   }
 );
 
-export const updateSubject = createAsyncThunk(
-  "subject/update",
+export const updateDepartment = createAsyncThunk(
+  "department/update",
   async ({ id, ...values }, { getState, rejectWithValue }) => {
     try {
       const {
@@ -151,7 +130,7 @@ export const updateSubject = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `${djangoUrl}/api/academic/subjects/${id}/`,
+        `${djangoUrl}/api/academic/departments/${id}/`,
         values,
         config
       );
@@ -162,15 +141,15 @@ export const updateSubject = createAsyncThunk(
   }
 );
 
-// Slice for Subject State Management
-const subjectSlice = createSlice({
-  name: "subject",
+// Slice for Department State Management
+const departmentSlice = createSlice({
+  name: "department",
   initialState: {
-    subject: null,
-    subjects: [],
+    department: null,
+    departments: [],
     loading: false,
     error: null,
-    createdSubject: null,
+    createdDepartment: null,
     successCreate: false,
     loadingCreate: false,
     errorCreate: null,
@@ -178,89 +157,77 @@ const subjectSlice = createSlice({
   reducers: {
     resetCreateState: (state) => {
       state.successCreate = false;
-      state.createdSubject = null;
+      state.createdDepartment = null;
       state.errorCreate = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Get Subject Details
-      .addCase(getSubjectDetails.pending, (state) => {
+      // Get Department Details
+      .addCase(getDepartmentDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getSubjectDetails.fulfilled, (state, action) => {
+      .addCase(getDepartmentDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.subject = action.payload;
+        state.department = action.payload;
       })
-      .addCase(getSubjectDetails.rejected, (state, action) => {
+      .addCase(getDepartmentDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // List Subjects
-      .addCase(listSubjects.pending, (state) => {
+      // List Departments
+      .addCase(listDepartments.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(listSubjects.fulfilled, (state, action) => {
+      .addCase(listDepartments.fulfilled, (state, action) => {
         state.loading = false;
-        state.subjects = action.payload;
+        state.departments = action.payload;
       })
-      .addCase(listSubjects.rejected, (state, action) => {
+      .addCase(listDepartments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Create Subject
-      .addCase(createSubject.pending, (state) => {
+      // Create Department
+      .addCase(createDepartment.pending, (state) => {
         state.loadingCreate = true;
         state.errorCreate = null;
       })
-      .addCase(createSubject.fulfilled, (state, action) => {
+      .addCase(createDepartment.fulfilled, (state, action) => {
         state.loadingCreate = false;
         state.successCreate = true;
-        state.createdSubject = action.payload;
+        state.createdDepartment = action.payload;
       })
-      .addCase(createSubject.rejected, (state, action) => {
+      .addCase(createDepartment.rejected, (state, action) => {
         state.loadingCreate = false;
         state.errorCreate = action.payload;
       })
-      // Delete Subject
-      .addCase(deleteSubject.pending, (state) => {
+      // Delete Department
+      .addCase(deleteDepartment.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSubject.fulfilled, (state, action) => {
+      .addCase(deleteDepartment.fulfilled, (state, action) => {
         state.loading = false;
-        state.subjects = state.subjects.filter(
-          (subject) => subject.id !== action.payload
+        state.departments = state.departments.filter(
+          (department) => department.id !== action.payload
         );
       })
-      .addCase(deleteSubject.rejected, (state, action) => {
+      .addCase(deleteDepartment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Update Subject
-      .addCase(updateSubject.pending, (state) => {
+      // Update Department
+      .addCase(updateDepartment.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateSubject.fulfilled, (state, action) => {
+      .addCase(updateDepartment.fulfilled, (state, action) => {
         state.loading = false;
-        state.subject = action.payload;
+        state.department = action.payload;
       })
-      .addCase(updateSubject.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // Bulk Create Subjects
-      .addCase(bulkCreateSubjects.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(bulkCreateSubjects.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(bulkCreateSubjects.rejected, (state, action) => {
+      .addCase(updateDepartment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -268,5 +235,5 @@ const subjectSlice = createSlice({
 });
 
 // Export Reducer
-export const { resetCreateState } = subjectSlice.actions;
-export default subjectSlice.reducer;
+export const { resetCreateState } = departmentSlice.actions;
+export default departmentSlice.reducer;

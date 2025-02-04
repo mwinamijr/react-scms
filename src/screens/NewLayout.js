@@ -30,7 +30,7 @@ function getItem(label, key, icon, children, onClick = null) {
   };
 }
 
-const DashLayout = (props) => {
+const DashboardLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [openKeys, setOpenKeys] = useState([]); // Track open submenus
   const dispatch = useDispatch();
@@ -79,6 +79,16 @@ const DashLayout = (props) => {
         getItem("Collections", "/finance/reports/collections"),
         getItem("Invoices", "/finance/reports/invoices"),
       ]),
+    ]),
+    getItem("Academic", "academic", <TeamOutlined />, [
+      getItem(
+        <Link to="/academic/departments">Departments</Link>,
+        "/academic/departments"
+      ),
+      getItem(
+        <Link to="/academic/subjects">Subjects</Link>,
+        "/academic/subjects"
+      ),
     ]),
     getItem("Exam", "exam", <FileDoneOutlined />, [
       getItem("Setting", "exam/setting", null, [
@@ -180,4 +190,4 @@ const DashLayout = (props) => {
   );
 };
 
-export default DashLayout;
+export default DashboardLayout;

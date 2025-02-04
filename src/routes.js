@@ -29,6 +29,15 @@ import BulkUpload from "./screens/students/BulkUpload";
 import ReceiptsDetails from "./screens/finance/ReceiptsDetails";
 import PaymentDetails from "./screens/finance/PaymentDetails";
 import AddPayment from "./screens/finance/AddPayment";
+import SubjectList from "./screens/academic/subjects/SubjectList";
+import SubjectDetails from "./screens/academic/subjects/SubjectDetails";
+import AddSubject from "./screens/academic/subjects/AddSubject";
+import UpdateSubject from "./screens/academic/subjects/UpdateSubject";
+import SubjectBulkUpload from "./screens/academic/subjects/BulkUpload";
+import DepartmentList from "./screens/academic/departments/DepartmentList";
+import DepartmentDetails from "./screens/academic/departments/DepartmentDetails";
+import AddDepartment from "./screens/academic/departments/AddDepartment";
+import UpdateDepartment from "./screens/academic/departments/UpdateDepartment";
 
 const BaseRouter = () => {
   // Access userInfo from the user slice
@@ -41,6 +50,18 @@ const BaseRouter = () => {
     <div>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="academic/">
+          <Route path="departments" element={<DepartmentList />} />
+          <Route path="departments/:id" element={<DepartmentDetails />} />
+          <Route path="departments/add" element={<AddDepartment />} />
+          <Route path="departments/:id/edit" element={<UpdateDepartment />} />
+          <Route path="subjects" element={<SubjectList />} />
+          <Route path="subjects/:id" element={<SubjectDetails />} />
+          <Route path="subjects/add" element={<AddSubject />} />
+          <Route path="subjects/upload" element={<SubjectBulkUpload />} />
+          <Route path="subjects/:id/edit" element={<UpdateSubject />} />
+        </Route>
 
         <Route path="finance/">
           <Route path="receipts/" element={<Receipts />} />

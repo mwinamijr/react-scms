@@ -92,6 +92,30 @@ export const createTeacher = createAsyncThunk(
   }
 );
 
+export const bulkCreateTeachers = createAsyncThunk(
+  "teacher/bulkCreate",
+  async (filename, { getState, rejectWithValue }) => {
+    try {
+      const {
+        getUsers: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.post(
+        `${djangoUrl}/api/users/teachers/bulk-upload/${filename}/`,
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
 export const deleteTeacher = createAsyncThunk(
   "teacher/delete",
   async (id, { getState, rejectWithValue }) => {
@@ -105,10 +129,7 @@ export const deleteTeacher = createAsyncThunk(
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      await axios.delete(
-        `${djangoUrl}/api/users/teachers/delete/${id}/`,
-        config
-      );
+      await axios.delete(`${djangoUrl}/api/users/teachers/${id}/`, config);
       return id; // Return teacherId to allow removal from state
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
@@ -228,6 +249,18 @@ const teacherSlice = createSlice({
         state.teacher = action.payload;
       })
       .addCase(updateTeacher.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Bulk Create Teachers
+      .addCase(bulkCreateTeachers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(bulkCreateTeachers.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(bulkCreateTeachers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
