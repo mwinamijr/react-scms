@@ -13,21 +13,26 @@ function TeacherBulkUpload() {
   const dispatch = useDispatch();
 
   // Accessing state from Redux store
-  const { loading, error } = useSelector((state) => state.getTeachers); // Assuming the state is in 'getTeachers'
+  const { loading, error, bulkCreated } = useSelector(
+    (state) => state.getTeachers
+  ); // Assuming the state is in 'getTeachers'
 
   const submitHandler = (e) => {
     e.preventDefault();
 
     // Dispatch the bulkCreateTeachers thunk with the selected file
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file); // Append the file to the FormData object
-      dispatch(bulkCreateTeachers(formData));
+      if (!file) {
+        alert("Please select a file before uploading.");
+        return;
+      }
+
+      dispatch(bulkCreateTeachers(file));
     }
   };
   return (
     <Container className="mt-4">
-      <Link to="/sis/students/" className="btn btn-secondary mb-3">
+      <Link to={`/users/teachers/`} className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
       <Card className="shadow">
@@ -36,6 +41,7 @@ function TeacherBulkUpload() {
         </Card.Header>
         <Card.Body>
           {error && <Message variant="danger">{error}</Message>}
+          {bulkCreated && <Message>{bulkCreated}</Message>}
           {loading && <Loader />}
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="bulkUpload" className="mb-3">

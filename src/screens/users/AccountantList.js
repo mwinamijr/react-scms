@@ -84,8 +84,18 @@ const AccountantList = () => {
       </Title>
       <Row gutter={[16, 16]} className="mb-4">
         <Col xs={24} sm={12} lg={6}>
-          <Button type="default" icon={<UserAddOutlined />} block>
-            <Link to="/users/accountants/add">Add Accountant</Link>
+          <Button type="default" block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <UserAddOutlined />
+              <Link to="/users/accountants/add">Add Accountant</Link>
+            </span>
           </Button>
         </Col>
       </Row>

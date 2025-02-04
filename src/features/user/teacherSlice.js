@@ -94,11 +94,16 @@ export const createTeacher = createAsyncThunk(
 
 export const bulkCreateTeachers = createAsyncThunk(
   "teacher/bulkCreate",
-  async (filename, { getState, rejectWithValue }) => {
+  async (file, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
+
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append("file", file);
+
       const config = {
         headers: {
           "Content-type": "multipart/form-data",
@@ -106,7 +111,8 @@ export const bulkCreateTeachers = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/users/teachers/bulk-upload/${filename}/`,
+        `${djangoUrl}/api/users/teachers/bulk-upload/`,
+        formData,
         config
       );
       return data;
@@ -174,6 +180,7 @@ const teacherSlice = createSlice({
     successCreate: false,
     loadingCreate: false,
     errorCreate: null,
+    bulkCreated: null,
   },
   reducers: {
     resetCreateState: (state) => {
@@ -257,8 +264,9 @@ const teacherSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(bulkCreateTeachers.fulfilled, (state) => {
+      .addCase(bulkCreateTeachers.fulfilled, (state, action) => {
         state.loading = false;
+        state.bulkCreated = action.payload;
       })
       .addCase(bulkCreateTeachers.rejected, (state, action) => {
         state.loading = false;
