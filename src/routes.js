@@ -9,10 +9,11 @@ import TeacherList from "./screens/users/TeacherList";
 import TeacherDetails from "./screens/users/TeacherDetails";
 import AddTeacher from "./screens/users/AddTeacher";
 import TeacherBulkUpload from "./screens/users/TeacherBulkUpload";
-import EditTeacherProfile from "./screens/users/EditTeacherProfile";
+import EditTeacherProfile from "./screens/users/TeacherUpdateProfile";
 import PrintTeacherProfile from "./screens/users/PrintTeacherProfile";
 import AccountantList from "./screens/users/AccountantList";
 import AccountantDetails from "./screens/users/AccountantDetails";
+import AccountantUpdate from "./screens/users/AccountantUpdate";
 import UserProfile from "./screens/users/UserProfile";
 import ParentList from "./screens/users/ParentList";
 import ParentDetails from "./screens/users/ParentDetails";
@@ -99,6 +100,10 @@ const BaseRouter = () => {
         <Route path="users/accountants/:id" element={<AccountantDetails />} />
         <Route path="users/accountants/add" element={<AddAccountant />} />
         <Route path="users/:id" element={<UserProfile />} />
+        <Route
+          path="/users/accountants/:id/edit"
+          element={<AccountantUpdate />}
+        />
 
         <Route path="/notification/sms/" element={<Assignment />} />
       </Routes>
