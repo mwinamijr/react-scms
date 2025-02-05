@@ -8,22 +8,29 @@ import {
   Col,
   Input,
   Button,
-  Pagination,
   Form,
   message,
   Space,
-  Spin,
+  Popconfirm,
+  Typography,
 } from "antd";
 import {
   EditOutlined,
   UserAddOutlined,
   UploadOutlined,
+  EyeOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
-import { listStudents } from "../../features/students/studentSlice";
+import Message from "../../components/Message";
+import {
+  listStudents,
+  deleteStudent,
+} from "../../features/students/studentSlice";
+
+const { Title } = Typography;
 
 const Students = () => {
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     first_name: "",
     middle_name: "",
@@ -31,13 +38,13 @@ const Students = () => {
     class_level: "",
   });
 
-  const { loading, error, students, pagination } = useSelector(
+  const { loading, error, students } = useSelector(
     (state) => state.getStudents
   );
 
   useEffect(() => {
-    dispatch(listStudents({ ...filters, page: currentPage }));
-  }, [dispatch, filters, currentPage]);
+    dispatch(listStudents({ ...filters }));
+  }, [dispatch, filters]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,16 +52,59 @@ const Students = () => {
   };
 
   const handleSearch = () => {
-    setCurrentPage(1);
-    dispatch(listStudents({ ...filters, page: 1 }));
+    dispatch(listStudents({ ...filters }));
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    dispatch(listStudents({ ...filters, page }));
-  };
+  // Define columns for the Ant Design Table
+  const columns = [
+    {
+      title: "Addmission No",
+      dataIndex: "admission_number",
+      key: "admission_number",
+    },
+    {
+      title: "Full Name",
+      key: "fullName",
+      render: (text, record) => `${record.first_name} ${record.last_name}`,
+    },
+    {
+      title: "Class Level",
+      dataIndex: "class_level",
+      key: "class_level",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space size="middle">
+          <Link to={`/sis/students/${record.id}`}>
+            <EyeOutlined style={{ color: "blue" }} />
+          </Link>
+          <Link to={`/sis/students/${record.id}/edit`}>
+            <EditOutlined style={{ color: "green" }} />
+          </Link>
+          <Popconfirm
+            title="Delete this student?"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
 
-  const totalPages = pagination ? Math.ceil(pagination.count / 30) : 1;
+  // Handle delete action
+  const handleDelete = (id) => {
+    dispatch(deleteStudent(id))
+      .unwrap()
+      .then(() => message.success("Teacher deleted successfully"));
+  };
 
   return (
     <div className="students-page">
@@ -65,17 +115,40 @@ const Students = () => {
         <Breadcrumb.Item>Students</Breadcrumb.Item>
       </Breadcrumb>
 
-      <h1 className="text-center mb-4">Students</h1>
+      {/* Title */}
+      <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
+        Teachers
+      </Title>
 
       <Row gutter={[16, 16]} className="mb-4">
         <Col xs={24} sm={12} lg={6}>
-          <Button type="primary" icon={<UserAddOutlined />} block>
-            <Link to="/sis/students/add">Add Student</Link>
+          <Button type="default" block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <UserAddOutlined />
+              <Link to="/sis/students/add">Add Student</Link>
+            </span>
           </Button>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Button type="default" icon={<UploadOutlined />} block>
-            <Link to="/sis/students/upload">Bulk Upload</Link>
+          <Button type="default" block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <UploadOutlined />
+              <Link to="/sis/students/upload">Bulk Upload</Link>
+            </span>
           </Button>
         </Col>
       </Row>
@@ -132,65 +205,17 @@ const Students = () => {
         </Row>
       </Form>
 
-      {loading ? (
-        <Space size="middle">
-          <Spin tip="Loading student details..." />
-        </Space>
-      ) : error ? (
-        message.error(error)
-      ) : (
-        <div>
-          <Table
-            dataSource={students}
-            rowKey={(record) => record.id}
-            pagination={false}
-            className="mt-4"
-            responsive="true"
-          >
-            <Table.Column
-              title="Adm No"
-              dataIndex="admission_number"
-              key="admission_number"
-            />
-            <Table.Column
-              title="Full Name"
-              key="fullName"
-              render={(record) =>
-                `${record.first_name} ${record.middle_name} ${record.last_name}`
-              }
-            />
-            <Table.Column title="Sex" dataIndex="gender" key="gender" />
-            <Table.Column
-              title="Class"
-              dataIndex="class_level"
-              key="class_level"
-            />
-            <Table.Column
-              title="Birthday"
-              dataIndex="date_of_birth"
-              key="date_of_birth"
-            />
-            <Table.Column
-              title="Actions"
-              key="actions"
-              render={(record) => (
-                <Space size="middle">
-                  <Link to={`/sis/students/${record.id}`}>
-                    <EditOutlined />
-                  </Link>
-                </Space>
-              )}
-            />
-          </Table>
-          <Pagination
-            className="mt-4"
-            current={currentPage}
-            total={totalPages * 30}
-            pageSize={30}
-            onChange={handlePageChange}
-          />
-        </div>
-      )}
+      {/* Content */}
+      {error && <Message variant="danger">{error}</Message>}
+
+      <Table
+        dataSource={students}
+        columns={columns}
+        rowKey="id"
+        bordered
+        pagination={{ pageSize: 10 }}
+        loading={loading}
+      />
     </div>
   );
 };

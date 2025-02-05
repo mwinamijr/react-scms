@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { bulkCreateStudents } from "../../features/students/studentSlice";
 
-function TeacherBulkUpload() {
+function StudentBulkUpload() {
   const [file, setFile] = useState(null);
   const [uploadMessage, setUploadMessage] = useState("");
   const [notCreatedStudents, setNotCreatedStudents] = useState([]);
@@ -105,4 +105,4 @@ function TeacherBulkUpload() {
   );
 }
 
-export default TeacherBulkUpload;
+export default StudentBulkUpload;

@@ -18,6 +18,7 @@ import {
   createStudent,
   resetCreateState,
 } from "../../features/students/studentSlice";
+import { listClassLevels } from "../../features/academic/classLevelSlice"; // Import class levels action
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -30,6 +31,7 @@ function AddStudent() {
   const { loadingCreate, errorCreate, successCreate } = useSelector(
     (state) => state.getStudents
   );
+  const { classLevels, loading } = useSelector((state) => state.getClassLevels);
 
   useEffect(() => {
     if (successCreate) {
@@ -39,11 +41,29 @@ function AddStudent() {
     }
   }, [dispatch, successCreate, navigate]);
 
+  // Fetch class levels when component mounts
+  useEffect(() => {
+    dispatch(listClassLevels());
+  }, [dispatch]);
+
   const submitHandler = (values) => {
     const formattedValues = {
-      ...values,
-      birthday: values.birthday.toISOString(), // Convert date to ISO format
+      first_name: values.first_name,
+      middle_name: values.middle_name || "", // Optional field
+      last_name: values.last_name,
+      admission_number: values.admission_number,
+      class_level: values.class_level,
+      birthday: values.birthday ? values.birthday.format("YYYY-MM-DD") : null, // Format date
+      gender: values.gender,
+      religion: values.religion,
+      region: values.region || "", // Optional field
+      city: values.city || "", // Optional field
+      street: values.street || "", // Optional field
+      std_vii_number: values.std_vii_number || "", // Optional field
+      prems_number: values.prems_number || "", // Optional field
+      parent_contact: values.parent_contact,
     };
+
     dispatch(createStudent(formattedValues));
   };
 
@@ -65,27 +85,27 @@ function AddStudent() {
           onFinish={submitHandler}
           className="mt-3"
         >
-          {/* Personal Information Section */}
+          {/* Personal Information */}
           <Title level={5}>Personal Information</Title>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
               <Form.Item
                 label="First Name"
-                name="firstName"
+                name="first_name"
                 rules={[{ required: true, message: "First Name is required" }]}
               >
                 <Input placeholder="Enter first name" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
-              <Form.Item label="Middle Name" name="middleName">
+              <Form.Item label="Middle Name" name="middle_name">
                 <Input placeholder="Enter middle name" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
               <Form.Item
                 label="Last Name"
-                name="lastName"
+                name="last_name"
                 rules={[{ required: true, message: "Last Name is required" }]}
               >
                 <Input placeholder="Enter last name" />
@@ -93,7 +113,7 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Academic Details Section */}
+          {/* Academic Details */}
           <Title level={5} className="mt-4">
             Academic Details
           </Title>
@@ -101,45 +121,46 @@ function AddStudent() {
             <Col xs={24} md={12}>
               <Form.Item
                 label="Admission Number"
-                name="admissionNumber"
+                name="admission_number"
                 rules={[
                   { required: true, message: "Admission Number is required" },
                 ]}
               >
-                <Input type="number" placeholder="Enter admission number" />
+                <Input type="text" placeholder="Enter admission number" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
               <Form.Item
                 label="Class Level"
-                name="classLevel"
+                name="class_level"
                 rules={[{ required: true, message: "Class Level is required" }]}
               >
-                <Select placeholder="Choose class level">
-                  <Option value="form one">Form One</Option>
-                  <Option value="form two">Form Two</Option>
-                  <Option value="form three">Form Three</Option>
-                  <Option value="form four">Form Four</Option>
+                <Select placeholder="Choose class level" loading={loading}>
+                  {classLevels.map((level) => (
+                    <Option key={level.id} value={level.name}>
+                      {level.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
           </Row>
 
-          {/* Additional Information Section */}
+          {/* Additional Information */}
           <Title level={5} className="mt-4">
             Additional Information
           </Title>
           <Row gutter={[16, 16]}>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <Form.Item
                 label="Birthday"
                 name="birthday"
                 rules={[{ required: true, message: "Birthday is required" }]}
               >
-                <DatePicker className="w-full" />
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
               </Form.Item>
             </Col>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={8}>
               <Form.Item
                 label="Gender"
                 name="gender"
@@ -151,9 +172,22 @@ function AddStudent() {
                 </Select>
               </Form.Item>
             </Col>
+            <Col xs={24} md={8}>
+              <Form.Item
+                label="Religion"
+                name="religion"
+                rules={[{ required: true, message: "Religion is required" }]}
+              >
+                <Select placeholder="Choose religion">
+                  <Option value="Islam">Islam</Option>
+                  <Option value="Christian">Christian</Option>
+                  <Option value="Other">Other</Option>
+                </Select>
+              </Form.Item>
+            </Col>
           </Row>
 
-          {/* Contact Information Section */}
+          {/* Contact Information */}
           <Title level={5} className="mt-4">
             Contact Information
           </Title>
@@ -176,12 +210,12 @@ function AddStudent() {
           </Row>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
-              <Form.Item label="STD VII Number" name="stdViiNumber">
+              <Form.Item label="STD VII Number" name="std_vii_number">
                 <Input placeholder="Enter STD VII Number" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item label="Prems Number" name="premsNumber">
+              <Form.Item label="Prems Number" name="prems_number">
                 <Input placeholder="Enter Prems Number" />
               </Form.Item>
             </Col>
@@ -189,7 +223,7 @@ function AddStudent() {
 
           <Form.Item
             label="Parent Phone"
-            name="parentContact"
+            name="parent_contact"
             rules={[{ required: true, message: "Parent Contact is required" }]}
           >
             <Input placeholder="Enter parent phone number" />

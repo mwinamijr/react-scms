@@ -7,6 +7,7 @@ import studentReducer from "./features/students/studentSlice";
 import parentReducer from "./features/user/parentSlice";
 import subjectReducer from "./features/academic/subjectSlice";
 import departmentReducer from "./features/academic/departmentSlice";
+import classLevelReducer from "./features/academic/classLevelSlice";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     getParents: parentReducer,
     getSubjects: subjectReducer,
     getDepartments: departmentReducer,
+    getClassLevels: classLevelReducer,
   },
 });
 

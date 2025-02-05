@@ -25,6 +25,7 @@ import Reports from "./screens/finance/Reports";
 import StudentList from "./screens/students/StudentList";
 import StudentDetailsScreen from "./screens/students/StudentDetails";
 import AddStudent from "./screens/students/AddStudent";
+import StudentUpdate from "./screens/students/StudentUpdate";
 import AddReceipt from "./screens/finance/AddReceipt";
 import BulkUpload from "./screens/students/BulkUpload";
 import ReceiptsDetails from "./screens/finance/ReceiptsDetails";
@@ -39,6 +40,10 @@ import DepartmentList from "./screens/academic/departments/DepartmentList";
 import DepartmentDetails from "./screens/academic/departments/DepartmentDetails";
 import AddDepartment from "./screens/academic/departments/AddDepartment";
 import UpdateDepartment from "./screens/academic/departments/UpdateDepartment";
+import ClassLevelList from "./screens/academic/classLevel/ClassLevelList";
+import ClassLevelDetails from "./screens/academic/classLevel/ClassLevelDetails";
+import AddClassLevel from "./screens/academic/classLevel/AddClassLevel";
+import UpdateClassLevel from "./screens/academic/classLevel/UpdateClassLevel";
 
 const BaseRouter = () => {
   // Access userInfo from the user slice
@@ -57,6 +62,10 @@ const BaseRouter = () => {
           <Route path="departments/:id" element={<DepartmentDetails />} />
           <Route path="departments/add" element={<AddDepartment />} />
           <Route path="departments/:id/edit" element={<UpdateDepartment />} />
+          <Route path="classLevels" element={<ClassLevelList />} />
+          <Route path="classLevels/:id" element={<ClassLevelDetails />} />
+          <Route path="classLevels/add" element={<AddClassLevel />} />
+          <Route path="classLevels/:id/edit" element={<UpdateClassLevel />} />
           <Route path="subjects" element={<SubjectList />} />
           <Route path="subjects/:id" element={<SubjectDetails />} />
           <Route path="subjects/add" element={<AddSubject />} />
@@ -80,6 +89,7 @@ const BaseRouter = () => {
           <Route path="students/:id" element={<StudentDetailsScreen />} />
           <Route path="students/add" element={<AddStudent />} />
           <Route path="students/upload" element={<BulkUpload />} />
+          <Route path="students/:id/edit" element={<StudentUpdate />} />
         </Route>
         <Route path="users" element={<UserList />} />
         <Route path="users/parents" element={<ParentList />} />
