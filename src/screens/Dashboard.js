@@ -1,124 +1,127 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Row, Col } from "react-bootstrap";
-
-import { listStudents } from "../features/students/studentSlice";
+import { Card, Row, Col, Typography, Statistic, Space } from "antd";
+import {
+  UserOutlined,
+  BookOutlined,
+  TeamOutlined,
+  FileTextOutlined,
+  DollarCircleOutlined,
+  SolutionOutlined,
+} from "@ant-design/icons";
 import { listUsers } from "../features/user/userSlice";
+import { listStudents } from "../features/students/studentSlice";
 import { listTeachers } from "../features/user/teacherSlice";
 import { listAccountants } from "../features/user/accountantSlice";
 import { listParents } from "../features/user/parentSlice";
+import { listSubjects } from "../features/academic/subjectSlice";
+import { listClassLevels } from "../features/academic/classLevelSlice";
 
-function Dashboard() {
+const { Title } = Typography;
+
+const Dashboard = () => {
   const dispatch = useDispatch();
 
-  // Selectors for fetching data from Redux store
-  const { pagination: studentPagination = {} } = useSelector(
-    (state) => state.getStudents || {}
-  );
-  const { pagination: userPagination = {} } = useSelector(
-    (state) => state.getUsers || {}
-  );
-  const { pagination: parentPagination = {} } = useSelector(
-    (state) => state.getParents || {}
-  );
-  const { teachers = [] } = useSelector((state) => state.teacher || {});
-  const { accountants = [] } = useSelector((state) => state.accountant || {});
-
-  // Dispatch actions to fetch data when the component mounts
+  // Fetch data on mount
   useEffect(() => {
     dispatch(listStudents());
     dispatch(listUsers());
     dispatch(listTeachers());
     dispatch(listAccountants());
     dispatch(listParents());
+    dispatch(listSubjects());
+    dispatch(listClassLevels());
   }, [dispatch]);
 
-  // Render responsive dashboard cards
+  // Get Redux state and extract counts
+  const studentCount = useSelector(
+    (state) => state.getStudents?.students?.length || 0
+  );
+  const userCount = useSelector((state) => state.getUsers?.users?.length || 0);
+  const teacherCount = useSelector(
+    (state) => state.getTeachers?.teachers?.length || 0
+  );
+  const accountantCount = useSelector(
+    (state) => state.getAccountants?.accountants?.length || 0
+  );
+  const parentCount = useSelector(
+    (state) => state.getParents?.parents?.length || 0
+  );
+  const subjectCount = useSelector(
+    (state) => state.getSubjects?.subjects?.length || 0
+  );
+  const classCount = useSelector(
+    (state) => state.getClassLevels?.classLevels?.length || 0
+  );
+
+  // Dashboard cards data
+  const dashboardData = [
+    {
+      title: "Students",
+      count: studentCount,
+      icon: <UserOutlined />,
+      link: "/sis/students",
+    },
+    {
+      title: "Teachers",
+      count: teacherCount,
+      icon: <TeamOutlined />,
+      link: "/users/teachers",
+    },
+    {
+      title: "Parents",
+      count: parentCount,
+      icon: <SolutionOutlined />,
+      link: "/users/parents",
+    },
+    {
+      title: "Accountants",
+      count: accountantCount,
+      icon: <DollarCircleOutlined />,
+      link: "/users/accountants",
+    },
+    {
+      title: "Users",
+      count: userCount,
+      icon: <UserOutlined />,
+      link: "/users",
+    },
+    {
+      title: "Subjects",
+      count: subjectCount,
+      icon: <BookOutlined />,
+      link: "/academic/subjects",
+    },
+    {
+      title: "Classes",
+      count: classCount,
+      icon: <FileTextOutlined />,
+      link: "/academic/classes",
+    },
+  ];
+
   return (
-    <div className="dashboard-container">
-      <h1 className="mb-4">Dashboard</h1>
-
-      <Row className="gy-4">
-        {/* Students Card */}
-        <Col xs={12} md={6} lg={4}>
-          <Card className="h-100 shadow-sm">
-            <Card.Header>
-              <Link to="/sis/students" className="text-decoration-none">
-                Students
-              </Link>
-            </Card.Header>
-            <Card.Body className="text-center">
-              <h3 className="display-4">{studentPagination.count || 0}</h3>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* Teachers Card */}
-        <Col xs={12} md={6} lg={4}>
-          <Card className="h-100 shadow-sm">
-            <Card.Header>
-              <Link to="/users/teachers" className="text-decoration-none">
-                Teachers
-              </Link>
-            </Card.Header>
-            <Card.Body className="text-center">
-              <h3 className="display-4">{teachers.length}</h3>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* Parents Card */}
-        <Col xs={12} md={6} lg={4}>
-          <Card className="h-100 shadow-sm">
-            <Card.Header>
-              <Link to="/users/parents" className="text-decoration-none">
-                Parents
-              </Link>
-            </Card.Header>
-            <Card.Body className="text-center">
-              <h3 className="display-4">{parentPagination.count || 0}</h3>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row className="gy-4 mt-4">
-        {/* Accountants Card */}
-        <Col xs={12} md={6} lg={4}>
-          <Card className="h-100 shadow-sm">
-            <Card.Header>
-              <Link to="/users/accountants" className="text-decoration-none">
-                Accountants
-              </Link>
-            </Card.Header>
-            <Card.Body className="text-center">
-              <h3 className="display-4">{accountants.length}</h3>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* Users Card */}
-        <Col xs={12} md={6} lg={4}>
-          <Card className="h-100 shadow-sm">
-            <Card.Header>
-              <Link to="/users" className="text-decoration-none">
-                Users
-              </Link>
-            </Card.Header>
-            <Card.Body className="text-center">
-              <h3 className="display-4">{userPagination.count || 0}</h3>
-            </Card.Body>
-            <Card.Footer className="text-center">
-              <Link to="/users/add" className="btn btn-dark w-100">
-                Add User
-              </Link>
-            </Card.Footer>
-          </Card>
-        </Col>
+    <div style={{ padding: "20px" }}>
+      <Title level={2} className="mb-4">
+        Dashboard
+      </Title>
+      <Row gutter={[16, 16]}>
+        {dashboardData.map((item, index) => (
+          <Col xs={24} sm={12} md={8} lg={6} key={index}>
+            <Link to={item.link}>
+              <Card hoverable className="dashboard-card">
+                <Space size="large">
+                  <span className="dashboard-icon">{item.icon}</span>
+                  <Statistic title={item.title} value={item.count} />
+                </Space>
+              </Card>
+            </Link>
+          </Col>
+        ))}
       </Row>
     </div>
   );
-}
+};
 
 export default Dashboard;
