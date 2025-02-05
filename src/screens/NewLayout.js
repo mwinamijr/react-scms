@@ -86,6 +86,10 @@ const DashboardLayout = (props) => {
         "/academic/departments"
       ),
       getItem(
+        <Link to="/academic/classLevels">Class Levels</Link>,
+        "/academic/classLevels"
+      ),
+      getItem(
         <Link to="/academic/subjects">Subjects</Link>,
         "/academic/subjects"
       ),
