@@ -94,11 +94,16 @@ export const createSubject = createAsyncThunk(
 
 export const bulkCreateSubjects = createAsyncThunk(
   "subject/bulkCreate",
-  async (filename, { getState, rejectWithValue }) => {
+  async (file, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
+
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append("file", file);
+
       const config = {
         headers: {
           "Content-type": "multipart/form-data",
@@ -106,7 +111,8 @@ export const bulkCreateSubjects = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/academic/subjects/bulk-upload/${filename}/`,
+        `${djangoUrl}/api/academic/subjects/bulk-upload/`,
+        formData,
         config
       );
       return data;
