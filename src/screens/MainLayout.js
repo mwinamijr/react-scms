@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   DesktopOutlined,
   MailOutlined,
   PieChartOutlined,
   CalculatorOutlined,
-  UserDeleteOutlined,
   TeamOutlined,
   UserOutlined,
   FileExcelOutlined,
@@ -13,12 +12,12 @@ import {
   CalendarOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Grid } from "antd";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { logout } from "../features/user/userSlice"; // Import the logout action
-import TopHead from "../components/TopHead";
+import NotificationSection from "./header/NotificationSection";
+import ProfileSection from "./header/ProfileSection";
+import logo from "../assets/hayatul-logo.svg";
 
-const { Content, Footer, Sider } = Layout;
-const { useBreakpoint } = Grid; // For responsive behavior
+const { Content, Header, Footer, Sider } = Layout;
+const { useBreakpoint } = Grid;
 
 function getItem(label, key, icon, children, onClick = null) {
   return {
@@ -30,20 +29,12 @@ function getItem(label, key, icon, children, onClick = null) {
   };
 }
 
-const DashboardLayout = (props) => {
+const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [openKeys, setOpenKeys] = useState([]); // Track open submenus
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation(); // Get current route location
-  const screens = useBreakpoint(); // Access responsive breakpoints
+  const [openKeys, setOpenKeys] = useState([]);
+  const location = useLocation();
+  const screens = useBreakpoint();
 
-  const logoutHandler = () => {
-    dispatch(logout()); // Dispatch the logout action
-    navigate("/"); // Redirect to home screen after logout
-  };
-
-  // Menu items
   const items = [
     getItem(
       <Link to="/dashboard">Dashboard</Link>,
@@ -121,7 +112,6 @@ const DashboardLayout = (props) => {
       getItem("Compose", "/notification/compose"),
     ]),
     getItem("School Calendar", "/calendar", <CalendarOutlined />),
-    getItem("Logout", "logout", <UserDeleteOutlined />, null, logoutHandler),
   ];
 
   // Memoize selectedKeys based on the current location
@@ -150,45 +140,58 @@ const DashboardLayout = (props) => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        breakpoint="md" // Auto-collapse on small screens
-        collapsedWidth={80} // Minimize sidebar width
+      <Header
+        style={{
+          padding: "0 20px",
+          background: "#2a4b8d",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <div
-          style={{
-            height: 32,
-            margin: 16,
-            color: "white",
-            fontSize: collapsed ? "100%" : "120%",
-            textAlign: "center",
-            background: "rgba(255, 255, 255, 0.2)",
-          }}
-        >
-          {collapsed ? "HISMS" : "Hayatul SIMS"}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <img
+            src={logo}
+            alt="techdometz"
+            style={{ height: 40, marginRight: 10 }}
+          />
+          <h1 style={{ color: "#fff", fontSize: "20px", margin: 0 }}>
+            Tech HMS
+          </h1>
         </div>
-        <Menu
-          theme="dark"
-          selectedKeys={selectedKeys}
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          mode="inline"
-          items={items}
-        />
-      </Sider>
-      <Layout className="site-layout">
-        <TopHead style={{ float: "right" }} />
-        <Content style={{ margin: "16px" }}>
-          <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
-            {props.children}
-          </div>
-        </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Hayatul Islamiya © 2022 - {new Date().getFullYear()} Created by
-          Techdometz
-        </Footer>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <NotificationSection />
+          <ProfileSection />
+        </div>
+      </Header>
+      <Layout>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          breakpoint="md"
+          collapsedWidth={80}
+        >
+          <Menu
+            theme="dark"
+            selectedKeys={selectedKeys}
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            mode="inline"
+            items={items}
+          />
+        </Sider>
+        <Layout className="site-layout">
+          <Content style={{ margin: "16px" }}>
+            <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
+              <Outlet />
+            </div>
+          </Content>
+          <Footer style={{ textAlign: "center" }}>
+            Hayatul Islamiya © 2022 - {new Date().getFullYear()} Created by
+            Techdometz
+          </Footer>
+        </Layout>
       </Layout>
     </Layout>
   );

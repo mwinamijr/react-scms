@@ -1,107 +1,146 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Form,
-  Input,
-  Button,
-  Typography,
-  Alert,
-  Spin,
+  Layout,
   Row,
   Col,
   Card,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Typography,
+  Divider,
+  Spin,
+  message,
 } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { login } from "../features/user/userSlice";
+import AuthFooter from "../components/AuthFooter";
+import logo from "../assets/hayatul-logo.svg";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
-function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.getUsers);
-  const { error, loading, userInfo } = user;
+  const { error, loading, userInfo } = useSelector((state) => state.getUsers);
+
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/dashboard"); // Redirect to dashboard screen aif the user is already logged in
+      navigate("/dashboard");
     }
   }, [userInfo, navigate]);
 
-  const submitHandler = () => {
-    dispatch(login({ email, password }));
-    navigate("/dashboard"); // Redirect to dashboard screen after login
+  const handleLogin = (values) => {
+    dispatch(login({ email: values.email, password: values.password }));
   };
 
   return (
-    <div style={{ padding: "16px" }}>
-      <Row justify="center">
-        <Col xs={24} sm={20} md={12} lg={8}>
-          <Card>
-            <Title level={2} className="text-center">
-              Sign In
-            </Title>
-            {error && <Alert message={error} type="error" showIcon />}
-            {loading && (
-              <Spin
-                size="large"
-                style={{ margin: "20px auto", display: "block" }}
+    <Layout
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Row justify="center" style={{ width: "100%" }}>
+        <Col xs={22} sm={18} md={12} lg={8}>
+          <Card bordered style={{ padding: "24px", textAlign: "center" }}>
+            {/* Logo */}
+            <div onClick={() => (window.location.href = "#")}>
+              <img
+                src={logo}
+                alt="techdometz"
+                style={{ height: 40, marginRight: 10 }}
               />
-            )}
+            </div>
+
+            <Title level={2} style={{ marginTop: "16px" }}>
+              Hi, Welcome Back
+            </Title>
+            <Text type="secondary">Enter your credentials to continue</Text>
+
+            {error && message.error(error)}
 
             <Form
+              form={form}
               layout="vertical"
-              onFinish={submitHandler}
-              style={{ marginTop: "20px" }}
+              onFinish={handleLogin}
+              style={{ marginTop: "24px" }}
             >
               <Form.Item
                 label="Email Address"
                 name="email"
-                rules={[
-                  { required: true, message: "Please enter your email!" },
-                  { type: "email", message: "Please enter a valid email!" },
-                ]}
+                rules={[{ required: true, message: "Please enter your email" }]}
               >
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <Input placeholder="Enter your email" />
               </Form.Item>
 
+              {/* Password */}
               <Form.Item
                 label="Password"
                 name="password"
                 rules={[
-                  { required: true, message: "Please enter your password!" },
+                  { required: true, message: "Please enter your password" },
                 ]}
               >
                 <Input.Password
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  iconRender={(visible) =>
+                    visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                  }
                 />
               </Form.Item>
 
+              {/* Remember Me & Forgot Password */}
+              <Row justify="space-between">
+                <Col>
+                  <Form.Item name="remember" valuePropName="checked" noStyle>
+                    <Checkbox defaultChecked>Remember me</Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Link to="/forgot-password">Forgot Password?</Link>
+                </Col>
+              </Row>
+
+              {/* Submit Button */}
               <Form.Item>
-                <Button type="primary" htmlType="submit" block>
-                  Sign In
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  disabled={loading}
+                  icon={
+                    loading ? <Spin indicator={<LoadingOutlined />} /> : null
+                  }
+                >
+                  {loading ? "Signing in..." : "Sign in"}
                 </Button>
               </Form.Item>
             </Form>
 
-            <Typography.Text>
-              New here? <Link to="/register">Register Now</Link>
-            </Typography.Text>
+            <Divider />
+
+            <Text>
+              Don't have an account? Contact your employer to get one.
+            </Text>
           </Card>
+
+          <AuthFooter style={{ marginTop: "24px", textAlign: "center" }} />
         </Col>
       </Row>
-    </div>
+    </Layout>
   );
-}
+};
 
-export default LoginScreen;
+export default Login;

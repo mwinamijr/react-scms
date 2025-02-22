@@ -1,8 +1,16 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { createHashRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; // Import useSelector to access Redux store
+import { useEffect } from "react";
 
+import MinimalLayout from "./screens/MinimalLayout";
+import MainLayout from "./screens/MainLayout";
 import Dashboard from "./screens/Dashboard";
+import Login from "./screens/Login";
+import Home from "./screens/Home";
+import Developers from "./screens/gettingStarted/Developers";
+import Teachers from "./screens/gettingStarted/Teachers";
+import Parents from "./screens/gettingStarted/Parents";
 import UserList from "./screens/users/UserList";
 import AddAccountant from "./screens/users/AddAccountant";
 import TeacherList from "./screens/users/TeacherList";
@@ -45,80 +53,112 @@ import ClassLevelDetails from "./screens/academic/classLevel/ClassLevelDetails";
 import AddClassLevel from "./screens/academic/classLevel/AddClassLevel";
 import UpdateClassLevel from "./screens/academic/classLevel/UpdateClassLevel";
 
-const BaseRouter = () => {
-  // Access userInfo from the user slice
+const ProtectedRoute = ({ element }) => {
+  const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.getUsers);
 
-  if (userInfo) {
-    <Navigate replace to="/dashboard" />;
-  }
-  return (
-    <div>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login");
+    }
+  }, [navigate, userInfo]);
 
-        <Route path="academic/">
-          <Route path="departments" element={<DepartmentList />} />
-          <Route path="departments/:id" element={<DepartmentDetails />} />
-          <Route path="departments/add" element={<AddDepartment />} />
-          <Route path="departments/:id/edit" element={<UpdateDepartment />} />
-          <Route path="classLevels" element={<ClassLevelList />} />
-          <Route path="classLevels/:id" element={<ClassLevelDetails />} />
-          <Route path="classLevels/add" element={<AddClassLevel />} />
-          <Route path="classLevels/:id/edit" element={<UpdateClassLevel />} />
-          <Route path="subjects" element={<SubjectList />} />
-          <Route path="subjects/:id" element={<SubjectDetails />} />
-          <Route path="subjects/add" element={<AddSubject />} />
-          <Route path="subjects/upload" element={<SubjectBulkUpload />} />
-          <Route path="subjects/:id/edit" element={<UpdateSubject />} />
-        </Route>
-
-        <Route path="finance/">
-          <Route path="receipts/" element={<Receipts />} />
-          <Route path="receipts/:id" element={<ReceiptsDetails />} />
-          <Route path="receipts/add/" element={<AddReceipt />} />
-          <Route path="payments/" element={<Payments />} />
-          <Route path="payments/:id" element={<PaymentDetails />} />
-          <Route path="payments/add/" element={<AddPayment />} />
-          <Route path="payroll/" element={<Payroll />} />
-          <Route path="reports/" element={<Reports />} />
-        </Route>
-
-        <Route path="sis/">
-          <Route path="students/" element={<StudentList />} />
-          <Route path="students/:id" element={<StudentDetailsScreen />} />
-          <Route path="students/add" element={<AddStudent />} />
-          <Route path="students/upload" element={<BulkUpload />} />
-          <Route path="students/:id/edit" element={<StudentUpdate />} />
-        </Route>
-        <Route path="users" element={<UserList />} />
-        <Route path="users/parents" element={<ParentList />} />
-        <Route path="users/parents/:id" element={<ParentDetails />} />
-        <Route path="users/teachers" element={<TeacherList />} />
-        <Route path="users/teachers/add" element={<AddTeacher />} />
-        <Route path="users/teachers/upload" element={<TeacherBulkUpload />} />
-        <Route path="users/teachers/:id" element={<TeacherDetails />} />
-        <Route
-          path="/users/teachers/:id/edit"
-          element={<EditTeacherProfile />}
-        />
-        <Route
-          path="/users/teachers/:id/print"
-          element={<PrintTeacherProfile />}
-        />
-        <Route path="users/accountants/" element={<AccountantList />} />
-        <Route path="users/accountants/:id" element={<AccountantDetails />} />
-        <Route path="users/accountants/add" element={<AddAccountant />} />
-        <Route path="users/:id" element={<UserProfile />} />
-        <Route
-          path="/users/accountants/:id/edit"
-          element={<AccountantUpdate />}
-        />
-
-        <Route path="/notification/sms/" element={<Assignment />} />
-      </Routes>
-    </div>
-  );
+  return element;
 };
 
-export default BaseRouter;
+const MainRoutes = {
+  path: "/",
+  element: <ProtectedRoute element={<MainLayout />} />,
+  children: [
+    { path: "/", element: <Dashboard /> },
+    {
+      path: "dashboard",
+      children: [{ path: "", element: <Dashboard /> }],
+    },
+    {
+      path: "academic",
+      children: [
+        { path: "departments", element: <DepartmentList /> },
+        { path: "departments/:id", element: <DepartmentDetails /> },
+        { path: "departments/add", element: <AddDepartment /> },
+        { path: "departments/:id/edit", element: <UpdateDepartment /> },
+        { path: "classLevels", element: <ClassLevelList /> },
+        { path: "classLevels/:id", element: <ClassLevelDetails /> },
+        { path: "classLevels/add", element: <AddClassLevel /> },
+        { path: "classLevels/:id/edit", element: <UpdateClassLevel /> },
+        { path: "subjects", element: <SubjectList /> },
+        { path: "subjects/:id", element: <SubjectDetails /> },
+        { path: "subjects/add", element: <AddSubject /> },
+        { path: "subjects/upload", element: <SubjectBulkUpload /> },
+        { path: "subjects/:id/edit", element: <UpdateSubject /> },
+      ],
+    },
+    {
+      path: "finance",
+      children: [
+        { path: "receipts/", element: <Receipts /> },
+        { path: "receipts/:id", element: <ReceiptsDetails /> },
+        { path: "receipts/add/", element: <AddReceipt /> },
+        { path: "payments/", element: <Payments /> },
+        { path: "payments/:id", element: <PaymentDetails /> },
+        { path: "payments/add/", element: <AddPayment /> },
+        { path: "payroll/", element: <Payroll /> },
+        { path: "reports/", element: <Reports /> },
+      ],
+    },
+    {
+      path: "sis",
+      children: [
+        { path: "students/", element: <StudentList /> },
+        { path: "students/:id", element: <StudentDetailsScreen /> },
+        { path: "students/add", element: <AddStudent /> },
+        { path: "students/upload", element: <BulkUpload /> },
+        { path: "students/:id/edit", element: <StudentUpdate /> },
+      ],
+    },
+    {
+      path: "users",
+      children: [
+        { path: "", element: <UserList /> },
+        { path: ":id", element: <UserProfile /> },
+        { path: "parents", element: <ParentList /> },
+        { path: "parents/:id", element: <ParentDetails /> },
+        { path: "teachers", element: <TeacherList /> },
+        { path: "teachers/add", element: <AddTeacher /> },
+        { path: "teachers/upload", element: <TeacherBulkUpload /> },
+        { path: "teachers/:id", element: <TeacherDetails /> },
+        { path: "teachers/:id/edit", element: <EditTeacherProfile /> },
+        { path: "teachers/:id/print", element: <PrintTeacherProfile /> },
+        { path: "accountants/", element: <AccountantList /> },
+        { path: "accountants/:id", element: <AccountantDetails /> },
+        { path: "accountants/add", element: <AddAccountant /> },
+        { path: "accountants/:id/edit", element: <AccountantUpdate /> },
+      ],
+    },
+    {
+      path: "notification/sms",
+      children: [{ path: "", element: <Assignment /> }],
+    },
+  ],
+};
+
+// Authentication Routes
+const AuthenticationRoutes = {
+  path: "/",
+  element: <MinimalLayout />,
+  children: [
+    { path: "login", element: <Login /> },
+
+    { path: "/", element: <Home /> },
+    { path: "/getting-started/developers/", element: <Developers /> },
+    { path: "/getting-started/teachers/", element: <Teachers /> },
+    { path: "/getting-started/parents/", element: <Parents /> },
+  ],
+};
+
+// Combine Routes
+const router = createHashRouter([MainRoutes, AuthenticationRoutes], {
+  basename: "/",
+});
+
+export default router;
