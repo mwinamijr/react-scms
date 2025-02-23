@@ -11,9 +11,7 @@ function PaymentsDetails() {
   const { id } = useParams();
 
   // Access payment details from the Redux store
-  const { loading, error, payment } = useSelector(
-    (state) => state.finance.paymentDetails
-  );
+  const { loading, error, payment } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
     dispatch(paymentDetails(id)); // Dispatch the action to fetch payment details

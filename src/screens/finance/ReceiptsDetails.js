@@ -11,9 +11,7 @@ function ReceiptsDetails() {
   const { id } = useParams();
 
   // Access receipt details from the finance slice
-  const { loading, error, receipt } = useSelector(
-    (state) => state.finance.receiptDetails
-  );
+  const { loading, error, receipt } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
     dispatch(receiptDetails(id)); // Replace with the appropriate thunk from the slice
@@ -21,15 +19,15 @@ function ReceiptsDetails() {
 
   return (
     <div>
-      <Breadcrumb>
-        <Breadcrumb.Item href="#">
-          <Link to="/">Home</Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">
-          <Link to="/finance/receipts/">Receipts</Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>Details</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+        style={{ marginBottom: 16 }}
+        items={[
+          { title: <Link to="/dashboard">Dashboard</Link> },
+          { title: <Link to="/finance/receipts/">Receipts</Link> },
+          { title: "Receipt Details" },
+        ]}
+      />
+
       <div>
         {loading ? (
           <Loader />

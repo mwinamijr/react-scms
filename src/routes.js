@@ -52,6 +52,13 @@ import ClassLevelList from "./screens/academic/classLevel/ClassLevelList";
 import ClassLevelDetails from "./screens/academic/classLevel/ClassLevelDetails";
 import AddClassLevel from "./screens/academic/classLevel/AddClassLevel";
 import UpdateClassLevel from "./screens/academic/classLevel/UpdateClassLevel";
+import Allocation from "./screens/finance/allocations/Allocation";
+import AddPaymentAllocation from "./screens/finance/allocations/AddPaymentAllocation";
+import AddReceiptAllocation from "./screens/finance/allocations/AddReceiptAllocation";
+import PaymentAllocationDetails from "./screens/finance/allocations/PaymentAllocationDetails";
+import ReceiptAllocationDetails from "./screens/finance/allocations/ReceiptAllocationDetails";
+import UpdatePaymentAllocation from "./screens/finance/allocations/UpdatePaymentAllocation";
+import UpdateReceiptAllocation from "./screens/finance/allocations/UpdateReceiptAllocation";
 
 const ProtectedRoute = ({ element }) => {
   const navigate = useNavigate();
@@ -104,6 +111,36 @@ const MainRoutes = {
         { path: "payments/add/", element: <AddPayment /> },
         { path: "payroll/", element: <Payroll /> },
         { path: "reports/", element: <Reports /> },
+        {
+          path: "allocations",
+          children: [
+            { path: "", element: <Allocation /> },
+            {
+              path: "payment-allocations/add",
+              element: <AddPaymentAllocation />,
+            },
+            {
+              path: "payment-allocations/:id",
+              element: <PaymentAllocationDetails />,
+            },
+            {
+              path: "payment-allocations/:id/edit",
+              element: <UpdatePaymentAllocation />,
+            },
+            {
+              path: "receipt-allocations/add",
+              element: <AddReceiptAllocation />,
+            },
+            {
+              path: "receipt-allocations/:id",
+              element: <ReceiptAllocationDetails />,
+            },
+            {
+              path: "receipt-allocations/:id/edit",
+              element: <UpdateReceiptAllocation />,
+            },
+          ],
+        },
       ],
     },
     {
@@ -159,6 +196,10 @@ const AuthenticationRoutes = {
 // Combine Routes
 const router = createHashRouter([MainRoutes, AuthenticationRoutes], {
   basename: "/",
+  future: {
+    v7_startTransition: true, // Enables state transitions for v7
+    v7_relativeSplatPath: true, // Enables new relative splat route resolution
+  },
 });
 
 export default router;

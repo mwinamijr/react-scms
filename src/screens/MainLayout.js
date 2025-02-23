@@ -65,6 +65,10 @@ const DashboardLayout = () => {
         <Link to="/finance/payments">Payments</Link>,
         "/finance/payments"
       ),
+      getItem(
+        <Link to="/finance/allocations">Allocations</Link>,
+        "/finance/allocations"
+      ),
       getItem(<Link to="/finance/payroll">Payroll</Link>, "/finance/payroll"),
       getItem("Reports", "finance/reports", null, [
         getItem("Collections", "/finance/reports/collections"),

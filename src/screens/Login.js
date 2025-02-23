@@ -60,7 +60,7 @@ const Login = () => {
               <img
                 src={logo}
                 alt="techdometz"
-                style={{ height: 40, marginRight: 10 }}
+                style={{ height: 50, marginRight: 10 }}
               />
             </div>
 

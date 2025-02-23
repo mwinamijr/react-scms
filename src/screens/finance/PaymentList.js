@@ -14,7 +14,9 @@ function Payments() {
   const { userInfo } = useSelector((state) => state.getUsers);
 
   // Access payments from the Redux store
-  const { loading, error, paymentList } = useSelector((state) => state.finance);
+  const { loading, error, paymentList } = useSelector(
+    (state) => state.getFinance
+  );
 
   useEffect(() => {
     dispatch(listPayments()); // Dispatch the action to fetch payments

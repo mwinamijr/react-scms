@@ -3,9 +3,9 @@ import axios from "axios";
 import { getErrorMessage } from "../utils";
 import { djangoUrl } from "../utils";
 
-// Thunks for Receipt Actions
-export const listReceipts = createAsyncThunk(
-  "receipt/list",
+// Thunks for ReceiptAllocation Actions
+export const listReceiptAllocations = createAsyncThunk(
+  "receiptAllocation/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -18,7 +18,7 @@ export const listReceipts = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/finance/receipts/`,
+        `${djangoUrl}/api/finance/receipt-allocations/`,
         config
       );
       return data;
@@ -28,8 +28,8 @@ export const listReceipts = createAsyncThunk(
   }
 );
 
-export const receiptDetails = createAsyncThunk(
-  "receipt/details",
+export const receiptAllocationDetails = createAsyncThunk(
+  "receiptAllocation/details",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -42,7 +42,7 @@ export const receiptDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/finance/receipts/${id}`,
+        `${djangoUrl}/api/finance/receipt-allocations/${id}`,
         config
       );
       return data;
@@ -52,9 +52,9 @@ export const receiptDetails = createAsyncThunk(
   }
 );
 
-export const createReceipt = createAsyncThunk(
-  "receipt/create",
-  async (receiptData, { getState, rejectWithValue }) => {
+export const createReceiptAllocation = createAsyncThunk(
+  "receiptAllocation/create",
+  async (receiptAllocationData, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -66,8 +66,8 @@ export const createReceipt = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/finance/receipts/`,
-        receiptData,
+        `${djangoUrl}/api/finance/receipt-allocations/`,
+        receiptAllocationData,
         config
       );
       return data;
@@ -77,9 +77,9 @@ export const createReceipt = createAsyncThunk(
   }
 );
 
-export const updateReceipt = createAsyncThunk(
-  "receipt/update",
-  async ({ id, receiptData }, { getState, rejectWithValue }) => {
+export const updateReceiptAllocation = createAsyncThunk(
+  "receiptAllocation/update",
+  async ({ id, receiptAllocationData }, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -91,8 +91,8 @@ export const updateReceipt = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `${djangoUrl}/api/finance/receipts/${id}/`,
-        receiptData,
+        `${djangoUrl}/api/finance/receipt-allocations/${id}/`,
+        receiptAllocationData,
         config
       );
       return data;
@@ -102,8 +102,8 @@ export const updateReceipt = createAsyncThunk(
   }
 );
 
-export const deleteReceipt = createAsyncThunk(
-  "receipt/delete",
+export const deleteReceiptAllocation = createAsyncThunk(
+  "receiptAllocation/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -116,7 +116,7 @@ export const deleteReceipt = createAsyncThunk(
         },
       };
       const { data } = await axios.delete(
-        `${djangoUrl}/api/finance/receipts/${id}/`,
+        `${djangoUrl}/api/finance/receipt-allocations/${id}/`,
         config
       );
       return data;
@@ -126,9 +126,9 @@ export const deleteReceipt = createAsyncThunk(
   }
 );
 
-// Thunks for Payment Actions
-export const listPayments = createAsyncThunk(
-  "payment/list",
+// Thunks for PaymentAllocation Actions
+export const listPaymentAllocations = createAsyncThunk(
+  "paymentAllocation/list",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
@@ -141,7 +141,7 @@ export const listPayments = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/finance/payments/`,
+        `${djangoUrl}/api/finance/payment-allocations/`,
         config
       );
       return data;
@@ -151,8 +151,8 @@ export const listPayments = createAsyncThunk(
   }
 );
 
-export const paymentDetails = createAsyncThunk(
-  "payment/details",
+export const paymentAllocationDetails = createAsyncThunk(
+  "paymentAllocation/details",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -165,7 +165,7 @@ export const paymentDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/finance/payments/${id}`,
+        `${djangoUrl}/api/finance/payment-allocations/${id}`,
         config
       );
       return data;
@@ -175,9 +175,9 @@ export const paymentDetails = createAsyncThunk(
   }
 );
 
-export const createPayment = createAsyncThunk(
-  "payment/create",
-  async (paymentData, { getState, rejectWithValue }) => {
+export const createPaymentAllocation = createAsyncThunk(
+  "paymentAllocation/create",
+  async (paymentAllocationData, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -189,8 +189,8 @@ export const createPayment = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `${djangoUrl}/api/finance/payments/`,
-        paymentData,
+        `${djangoUrl}/api/finance/payment-allocations/`,
+        paymentAllocationData,
         config
       );
       return data;
@@ -200,9 +200,9 @@ export const createPayment = createAsyncThunk(
   }
 );
 
-export const updatePayment = createAsyncThunk(
-  "payment/update",
-  async ({ id, paymentData }, { getState, rejectWithValue }) => {
+export const updatePaymentAllocation = createAsyncThunk(
+  "paymentAllocation/update",
+  async ({ id, paymentAllocationData }, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
@@ -214,8 +214,8 @@ export const updatePayment = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `${djangoUrl}/api/finance/payments/${id}/`,
-        paymentData,
+        `${djangoUrl}/api/finance/payment-allocations/${id}/`,
+        paymentAllocationData,
         config
       );
       return data;
@@ -225,8 +225,8 @@ export const updatePayment = createAsyncThunk(
   }
 );
 
-export const deletePayment = createAsyncThunk(
-  "payment/delete",
+export const deletePaymentAllocation = createAsyncThunk(
+  "paymentAllocation/delete",
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
@@ -239,7 +239,7 @@ export const deletePayment = createAsyncThunk(
         },
       };
       const { data } = await axios.delete(
-        `${djangoUrl}/api/finance/payments/${id}/`,
+        `${djangoUrl}/api/finance/payment-allocations/${id}/`,
         config
       );
       return data;
@@ -253,10 +253,10 @@ export const deletePayment = createAsyncThunk(
 const financeSlice = createSlice({
   name: "finance",
   initialState: {
-    receiptList: [],
-    receiptDetails: null,
-    paymentList: [],
-    paymentDetails: null,
+    receiptAllocations: [],
+    receiptAllocation: null,
+    paymentAllocations: [],
+    paymentAllocation: null,
     loading: false,
     error: null,
     successCreate: false,
@@ -266,132 +266,127 @@ const financeSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Receipts
-      .addCase(listReceipts.pending, (state) => {
+      // ReceiptAllocations
+      .addCase(listReceiptAllocations.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(listReceipts.fulfilled, (state, action) => {
+      .addCase(listReceiptAllocations.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptList = action.payload.results;
-        state.pagination = {
-          count: action.payload.count,
-          next: action.payload.next,
-          previous: action.payload.previous,
-        }; // Set pagination metadata
+        state.receiptAllocations = action.payload;
       })
-      .addCase(listReceipts.rejected, (state, action) => {
+      .addCase(listReceiptAllocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(receiptDetails.pending, (state) => {
+      .addCase(receiptAllocationDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(receiptDetails.fulfilled, (state, action) => {
+      .addCase(receiptAllocationDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptDetails = action.payload;
+        state.receiptAllocation = action.payload;
       })
-      .addCase(receiptDetails.rejected, (state, action) => {
+      .addCase(receiptAllocationDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createReceipt.pending, (state) => {
+      .addCase(createReceiptAllocation.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createReceipt.fulfilled, (state, action) => {
+      .addCase(createReceiptAllocation.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(createReceipt.rejected, (state, action) => {
+      .addCase(createReceiptAllocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateReceipt.pending, (state) => {
+      .addCase(updateReceiptAllocation.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateReceipt.fulfilled, (state, action) => {
+      .addCase(updateReceiptAllocation.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptDetails = action.payload;
+        state.receiptAllocation = action.payload;
       })
-      .addCase(updateReceipt.rejected, (state, action) => {
+      .addCase(updateReceiptAllocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteReceipt.pending, (state) => {
+      .addCase(deleteReceiptAllocation.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteReceipt.fulfilled, (state, action) => {
+      .addCase(deleteReceiptAllocation.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptList = state.receiptList.filter(
-          (receipt) => receipt.id !== action.payload.id
+        state.receiptAllocations = state.receiptAllocations.filter(
+          (receiptAllocation) => receiptAllocation.id !== action.payload.id
         );
       })
-      .addCase(deleteReceipt.rejected, (state, action) => {
+      .addCase(deleteReceiptAllocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Payments
-      .addCase(listPayments.pending, (state) => {
+      // PaymentAllocations
+      .addCase(listPaymentAllocations.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(listPayments.fulfilled, (state, action) => {
+      .addCase(listPaymentAllocations.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentList = action.payload;
+        state.paymentAllocations = action.payload;
       })
-      .addCase(listPayments.rejected, (state, action) => {
+      .addCase(listPaymentAllocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(paymentDetails.pending, (state) => {
+      .addCase(paymentAllocationDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(paymentDetails.fulfilled, (state, action) => {
+      .addCase(paymentAllocationDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentDetails = action.payload;
+        state.paymentAllocation = action.payload;
       })
-      .addCase(paymentDetails.rejected, (state, action) => {
+      .addCase(paymentAllocationDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createPayment.pending, (state) => {
+      .addCase(createPaymentAllocation.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createPayment.fulfilled, (state, action) => {
+      .addCase(createPaymentAllocation.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(createPayment.rejected, (state, action) => {
+      .addCase(createPaymentAllocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updatePayment.pending, (state) => {
+      .addCase(updatePaymentAllocation.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updatePayment.fulfilled, (state, action) => {
+      .addCase(updatePaymentAllocation.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentDetails = action.payload;
+        state.paymentAllocation = action.payload;
       })
-      .addCase(updatePayment.rejected, (state, action) => {
+      .addCase(updatePaymentAllocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deletePayment.pending, (state) => {
+      .addCase(deletePaymentAllocation.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deletePayment.fulfilled, (state, action) => {
+      .addCase(deletePaymentAllocation.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentList = state.paymentList.filter(
-          (payment) => payment.id !== action.payload.id
+        state.paymentAllocations = state.paymentAllocations.filter(
+          (paymentAllocation) => paymentAllocation.id !== action.payload.id
         );
       })
-      .addCase(deletePayment.rejected, (state, action) => {
+      .addCase(deletePaymentAllocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

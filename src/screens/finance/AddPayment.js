@@ -22,7 +22,7 @@ function AddPayment() {
   const navigate = useNavigate();
 
   const { loadingCreate, errorCreate, successCreate } = useSelector(
-    (state) => state.finance
+    (state) => state.getFinance
   );
 
   const { userInfo } = useSelector((state) => state.getUsers);

@@ -8,13 +8,15 @@ import parentReducer from "./features/user/parentSlice";
 import subjectReducer from "./features/academic/subjectSlice";
 import departmentReducer from "./features/academic/departmentSlice";
 import classLevelReducer from "./features/academic/classLevelSlice";
+import allocationReducer from "./features/finance/allocationSlice";
 
 const store = configureStore({
   reducer: {
     getUsers: userReducer,
     getTeachers: teacherReducer,
     getAccountants: accountantReducer,
-    finance: financeReducer,
+    getFinance: financeReducer,
+    getAllocations: allocationReducer,
     getStudents: studentReducer,
     getParents: parentReducer,
     getSubjects: subjectReducer,

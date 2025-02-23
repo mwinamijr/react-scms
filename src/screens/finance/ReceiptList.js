@@ -14,7 +14,9 @@ function Receipts() {
   const { userInfo } = useSelector((state) => state.getUsers);
 
   // Access state from the finance slice
-  const { receiptList, loading, error } = useSelector((state) => state.finance);
+  const { receiptList, loading, error } = useSelector(
+    (state) => state.getFinance
+  );
 
   useEffect(() => {
     dispatch(listReceipts());

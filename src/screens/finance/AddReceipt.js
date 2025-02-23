@@ -24,7 +24,7 @@ function AddReceipt() {
 
   // Redux state
   const { loadingCreate, errorCreate, successCreate } = useSelector(
-    (state) => state.finance
+    (state) => state.getFinance
   );
   const { userInfo } = useSelector((state) => state.getUsers);
   const { students } = useSelector((state) => state.getStudents); // Access student list
