@@ -1,22 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const djangoUrl = "http://127.0.0.1:8000";
-
-const getErrorMessage = (error) => {
-  if (error.response) {
-    if (error.response.data) {
-      if (typeof error.response.data === "string") {
-        return error.response.data; // Handle string errors
-      } else if (error.response.data.detail) {
-        return error.response.data.detail; // Handle DRF 'detail' key
-      } else {
-        return JSON.stringify(error.response.data); // Convert object errors to string
-      }
-    }
-  }
-  return error.message || "An unknown error occurred";
-};
+import { djangoUrl } from "../utils";
+import { getErrorMessage } from "../utils";
 
 // Async thunk for fetching the student list with advanced search and pagination
 export const listStudents = createAsyncThunk(

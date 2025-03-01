@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { createReceipt } from "../../features/finance/financeSlice";
 import { listStudents } from "../../features/students/studentSlice"; // Action to fetch students
+import { listReceiptAllocations } from "../../features/finance/allocationSlice";
+import Message from "../../components/Message";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -23,21 +25,46 @@ function AddReceipt() {
   const navigate = useNavigate();
 
   // Redux state
-  const { loadingCreate, errorCreate, successCreate } = useSelector(
+  const { loading, error, successCreate } = useSelector(
     (state) => state.getFinance
   );
   const { userInfo } = useSelector((state) => state.getUsers);
-  const { students } = useSelector((state) => state.getStudents); // Access student list
-  console.log(students);
+  const { students } = useSelector((state) => state.getStudents);
+  const { receiptAllocations } = useSelector((state) => state.getAllocations);
 
-  // Fetch student list on component mount
+  // Fetch student list and receipt allocations on component mount
   useEffect(() => {
-    dispatch(listStudents());
+    // Dispatch with a callback to handle any potential errors
+    dispatch(
+      listStudents({
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        class_level: "",
+      })
+    )
+      .unwrap()
+      .catch((error) => {
+        console.error("Error fetching students:", error);
+        AntMessage.error("Failed to load students list");
+      });
+
+    dispatch(listReceiptAllocations())
+      .unwrap()
+      .catch((error) => {
+        console.error("Error fetching receipt allocations:", error);
+        AntMessage.error("Failed to load payment categories");
+      });
   }, [dispatch]);
 
   // Handle form submission
   const submitHandler = (values) => {
-    dispatch(createReceipt(values));
+    const formattedData = {
+      ...values,
+      received_by: userInfo?.id,
+      amount: Number(values.amount),
+    };
+    dispatch(createReceipt(formattedData));
   };
 
   useEffect(() => {
@@ -45,7 +72,21 @@ function AddReceipt() {
       navigate("/finance/receipts");
       AntMessage.success("Receipt created successfully!");
     }
-  }, [dispatch, navigate, successCreate]);
+  }, [navigate, successCreate]);
+
+  // Create a safe filter function that works with both string and React node children
+  const filterStudentOption = (input, option) => {
+    if (!option || !option.children) return false;
+
+    // Handle when children is a string
+    if (typeof option.children === "string") {
+      return option.children.toLowerCase().includes(input.toLowerCase());
+    }
+
+    // Handle when children are React nodes (first_name + last_name)
+    const studentLabel = option.title || option["data-label"] || "";
+    return studentLabel.toLowerCase().includes(input.toLowerCase());
+  };
 
   return (
     <div>
@@ -59,10 +100,6 @@ function AddReceipt() {
         <Breadcrumb.Item>Add Receipt</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Button type="link" onClick={() => navigate("/finance/receipts/")}>
-        Go Back
-      </Button>
-
       {userInfo.isAccountant || userInfo.isAdmin ? (
         <Card>
           <Title level={4} className="text-center">
@@ -72,7 +109,7 @@ function AddReceipt() {
             A/C Number: NMB, NBC
           </Title>
           <Card title="Payment Receipt" bordered className="mt-3">
-            {errorCreate && <Text type="danger">{errorCreate}</Text>}
+            {error && <Message variant="danger">{error}</Message>}
 
             <Form
               layout="vertical"
@@ -80,16 +117,6 @@ function AddReceipt() {
               onFinish={submitHandler}
               className="mt-3"
             >
-              <Form.Item
-                label="Receipt Number"
-                name="receiptNumber"
-                rules={[
-                  { required: true, message: "Please input Receipt Number!" },
-                ]}
-              >
-                <Input placeholder="Enter Receipt Number" />
-              </Form.Item>
-
               <Form.Item
                 label="Payer"
                 name="payer"
@@ -111,21 +138,31 @@ function AddReceipt() {
                   showSearch
                   placeholder="Search and select a student"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.children.toLowerCase().includes(input.toLowerCase())
+                  filterOption={filterStudentOption}
+                  loading={!students || students.length === 0}
+                  notFoundContent={
+                    !students || students.length === 0
+                      ? "Loading students..."
+                      : "No student found"
                   }
                 >
-                  {students.map((student) => (
-                    <Option key={student.id} value={student.id}>
-                      {student.first_name} {student.last_name}
-                    </Option>
-                  ))}
+                  {students &&
+                    students.map((student) => (
+                      <Option
+                        key={student.id}
+                        value={student.id}
+                        title={`${student.first_name} ${student.last_name}`}
+                        data-label={`${student.first_name} ${student.last_name}`}
+                      >
+                        {student.first_name} {student.last_name}
+                      </Option>
+                    ))}
                 </Select>
               </Form.Item>
 
               <Form.Item
                 label="Paid For"
-                name="paidFor"
+                name="paid_for"
                 rules={[
                   {
                     required: true,
@@ -133,10 +170,18 @@ function AddReceipt() {
                   },
                 ]}
               >
-                <Select placeholder="Select Paid For">
-                  <Option value="school fees">School Fees</Option>
-                  <Option value="examination fees">Examination Fees</Option>
-                  <Option value="allowances">Allowances</Option>
+                <Select
+                  placeholder="Select Paid For"
+                  loading={
+                    !receiptAllocations || receiptAllocations.length === 0
+                  }
+                >
+                  {receiptAllocations &&
+                    receiptAllocations.map((allocation) => (
+                      <Option key={allocation.id} value={allocation.id}>
+                        {allocation.name}
+                      </Option>
+                    ))}
                 </Select>
               </Form.Item>
 
@@ -145,18 +190,36 @@ function AddReceipt() {
                 name="amount"
                 rules={[
                   { required: true, message: "Please input the amount!" },
+                  {
+                    validator: (_, value) => {
+                      const numValue = Number(value);
+                      if (isNaN(numValue)) {
+                        return Promise.reject("Please enter a valid number");
+                      }
+                      if (numValue <= 0) {
+                        return Promise.reject("Amount must be greater than 0");
+                      }
+                      return Promise.resolve();
+                    },
+                  },
                 ]}
               >
-                <Input type="number" placeholder="Enter the payment amount" />
+                <Input
+                  type="number"
+                  placeholder="Enter the payment amount"
+                  min={1}
+                  step="0.01"
+                />
               </Form.Item>
 
               <Form.Item>
                 <Button
                   type="primary"
                   htmlType="submit"
-                  loading={loadingCreate}
+                  loading={loading}
+                  disabled={loading}
                 >
-                  Submit Receipt
+                  {loading ? "submitting receipt" : "Submit Receipt"}
                 </Button>
               </Form.Item>
             </Form>

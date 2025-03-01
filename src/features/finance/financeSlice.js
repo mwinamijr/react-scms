@@ -42,7 +42,7 @@ export const receiptDetails = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${djangoUrl}/api/finance/receipts/${id}`,
+        `${djangoUrl}/api/finance/receipts/${id}/`,
         config
       );
       return data;
@@ -253,15 +253,14 @@ export const deletePayment = createAsyncThunk(
 const financeSlice = createSlice({
   name: "finance",
   initialState: {
-    receiptList: [],
-    receiptDetails: null,
-    paymentList: [],
-    paymentDetails: null,
+    receipts: [],
+    receipt: null,
+    payments: [],
+    payment: null,
     loading: false,
     error: null,
     successCreate: false,
-    loadingCreate: false,
-    errorCreate: null,
+    createdReceipt: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -273,12 +272,7 @@ const financeSlice = createSlice({
       })
       .addCase(listReceipts.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptList = action.payload.results;
-        state.pagination = {
-          count: action.payload.count,
-          next: action.payload.next,
-          previous: action.payload.previous,
-        }; // Set pagination metadata
+        state.receipts = action.payload;
       })
       .addCase(listReceipts.rejected, (state, action) => {
         state.loading = false;
@@ -290,7 +284,7 @@ const financeSlice = createSlice({
       })
       .addCase(receiptDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptDetails = action.payload;
+        state.receipt = action.payload;
       })
       .addCase(receiptDetails.rejected, (state, action) => {
         state.loading = false;
@@ -302,6 +296,8 @@ const financeSlice = createSlice({
       })
       .addCase(createReceipt.fulfilled, (state, action) => {
         state.loading = false;
+        state.createdReceipt = action.payload;
+        state.successCreate = true;
       })
       .addCase(createReceipt.rejected, (state, action) => {
         state.loading = false;
@@ -313,7 +309,7 @@ const financeSlice = createSlice({
       })
       .addCase(updateReceipt.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptDetails = action.payload;
+        state.receipt = action.payload;
       })
       .addCase(updateReceipt.rejected, (state, action) => {
         state.loading = false;
@@ -325,7 +321,7 @@ const financeSlice = createSlice({
       })
       .addCase(deleteReceipt.fulfilled, (state, action) => {
         state.loading = false;
-        state.receiptList = state.receiptList.filter(
+        state.receipts = state.receipts.filter(
           (receipt) => receipt.id !== action.payload.id
         );
       })
@@ -340,7 +336,7 @@ const financeSlice = createSlice({
       })
       .addCase(listPayments.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentList = action.payload;
+        state.payments = action.payload;
       })
       .addCase(listPayments.rejected, (state, action) => {
         state.loading = false;
@@ -352,7 +348,7 @@ const financeSlice = createSlice({
       })
       .addCase(paymentDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentDetails = action.payload;
+        state.payment = action.payload;
       })
       .addCase(paymentDetails.rejected, (state, action) => {
         state.loading = false;
@@ -375,7 +371,7 @@ const financeSlice = createSlice({
       })
       .addCase(updatePayment.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentDetails = action.payload;
+        state.payment = action.payload;
       })
       .addCase(updatePayment.rejected, (state, action) => {
         state.loading = false;
@@ -387,7 +383,7 @@ const financeSlice = createSlice({
       })
       .addCase(deletePayment.fulfilled, (state, action) => {
         state.loading = false;
-        state.paymentList = state.paymentList.filter(
+        state.payments = state.payments.filter(
           (payment) => payment.id !== action.payload.id
         );
       })

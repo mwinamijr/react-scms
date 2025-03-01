@@ -4,17 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Breadcrumb, Table } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { receiptDetails } from "../../features/finance/financeSlice"; // Update to import from financeSlice
+import { receiptDetails } from "../../features/finance/financeSlice";
 
 function ReceiptsDetails() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  // Access receipt details from the finance slice
   const { loading, error, receipt } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
-    dispatch(receiptDetails(id)); // Replace with the appropriate thunk from the slice
+    dispatch(receiptDetails(id));
   }, [dispatch, id]);
 
   return (
@@ -52,29 +51,35 @@ function ReceiptsDetails() {
                   <tbody>
                     <tr>
                       <td>Date</td>
-                      <td>{receipt.date}</td>
+                      <td>{receipt?.date}</td>
                       <td>Receipt number</td>
-                      <td>{receipt.receipt_no}</td>
+                      <td>{receipt?.receipt_number}</td>
                     </tr>
                     <tr>
                       <td>Payer</td>
-                      <td>{receipt.payer}</td>
+                      <td>{receipt?.payer}</td>
                     </tr>
                     <tr>
                       <td>Student</td>
-                      <td>{receipt.student}</td>
+                      <td>
+                        {receipt?.student_details.first_name}{" "}
+                        {receipt?.student_details.first_name}
+                      </td>
                     </tr>
                     <tr>
                       <td>Paid for</td>
-                      <td>{receipt.paid_for}</td>
+                      <td>{receipt?.paid_for_details.name}</td>
                     </tr>
                     <tr>
                       <td>Amount</td>
-                      <td>{receipt.amount}</td>
+                      <td>{receipt?.amount}</td>
                     </tr>
                     <tr>
                       <td>Received by</td>
-                      <td>{receipt.received_by}</td>
+                      <td>
+                        {receipt?.received_by_details.first_name}{" "}
+                        {receipt?.received_by_details.last_name}
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
