@@ -40,6 +40,11 @@ function Receipts() {
       render: (_, record) => `${record?.paid_for_details?.name}`,
     },
     {
+      title: "Through",
+      dataIndex: "paid_through",
+      key: "paid_through",
+    },
+    {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
@@ -91,7 +96,7 @@ function Receipts() {
               <Table
                 columns={columns}
                 dataSource={receipts}
-                rowKey="receipt_no"
+                rowKey="id"
                 pagination={{ pageSize: 10 }}
               />
             )}

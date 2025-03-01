@@ -18,14 +18,15 @@ function ReceiptsDetails() {
 
   return (
     <div>
-      <Breadcrumb
-        style={{ marginBottom: 16 }}
-        items={[
-          { title: <Link to="/dashboard">Dashboard</Link> },
-          { title: <Link to="/finance/receipts/">Receipts</Link> },
-          { title: "Receipt Details" },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/finance/receipts/">Receipts</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Receipt Details</Breadcrumb.Item>
+      </Breadcrumb>
 
       <div>
         {loading ? (
@@ -69,6 +70,10 @@ function ReceiptsDetails() {
                     <tr>
                       <td>Paid for</td>
                       <td>{receipt?.paid_for_details.name}</td>
+                    </tr>
+                    <tr>
+                      <td>Paid through</td>
+                      <td>{receipt?.paid_through}</td>
                     </tr>
                     <tr>
                       <td>Amount</td>

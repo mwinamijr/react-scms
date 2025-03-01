@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   Form,
   Input,
   Button,
   Breadcrumb,
+  DatePicker,
   Typography,
   Select,
   message as AntMessage,
 } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 import { createReceipt } from "../../features/finance/financeSlice";
 import { listStudents } from "../../features/students/studentSlice"; // Action to fetch students
 import { listReceiptAllocations } from "../../features/finance/allocationSlice";
@@ -63,6 +65,7 @@ function AddReceipt() {
       ...values,
       received_by: userInfo?.id,
       amount: Number(values.amount),
+      payment_date: dayjs(values.payment_date).format("YYYY-MM-DD"),
     };
     dispatch(createReceipt(formattedData));
   };
@@ -183,6 +186,48 @@ function AddReceipt() {
                       </Option>
                     ))}
                 </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Paid Through"
+                name="paid_through"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a method for payment!",
+                  },
+                ]}
+              >
+                <Select placeholder="Select Payment Method">
+                  <Option key="NMB" value="NMB">
+                    NMB
+                  </Option>
+                  <Option key="NBC" value="NBC">
+                    NBC
+                  </Option>
+                  <Option key="CRDB" value="CRDB">
+                    CRDB
+                  </Option>
+                  <Option key="HATI MALIPO" value="HATI_MALIPO">
+                    HATI MALIPO
+                  </Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Payment Date"
+                name="payment_date"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a date for payment!",
+                  },
+                ]}
+              >
+                <DatePicker
+                  placeholder="Date of Birth"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
 
               <Form.Item
