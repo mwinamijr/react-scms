@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Breadcrumb,
@@ -18,7 +18,6 @@ import {
   EditOutlined,
   UserAddOutlined,
   UploadOutlined,
-  EyeOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
 import Message from "../../components/Message";
@@ -31,6 +30,7 @@ const { Title } = Typography;
 
 const Students = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     first_name: "",
     middle_name: "",
@@ -81,16 +81,14 @@ const Students = () => {
       title: "Actions",
       key: "actions",
       render: (text, record) => (
-        <Space size="middle">
-          <Link to={`/sis/students/${record.id}`}>
-            <EyeOutlined style={{ color: "blue" }} />
-          </Link>
+        <Space size="middle" onClick={(e) => e.stopPropagation()}>
           <Link to={`/sis/students/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
           <Popconfirm
             title="Delete this student?"
             onConfirm={() => handleDelete(record.id)}
+            onClick={(e) => e.stopPropagation()}
           >
             <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
           </Popconfirm>
@@ -103,7 +101,7 @@ const Students = () => {
   const handleDelete = (id) => {
     dispatch(deleteStudent(id))
       .unwrap()
-      .then(() => message.success("Teacher deleted successfully"));
+      .then(() => message.success("Student deleted successfully"));
   };
 
   return (
@@ -215,6 +213,10 @@ const Students = () => {
         bordered
         pagination={{ pageSize: 10 }}
         loading={loading}
+        onRow={(record) => ({
+          onClick: () => navigate(`/sis/students/${record.id}`),
+          style: { cursor: "pointer" },
+        })}
       />
     </div>
   );

@@ -17,6 +17,7 @@ import {
   Space,
   Tag,
   Table,
+  Breadcrumb,
 } from "antd";
 import {
   UserOutlined,
@@ -51,9 +52,15 @@ const StudentDetailsScreen = () => {
 
   return (
     <div>
-      <Link to="/sis/students/" className="ant-btn ant-btn-link mb-4">
-        Go Back
-      </Link>
+      <Breadcrumb className="mb-4">
+        <Breadcrumb.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/sis/students/">Students</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Student Details</Breadcrumb.Item>
+      </Breadcrumb>
 
       <Card title="Student Profile">
         {loading ? (

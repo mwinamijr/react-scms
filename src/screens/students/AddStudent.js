@@ -12,6 +12,7 @@ import {
   Col,
   message,
   Divider,
+  Breadcrumb,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -71,9 +72,15 @@ function AddStudent() {
 
   return (
     <div className="container">
-      <Link to="/sis/students/">
-        <Button type="link">← Back to Students</Button>
-      </Link>
+      <Breadcrumb className="mb-4">
+        <Breadcrumb.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/sis/students/">Students</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Add Student</Breadcrumb.Item>
+      </Breadcrumb>
 
       <Card bordered className="shadow-lg mt-3">
         <Title level={3} className="text-center">
