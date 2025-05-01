@@ -31,7 +31,9 @@ function AddReceipt() {
     (state) => state.getFinance
   );
   const { userInfo } = useSelector((state) => state.getUsers);
-  const { students } = useSelector((state) => state.getStudents);
+  const { loading: loadStudents, students } = useSelector(
+    (state) => state.getStudents
+  );
   const { receiptAllocations } = useSelector((state) => state.getAllocations);
 
   // Fetch student list and receipt allocations on component mount
@@ -142,11 +144,9 @@ function AddReceipt() {
                   placeholder="Search and select a student"
                   optionFilterProp="children"
                   filterOption={filterStudentOption}
-                  loading={!students || students.length === 0}
+                  loading={loadStudents}
                   notFoundContent={
-                    !students || students.length === 0
-                      ? "Loading students..."
-                      : "No student found"
+                    loadStudents ? "Loading students..." : "No student found"
                   }
                 >
                   {students &&
@@ -208,7 +208,7 @@ function AddReceipt() {
                   <Option key="CRDB" value="CRDB">
                     CRDB
                   </Option>
-                  <Option key="HATI MALIPO" value="HATI_MALIPO">
+                  <Option key="HATI MALIPO" value="HATI MALIPO">
                     HATI MALIPO
                   </Option>
                 </Select>

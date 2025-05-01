@@ -14,7 +14,7 @@ export const listStudents = createAsyncThunk(
       const response = await axios.get(
         `${djangoUrl}/api/sis/students/?first_name=${first_name}&middle_name=${middle_name}&last_name=${last_name}&class_level=${class_level}`
       );
-      return response.data; // Includes pagination metadata and the student results
+      return response.data;
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }

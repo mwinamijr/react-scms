@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { Breadcrumb, Table } from "react-bootstrap";
+import { Breadcrumb, Table } from "antd";
 import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { listPayments } from "../../features/finance/financeSlice"; // Import from financeSlice
-import Loader from "../../components/Loader";
+import { listPayments } from "../../features/finance/financeSlice";
 import Message from "../../components/Message";
 
 function Payments() {
@@ -13,22 +12,71 @@ function Payments() {
 
   const { userInfo } = useSelector((state) => state.getUsers);
 
-  // Access payments from the Redux store
-  const { loading, error, paymentList } = useSelector(
-    (state) => state.getFinance
-  );
+  const { loading, error, payments } = useSelector((state) => state.getFinance);
+  console.log(payments);
 
   useEffect(() => {
-    dispatch(listPayments()); // Dispatch the action to fetch payments
+    dispatch(listPayments());
   }, [dispatch]);
+
+  const columns = [
+    {
+      title: "Payment id",
+      dataIndex: "payment_number",
+      key: "payment_number",
+    },
+    {
+      title: "Paid to",
+      dataIndex: "paid_to",
+      key: "paid_to",
+    },
+    {
+      title: "Paid For",
+      dataIndex: "paid_for",
+      key: "paid_for",
+      render: (_, record) => `${record?.paid_for?.name}`,
+    },
+    {
+      title: "Through",
+      dataIndex: "paid_through",
+      key: "paid_through",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    {
+      title: "Paid By",
+      dataIndex: "paid_by",
+      key: "paid_by",
+      render: (_, record) =>
+        `${record?.paid_by?.first_name} ${record?.paid_by?.last_name}`,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <span>
+          <Link to={`/finance/payments/${record.id}`}>
+            <EyeOutlined style={{ marginRight: 8 }} />
+          </Link>
+          <Link to={`/finance/payments/edit/${record.id}`}>
+            <EditOutlined style={{ marginRight: 8 }} />
+          </Link>
+          <DeleteOutlined style={{ color: "red" }} />
+        </span>
+      ),
+    },
+  ];
 
   return (
     <div>
       <Breadcrumb>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item active>Payments</Breadcrumb.Item>
+        <Breadcrumb.Item>Payments</Breadcrumb.Item>
       </Breadcrumb>
       <div>
         {userInfo.isAccountant || userInfo.isAdmin ? (
@@ -37,50 +85,15 @@ function Payments() {
             <Link to="/finance/payments/add" className="btn btn-light my-3">
               Add Payment
             </Link>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message variant="danger">{error}</Message>
-            ) : (
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Payment No</th>
-                    <th>Paid to</th>
-                    <th>Paid for</th>
-                    <th>User</th>
-                    <th>Amount</th>
-                    <th>Paid by</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paymentList.map((payment) => (
-                    <tr key={payment.payment_no}>
-                      <td>{payment.payment_no}</td>
-                      <td>{payment.paid_to}</td>
-                      <td>{payment.paid_for}</td>
-                      <td>{payment.user}</td>
-                      <td>{payment.amount}</td>
-                      <td>{payment.paid_by}</td>
-                      <td>
-                        <Link to={`/finance/payments/${payment.id}`}>
-                          <EyeOutlined />
-                        </Link>
-                        <span> </span>
-                        <Link to={`/finance/payments/${payment.id}`}>
-                          <EditOutlined />
-                        </Link>
-                        <span> </span>
-                        <Link to={`/finance/payments/${payment.id}`}>
-                          <DeleteOutlined />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            )}
+            {error && <Message variant="danger">{error}</Message>}
+
+            <Table
+              columns={columns}
+              dataSource={payments}
+              rowKey="id"
+              pagination={{ pageSize: 10 }}
+              loading={loading}
+            />
           </div>
         ) : (
           <Message>

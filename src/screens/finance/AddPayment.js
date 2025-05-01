@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Form,
   Input,
   Button,
   Breadcrumb,
+  Checkbox,
   Typography,
   Select,
   message as AntMessage,
@@ -12,20 +13,35 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { createPayment } from "../../features/finance/financeSlice";
+import { listTeachers } from "../../features/user/teacherSlice";
+import { listPaymentAllocations } from "../../features/finance/allocationSlice";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 function AddPayment() {
   const [form] = Form.useForm();
+  const [isEmployee, setIsEmployee] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loadingCreate, errorCreate, successCreate } = useSelector(
+  const { loading, error, successCreate } = useSelector(
     (state) => state.getFinance
   );
 
+  const { loading: loadTeachers, teachers } = useSelector(
+    (state) => state.getTeachers
+  );
+  const { loading: allocationLoading, paymentAllocations } = useSelector(
+    (state) => state.getAllocations
+  );
+
   const { userInfo } = useSelector((state) => state.getUsers);
+
+  useEffect(() => {
+    dispatch(listTeachers());
+    dispatch(listPaymentAllocations());
+  }, [dispatch]);
 
   useEffect(() => {
     if (successCreate) {
@@ -35,7 +51,34 @@ function AddPayment() {
   }, [dispatch, successCreate, navigate]);
 
   const submitHandler = (values) => {
-    dispatch(createPayment(values));
+    if (isEmployee) {
+      const getTeacher = teachers.find((teacher) => {
+        return teacher.id === values.user;
+      });
+      const formattedData = {
+        ...values,
+        paid_to: `${getTeacher.first_name} ${getTeacher.last_name}`,
+        paid_by_id: userInfo.id,
+      };
+      dispatch(createPayment(formattedData));
+      console.log("formated", formattedData);
+    } else {
+      console.log("values:", values);
+      dispatch(createPayment({ ...values, paid_by_id: userInfo.id }));
+    }
+  };
+
+  const filterUserOption = (input, option) => {
+    if (!option || !option.children) return false;
+
+    // Handle when children is a string
+    if (typeof option.children === "string") {
+      return option.children.toLowerCase().includes(input.toLowerCase());
+    }
+
+    // Handle when children are React nodes (first_name + last_name)
+    const userLabel = option.title || option["data-label"] || "";
+    return userLabel.toLowerCase().includes(input.toLowerCase());
   };
 
   return (
@@ -49,9 +92,7 @@ function AddPayment() {
         </Breadcrumb.Item>
         <Breadcrumb.Item>Add Payment</Breadcrumb.Item>
       </Breadcrumb>
-      <Button type="link" onClick={() => navigate("/finance/payments/")}>
-        Go Back
-      </Button>
+
       {userInfo.isAccountant || userInfo.isAdmin ? (
         <Card>
           <Title level={4} className="text-center">
@@ -61,36 +102,63 @@ function AddPayment() {
             A/C Number:- NMB: , NBC:
           </Title>
           <Card title="Payment Invoice" bordered>
-            {errorCreate && <Text type="danger">{errorCreate}</Text>}
-            {loadingCreate && <AntMessage>Loading...</AntMessage>}
+            {error && <Text type="danger">{error}</Text>}
             <Form
               layout="vertical"
               form={form}
               onFinish={submitHandler}
               className="mt-3"
             >
-              <Form.Item
-                label="Payment Number"
-                name="paymentNumber"
-                rules={[
-                  { required: true, message: "Please input Payment Number!" },
-                ]}
-              >
-                <Input placeholder="Enter Payment Number" />
+              <Form.Item>
+                <Checkbox
+                  checked={isEmployee}
+                  onChange={(e) => setIsEmployee(e.target.checked)}
+                >
+                  Is Employee?
+                </Checkbox>
               </Form.Item>
-              <Form.Item
-                label="Paid To"
-                name="paidTo"
-                rules={[{ required: true, message: "Please input Paid To!" }]}
-              >
-                <Input placeholder="Enter the recipient name" />
-              </Form.Item>
-              <Form.Item label="User" name="user">
-                <Input placeholder="Enter user name" />
-              </Form.Item>
+              {isEmployee ? (
+                <Form.Item
+                  label="User"
+                  name="user"
+                  rules={[{ required: true, message: "Please select a user!" }]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Search and select a user"
+                    optionFilterProp="children"
+                    filterOption={filterUserOption}
+                    loading={loadTeachers}
+                    notFoundContent={
+                      loadTeachers ? "Loading teachers..." : "No teacher found"
+                    }
+                  >
+                    {teachers &&
+                      teachers.map((teacher) => (
+                        <Option
+                          key={teacher.id}
+                          value={teacher.id}
+                          title={`${teacher.first_name} ${teacher.last_name}`}
+                          data-label={`${teacher.first_name} ${teacher.last_name}`}
+                        >
+                          {teacher.first_name} {teacher.last_name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              ) : (
+                <Form.Item
+                  label="Paid To"
+                  name="paid_to"
+                  rules={[{ required: true, message: "Please input Paid To!" }]}
+                >
+                  <Input placeholder="Enter the recipient name" />
+                </Form.Item>
+              )}
+
               <Form.Item
                 label="Paid For"
-                name="paidFor"
+                name="paid_for_id"
                 rules={[
                   {
                     required: true,
@@ -98,10 +166,16 @@ function AddPayment() {
                   },
                 ]}
               >
-                <Select placeholder="Select Payment Reason">
-                  <Option value="salary">Salary</Option>
-                  <Option value="tour">Tour</Option>
-                  <Option value="allowances">Allowances</Option>
+                <Select
+                  placeholder="Select Payment reason"
+                  loading={allocationLoading}
+                >
+                  {paymentAllocations &&
+                    paymentAllocations.map((allocation) => (
+                      <Option key={allocation.id} value={allocation.id}>
+                        {allocation.name}
+                      </Option>
+                    ))}
                 </Select>
               </Form.Item>
               <Form.Item
@@ -114,8 +188,13 @@ function AddPayment() {
                 <Input type="number" placeholder="Enter payment amount" />
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  Submit Payment
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {loading ? "submitting payment" : "Submit Payment"}
                 </Button>
               </Form.Item>
             </Form>

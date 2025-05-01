@@ -261,6 +261,7 @@ const financeSlice = createSlice({
     error: null,
     successCreate: false,
     createdReceipt: null,
+    createdPayment: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -268,7 +269,6 @@ const financeSlice = createSlice({
       // Receipts
       .addCase(listReceipts.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(listReceipts.fulfilled, (state, action) => {
         state.loading = false;
@@ -280,7 +280,6 @@ const financeSlice = createSlice({
       })
       .addCase(receiptDetails.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(receiptDetails.fulfilled, (state, action) => {
         state.loading = false;
@@ -292,7 +291,6 @@ const financeSlice = createSlice({
       })
       .addCase(createReceipt.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(createReceipt.fulfilled, (state, action) => {
         state.loading = false;
@@ -305,7 +303,6 @@ const financeSlice = createSlice({
       })
       .addCase(updateReceipt.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(updateReceipt.fulfilled, (state, action) => {
         state.loading = false;
@@ -317,7 +314,6 @@ const financeSlice = createSlice({
       })
       .addCase(deleteReceipt.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(deleteReceipt.fulfilled, (state, action) => {
         state.loading = false;
@@ -332,7 +328,6 @@ const financeSlice = createSlice({
       // Payments
       .addCase(listPayments.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(listPayments.fulfilled, (state, action) => {
         state.loading = false;
@@ -344,7 +339,6 @@ const financeSlice = createSlice({
       })
       .addCase(paymentDetails.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(paymentDetails.fulfilled, (state, action) => {
         state.loading = false;
@@ -356,10 +350,11 @@ const financeSlice = createSlice({
       })
       .addCase(createPayment.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(createPayment.fulfilled, (state, action) => {
         state.loading = false;
+        state.createdPayment = action.payload;
+        state.successCreate = true;
       })
       .addCase(createPayment.rejected, (state, action) => {
         state.loading = false;
@@ -367,7 +362,6 @@ const financeSlice = createSlice({
       })
       .addCase(updatePayment.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(updatePayment.fulfilled, (state, action) => {
         state.loading = false;
@@ -379,7 +373,6 @@ const financeSlice = createSlice({
       })
       .addCase(deletePayment.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(deletePayment.fulfilled, (state, action) => {
         state.loading = false;

@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { Breadcrumb, Table } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 
-import { listReceipts } from "../../features/finance/financeSlice"; // Updated import
-import Loader from "../../components/Loader";
+import { listReceipts } from "../../features/finance/financeSlice";
 import Message from "../../components/Message";
 
 function Receipts() {
@@ -13,7 +12,6 @@ function Receipts() {
 
   const { userInfo } = useSelector((state) => state.getUsers);
 
-  // Access state from the finance slice
   const { receipts, loading, error } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
@@ -30,8 +28,7 @@ function Receipts() {
       title: "Student",
       dataIndex: "student_details",
       key: "student",
-      render: (_, record) =>
-        `${record?.student_details?.first_name} ${record?.student_details?.last_name}`,
+      render: (_, record) => record?.student_details?.full_name,
     },
     {
       title: "Paid For",
@@ -88,18 +85,15 @@ function Receipts() {
             <Link to="/finance/receipts/add" className="btn btn-light my-3">
               Add Receipt
             </Link>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message variant="danger">{error}</Message>
-            ) : (
-              <Table
-                columns={columns}
-                dataSource={receipts}
-                rowKey="id"
-                pagination={{ pageSize: 10 }}
-              />
-            )}
+            {error && <Message variant="danger">{error}</Message>}
+
+            <Table
+              columns={columns}
+              dataSource={receipts}
+              rowKey="id"
+              loading={loading}
+              pagination={{ pageSize: 10 }}
+            />
           </div>
         ) : (
           <Message>

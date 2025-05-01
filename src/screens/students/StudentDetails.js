@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
@@ -31,6 +31,7 @@ const { Title, Text } = Typography;
 
 const StudentDetailsScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { loading, error, student } = useSelector((state) => state.getStudents);
   const {
@@ -70,7 +71,7 @@ const StudentDetailsScreen = () => {
                 className="profile-avatar"
               />
               <Title level={3} className="profile-name">
-                {student.first_name} {student.middle_name} {student.last_name}
+                {student.full_name}
               </Title>
               <Text type="secondary" className="profile-username">
                 Admission #: {student.admission_number}
@@ -94,7 +95,7 @@ const StudentDetailsScreen = () => {
             {/* Basic Information */}
             <Descriptions title="Basic Information" bordered column={2}>
               <Descriptions.Item label="Full Name">
-                {student.first_name} {student.middle_name} {student.last_name}
+                {student.full_name}
               </Descriptions.Item>
               <Descriptions.Item label="Gender">
                 {student.gender}
@@ -113,10 +114,10 @@ const StudentDetailsScreen = () => {
             {/* Academic Information */}
             <Descriptions title="Academic Information" bordered column={2}>
               <Descriptions.Item label="Class Level">
-                {student.class_level}
+                {student.class_level_display}
               </Descriptions.Item>
               <Descriptions.Item label="Class of Year">
-                {student.class_of_year || "N/A"}
+                {student.class_of_year_display || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Admission Date">
                 {student.admission_date
@@ -141,7 +142,7 @@ const StudentDetailsScreen = () => {
             {/* Contact Information */}
             <Descriptions title="Contact Information" bordered column={2}>
               <Descriptions.Item label="Parent/Guardian">
-                {student.parent_guardian}
+                {student.parent_guardian_display}
               </Descriptions.Item>
               <Descriptions.Item label="Parent Contact">
                 <PhoneOutlined /> {student.parent_contact || "N/A"}
@@ -171,25 +172,28 @@ const StudentDetailsScreen = () => {
             {/* Sibling Information */}
             <Card title="Siblings" className="mt-3">
               {student.siblings && student.siblings.length > 0 ? (
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Full Name</th>
-                      <th>Class</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {student.siblings.map((sibling) => (
-                      <tr key={sibling.id}>
-                        <td>
-                          {sibling.first_name} {sibling.middle_name}{" "}
-                          {sibling.last_name}
-                        </td>
-                        <td>{sibling.class_level}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <Table
+                  dataSource={student.siblings}
+                  columns={[
+                    {
+                      title: "Full Name",
+                      dataIndex: ["student"],
+                      key: "fullName",
+                      render: (_, record) => record?.full_name || "N/A",
+                    },
+                    {
+                      title: "Class Level",
+                      dataIndex: ["class_level"],
+                      key: "class_level",
+                      render: (_, record) => record?.class_level || "N/A",
+                    },
+                  ]}
+                  rowKey="id"
+                  onRow={(record) => ({
+                    onClick: () => navigate(`/sis/students/${record.id}`),
+                    style: { cursor: "pointer" },
+                  })}
+                />
               ) : (
                 <Text>No siblings available.</Text>
               )}
@@ -238,6 +242,10 @@ const StudentDetailsScreen = () => {
                   loading={receiptLoading}
                   rowKey="id"
                   pagination={{ pageSize: 10 }}
+                  onRow={(record) => ({
+                    onClick: () => navigate(`/finance/receipts/${record.id}`),
+                    style: { cursor: "pointer" },
+                  })}
                 />
               ) : (
                 <Text>No payments found</Text>

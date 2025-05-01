@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Breadcrumb, Table } from "react-bootstrap";
+import { Card, Table } from "react-bootstrap";
+import { Breadcrumb } from "antd";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { receiptDetails } from "../../features/finance/financeSlice";
@@ -62,10 +63,7 @@ function ReceiptsDetails() {
                     </tr>
                     <tr>
                       <td>Student</td>
-                      <td>
-                        {receipt?.student_details.first_name}{" "}
-                        {receipt?.student_details.first_name}
-                      </td>
+                      <td>{receipt?.student_details.full_name}</td>
                     </tr>
                     <tr>
                       <td>Paid for</td>

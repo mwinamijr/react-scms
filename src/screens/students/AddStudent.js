@@ -53,7 +53,9 @@ function AddStudent() {
       last_name: values.last_name,
       admission_number: values.admission_number,
       class_level: values.class_level,
-      birthday: values.birthday ? values.birthday.format("YYYY-MM-DD") : null, // Format date
+      date_of_birth: values.birthday
+        ? values.birthday.format("YYYY-MM-DD")
+        : null, // Format date
       gender: values.gender,
       religion: values.religion,
       region: values.region || "", // Optional field

@@ -48,12 +48,12 @@ const EditStudentProfile = () => {
         city: student.city,
         street: student.street,
         blood_group: student.blood_group,
-        parent_guardian: student.parent_guardian,
+        parent_guardian: student.parent_guardian_display,
         parent_contact: student.parent_contact,
         admission_number: student.admission_number,
         prem_number: student.prem_number,
-        class_level: student.class_level,
-        class_of_year: student.class_of_year,
+        class_level: student.class_level_display,
+        class_of_year: student.class_of_year_display,
         date_of_birth: student.date_of_birth
           ? dayjs(student.date_of_birth)
           : null,
@@ -179,7 +179,7 @@ const EditStudentProfile = () => {
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
               <Form.Item label="Parent/Guardian Email" name="parent_guardian">
-                <Input type="email" />
+                <Input disabled type="email" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>

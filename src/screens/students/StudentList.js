@@ -64,12 +64,12 @@ const Students = () => {
     },
     {
       title: "Full Name",
+      dataIndex: "full_name",
       key: "fullName",
-      render: (text, record) => `${record.first_name} ${record.last_name}`,
     },
     {
       title: "Class Level",
-      dataIndex: "class_level",
+      dataIndex: "class_level_display",
       key: "class_level",
     },
     {
