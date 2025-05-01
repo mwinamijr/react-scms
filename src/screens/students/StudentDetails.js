@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { studentDetails } from "../../features/students/studentSlice";
+import { listReceipts } from "../../features/finance/financeSlice";
 
 import {
   Card,
@@ -15,6 +16,7 @@ import {
   Row,
   Space,
   Tag,
+  Table,
 } from "antd";
 import {
   UserOutlined,
@@ -31,10 +33,20 @@ const StudentDetailsScreen = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { loading, error, student } = useSelector((state) => state.getStudents);
+  const {
+    loading: receiptLoading,
+    error: receiptError,
+    receipts,
+  } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
     dispatch(studentDetails(id));
+    dispatch(listReceipts());
   }, [dispatch, id]);
+
+  const studentPayments = receipts.filter(
+    (item) => Number(item.student) === Number(student.id)
+  );
 
   return (
     <div>
@@ -185,33 +197,48 @@ const StudentDetailsScreen = () => {
 
             {/* Payments History */}
             <Card title="Payments History" className="mt-3">
-              {student.payments && student.payments.length > 0 ? (
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {student.payments.map((payment) => (
-                      <tr key={payment.id}>
-                        <td>{new Date(payment.date).toLocaleDateString()}</td>
-                        <td>${payment.amount}</td>
-                        <td>
-                          <Tag
-                            color={payment.status === "Paid" ? "green" : "red"}
-                          >
-                            {payment.status}
-                          </Tag>
-                        </td>
-                        <td>{payment.description || "N/A"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              {receiptError && (
+                <Message variant="danger">{receiptError}</Message>
+              )}
+              {studentPayments && studentPayments.length > 0 ? (
+                <Table
+                  dataSource={studentPayments}
+                  columns={[
+                    {
+                      title: "Date",
+                      dataIndex: ["date"],
+                      key: "date",
+                      render: (_, record) => record?.date || "N/A",
+                    },
+                    {
+                      title: "Description",
+                      dataIndex: ["student", "description"],
+                      key: "description",
+                      render: (_, record) =>
+                        record?.paid_for_details?.name || "N/A",
+                    },
+                    {
+                      title: "Amount Paid",
+                      dataIndex: ["student", "price"],
+                      key: "amount",
+                      render: (_, record) =>
+                        `TSH ${record?.amount?.toLocaleString()}` || "N/A",
+                    },
+                    {
+                      title: "Status",
+                      dataIndex: "status",
+                      key: "status",
+                      render: (status) => (
+                        <Tag color={status === "pending" ? "orange" : "green"}>
+                          {status}
+                        </Tag>
+                      ),
+                    },
+                  ]}
+                  loading={receiptLoading}
+                  rowKey="id"
+                  pagination={{ pageSize: 10 }}
+                />
               ) : (
                 <Text>No payments found</Text>
               )}
