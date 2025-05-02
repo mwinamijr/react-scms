@@ -151,7 +151,11 @@ const EditStudentProfile = () => {
             </Col>
             <Col xs={24} md={8}>
               <Form.Item label="Religion" name="religion">
-                <Input />
+                <Select placeholder="Choose religion">
+                  <Option value="Islam">Islam</Option>
+                  <Option value="Christian">Christian</Option>
+                  <Option value="Other">Other</Option>
+                </Select>
               </Form.Item>
             </Col>
           </Row>

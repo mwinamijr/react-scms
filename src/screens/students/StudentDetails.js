@@ -39,17 +39,12 @@ const StudentDetailsScreen = () => {
     loading: receiptLoading,
     error: receiptError,
     studentReceipts,
-    receipts,
   } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
     dispatch(studentDetails(id));
     dispatch(listStudentReceipts(id));
   }, [dispatch, id]);
-
-  const studentPayments = receipts.filter(
-    (item) => Number(item.student) === Number(student.id)
-  );
 
   return (
     <div>

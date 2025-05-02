@@ -41,9 +41,9 @@ function ReceiptsDetails() {
                 <div className="receipt-bg">
                   <h3>
                     Hayatul Islamiya Secondary <br />
-                    P.O. Box 507, Babati - Manyara; Phone: 0788 030052, 0752
-                    506523 <br />
-                    A/C Number:- NMB: , NBC:
+                    P.O. Box 507, Babati - Manyara; <br />
+                    Phone: 0788 030052, 0752 506523 <br />
+                    A/C Number:- NMB: , NBC:, CRDB:
                   </h3>
                 </div>
               </Card.Header>
