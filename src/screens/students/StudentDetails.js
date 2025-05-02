@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { studentDetails } from "../../features/students/studentSlice";
-import { listReceipts } from "../../features/finance/financeSlice";
+import { listStudentReceipts } from "../../features/finance/financeSlice";
 
 import {
   Card,
@@ -38,12 +38,13 @@ const StudentDetailsScreen = () => {
   const {
     loading: receiptLoading,
     error: receiptError,
+    studentReceipts,
     receipts,
   } = useSelector((state) => state.getFinance);
 
   useEffect(() => {
     dispatch(studentDetails(id));
-    dispatch(listReceipts());
+    dispatch(listStudentReceipts(id));
   }, [dispatch, id]);
 
   const studentPayments = receipts.filter(
@@ -211,9 +212,9 @@ const StudentDetailsScreen = () => {
               {receiptError && (
                 <Message variant="danger">{receiptError}</Message>
               )}
-              {studentPayments && studentPayments.length > 0 ? (
+              {studentReceipts && studentReceipts.length > 0 ? (
                 <Table
-                  dataSource={studentPayments}
+                  dataSource={studentReceipts}
                   columns={[
                     {
                       title: "Date",

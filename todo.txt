@@ -1,0 +1,4 @@
+generate receipts list based on the student id for better loading in the frontend
+
+filter all receipts based on a specific date, start date - end date
+

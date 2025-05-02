@@ -28,6 +28,30 @@ export const listReceipts = createAsyncThunk(
   }
 );
 
+export const listStudentReceipts = createAsyncThunk(
+  "studentReceipt/list",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const {
+        getUsers: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${djangoUrl}/api/finance/receipts/student/${id}/`,
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
 export const receiptDetails = createAsyncThunk(
   "receipt/details",
   async (id, { getState, rejectWithValue }) => {
@@ -254,6 +278,7 @@ const financeSlice = createSlice({
   name: "finance",
   initialState: {
     receipts: [],
+    studentReceipts: [],
     receipt: null,
     payments: [],
     payment: null,
@@ -275,6 +300,17 @@ const financeSlice = createSlice({
         state.receipts = action.payload;
       })
       .addCase(listReceipts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(listStudentReceipts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(listStudentReceipts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.studentReceipts = action.payload;
+      })
+      .addCase(listStudentReceipts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
