@@ -6,21 +6,25 @@ import { djangoUrl } from "../utils";
 // Thunks for Receipt Actions
 export const listReceipts = createAsyncThunk(
   "receipt/list",
-  async (_, { getState, rejectWithValue }) => {
+  async (filters = {}, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
+
       const config = {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
+        params: filters, // this enables sending query params like ?from_date=...&to_date=...
       };
+
       const { data } = await axios.get(
         `${djangoUrl}/api/finance/receipts/`,
         config
       );
+
       return data;
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
