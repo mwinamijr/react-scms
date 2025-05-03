@@ -8,7 +8,7 @@ import {
   Col,
   Input,
   Button,
-  Form,
+  Select,
   message,
   Space,
   Popconfirm,
@@ -27,32 +27,45 @@ import {
 } from "../../features/students/studentSlice";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 const Students = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [filters, setFilters] = useState({
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    class_level: "",
-  });
 
   const { loading, error, students } = useSelector(
     (state) => state.getStudents
   );
 
+  const [filters, setFilters] = useState({
+    first_name: null,
+    middle_name: null,
+    last_name: null,
+    class_level: null,
+  });
+
   useEffect(() => {
-    dispatch(listStudents({ ...filters }));
-  }, [dispatch, filters]);
+    dispatch(listStudents());
+  }, [dispatch]);
+
+  const handleFilter = () => {
+    const query = {};
+
+    if (filters.first_name) query.first_name = filters.first_name;
+    if (filters.middle_name) query.middle_name = filters.middle_name;
+    if (filters.last_name) query.last_name = filters.last_name;
+    if (filters.class_level) query.class_level = filters.class_level;
+
+    dispatch(listStudents(query));
+  };
+
+  const handleClassChange = (value) => {
+    setFilters({ ...filters, class_level: value });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
-  };
-
-  const handleSearch = () => {
-    dispatch(listStudents({ ...filters }));
   };
 
   // Define columns for the Ant Design Table
@@ -115,10 +128,10 @@ const Students = () => {
 
       {/* Title */}
       <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
-        Teachers
+        Students
       </Title>
 
-      <Row gutter={[16, 16]} className="mb-4">
+      <Row gutter={[16, 16]} className="mb-4" align="middle" justify="start">
         <Col xs={24} sm={12} lg={6}>
           <Button type="default" block>
             <span
@@ -151,57 +164,56 @@ const Students = () => {
         </Col>
       </Row>
 
-      <Form layout="vertical" onFinish={handleSearch}>
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label="First Name">
-              <Input
-                name="first_name"
-                placeholder="Enter first name"
-                value={filters.first_name}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label="Middle Name">
-              <Input
-                name="middle_name"
-                placeholder="Enter middle name"
-                value={filters.middle_name}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label="Last Name">
-              <Input
-                name="last_name"
-                placeholder="Enter last name"
-                value={filters.last_name}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label="Class Level">
-              <Input
-                name="class_level"
-                placeholder="Enter class level"
-                value={filters.class_level}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={24}>
-            <Button type="primary" htmlType="submit" block>
-              Search
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+      <Row gutter={16} className="mb-4">
+        <Col xs={24} sm={12} md={5}>
+          <Input
+            label="First Name"
+            name="first_name"
+            placeholder="Enter first name"
+            value={filters.first_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} sm={12} md={5}>
+          <Input
+            label="Middle Name"
+            name="middle_name"
+            placeholder="Enter middle name"
+            value={filters.middle_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} sm={12} md={5}>
+          <Input
+            label="Last Name"
+            name="last_name"
+            placeholder="Enter last name"
+            value={filters.last_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={5}>
+          <Select
+            placeholder="Select Class Level"
+            onChange={handleClassChange}
+            allowClear
+            style={{ width: "100%" }}
+          >
+            <Option value="Form One">Form One</Option>
+            <Option value="Form Two">Form Two</Option>
+            <Option value="Form Three">Form Three</Option>
+            <Option value="Form Four">Form Four</Option>
+          </Select>
+        </Col>
+        <Col xs={24} md={4}>
+          <Button type="primary" onClick={handleFilter} block>
+            Apply Filters
+          </Button>
+        </Col>
+      </Row>
 
       {/* Content */}
       {error && <Message variant="danger">{error}</Message>}

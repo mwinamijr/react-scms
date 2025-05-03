@@ -63,23 +63,11 @@ const Dashboard = () => {
 
       // Dispatch all actions with empty search parameters
       await Promise.all([
-        dispatchWithTracking(
-          listStudents,
-          { first_name: "", middle_name: "", last_name: "", class_level: "" },
-          "students"
-        ),
-        dispatchWithTracking(
-          listUsers,
-          { first_name: "", middle_name: "", last_name: "", class_level: "" },
-          "users"
-        ),
+        dispatchWithTracking(listStudents, "students"),
+        dispatchWithTracking(listUsers, "users"),
         dispatchWithTracking(listTeachers, {}, "teachers"),
         dispatchWithTracking(listAccountants, {}, "accountants"),
-        dispatchWithTracking(
-          listParents,
-          { first_name: "", middle_name: "", last_name: "", class_level: "" },
-          "parents"
-        ),
+        dispatchWithTracking(listParents, "parents"),
         dispatchWithTracking(listSubjects, {}, "subjects"),
         dispatchWithTracking(listClassLevels, {}, "classLevels"),
       ]);

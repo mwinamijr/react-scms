@@ -6,13 +6,22 @@ import { getErrorMessage } from "../utils";
 // Async thunk for fetching the student list with advanced search and pagination
 export const listStudents = createAsyncThunk(
   "student/listStudents",
-  async (
-    { first_name = "", middle_name = "", last_name = "", class_level = "" },
-    { rejectWithValue }
-  ) => {
+  async (filters = {}, { getState, rejectWithValue }) => {
     try {
+      const {
+        getUsers: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+        params: filters, // this enables sending query params like ?from_date=...&to_date=...
+      };
       const response = await axios.get(
-        `${djangoUrl}/api/sis/students/?first_name=${first_name}&middle_name=${middle_name}&last_name=${last_name}&class_level=${class_level}`
+        `${djangoUrl}/api/sis/students/`,
+        config
       );
       return response.data;
     } catch (error) {
