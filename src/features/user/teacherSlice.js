@@ -45,16 +45,18 @@ export const getTeacherDetails = createAsyncThunk(
 
 export const listTeachers = createAsyncThunk(
   "teacher/list",
-  async (_, { getState, rejectWithValue }) => {
+  async (filters = {}, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
+
       const config = {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
+        params: filters,
       };
       const { data } = await axios.get(
         `${djangoUrl}/api/users/teachers/`,

@@ -144,7 +144,7 @@ const ParentList = () => {
         columns={columns}
         rowKey="id"
         bordered
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 20 }}
         loading={loading}
         onRow={(record) => ({
           onClick: () => navigate(`/users/parents/${record.id}`),

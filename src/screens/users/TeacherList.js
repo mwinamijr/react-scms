@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Breadcrumb,
@@ -9,11 +9,11 @@ import {
   Row,
   Col,
   Button,
+  Input,
   message,
   Popconfirm,
 } from "antd";
 import {
-  EyeOutlined,
   EditOutlined,
   DeleteOutlined,
   UserAddOutlined,
@@ -27,17 +27,37 @@ const { Title } = Typography;
 
 const TeacherList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Access teacher state from the store
   const { loading, error, teachers } = useSelector(
     (state) => state.getTeachers
   );
 
+  const [filters, setFilters] = useState({
+    first_name: null,
+    last_name: null,
+    email: null,
+  });
+
   useEffect(() => {
-    dispatch(listTeachers()); // Dispatch the action to fetch teachers
+    dispatch(listTeachers());
   }, [dispatch]);
 
-  // Define columns for the Ant Design Table
+  const handleFilter = () => {
+    const query = {};
+
+    if (filters.first_name) query.first_name = filters.first_name;
+    if (filters.last_name) query.last_name = filters.last_name;
+    if (filters.email) query.email = filters.email;
+
+    dispatch(listTeachers(query));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
   const columns = [
     {
       title: "Emp ID",
@@ -64,9 +84,6 @@ const TeacherList = () => {
       key: "actions",
       render: (text, record) => (
         <Space size="middle">
-          <Link to={`/users/teachers/${record.id}`}>
-            <EyeOutlined style={{ color: "blue" }} />
-          </Link>
           <Link to={`/users/teachers/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
@@ -136,6 +153,41 @@ const TeacherList = () => {
         </Col>
       </Row>
 
+      <Row gutter={16} className="mb-4" align="middle" justify="start">
+        <Col xs={24} md={6}>
+          <Input
+            name="first_name"
+            placeholder="Enter first name"
+            value={filters.first_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Input
+            name="last_name"
+            placeholder="Enter last name"
+            value={filters.last_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Input
+            name="email"
+            placeholder="Enter email"
+            value={filters.email}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Button type="primary" onClick={handleFilter} block>
+            Apply Filters
+          </Button>
+        </Col>
+      </Row>
+
       {/* Content */}
       {error && <Message variant="danger">{error}</Message>}
 
@@ -146,6 +198,10 @@ const TeacherList = () => {
         bordered
         pagination={{ pageSize: 10 }}
         loading={loading}
+        onRow={(record) => ({
+          onClick: () => navigate(`/users/teachers/${record.id}`),
+          style: { cursor: "pointer" },
+        })}
       />
     </div>
   );

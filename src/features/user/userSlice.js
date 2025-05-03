@@ -123,7 +123,7 @@ export const listUsers = createAsyncThunk(
         params: filters,
       };
       const response = await axios.get(`${djangoUrl}/api/users/users/`, config);
-      return response.data; // Includes pagination metadata and the student results
+      return response.data;
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }

@@ -20,7 +20,6 @@ import {
   CheckOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
-import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { listUsers, deleteUser } from "./../../features/user/userSlice";
 
@@ -46,7 +45,6 @@ const UserList = () => {
     const query = {};
 
     if (filters.first_name) query.first_name = filters.first_name;
-    if (filters.middle_name) query.middle_name = filters.middle_name;
     if (filters.last_name) query.last_name = filters.last_name;
     if (filters.email) query.email = filters.email;
 
@@ -117,7 +115,6 @@ const UserList = () => {
 
   return (
     <div>
-      {/* Breadcrumb */}
       <Breadcrumb style={{ marginBottom: 16 }}>
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
@@ -182,26 +179,20 @@ const UserList = () => {
         </Col>
       </Row>
 
-      {/* Users Table */}
-      {loading ? (
-        <div style={{ textAlign: "center" }}>
-          <Loader />
-        </div>
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : (
-        <Table
-          dataSource={users.filter((user) => !user.isParent)}
-          columns={columns}
-          rowKey="id"
-          pagination={{ pageSize: 20 }}
-          bordered
-          onRow={(record) => ({
-            onClick: () => navigate(`/users/${record.id}`),
-            style: { cursor: "pointer" },
-          })}
-        />
-      )}
+      {error && <Message variant="danger">{error}</Message>}
+
+      <Table
+        dataSource={users.filter((user) => !user.isParent)}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 20 }}
+        bordered
+        loading={loading}
+        onRow={(record) => ({
+          onClick: () => navigate(`/users/${record.id}`),
+          style: { cursor: "pointer" },
+        })}
+      />
     </div>
   );
 };

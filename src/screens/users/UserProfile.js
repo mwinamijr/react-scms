@@ -29,32 +29,27 @@ function UserProfile() {
         </Breadcrumb.Item>
         <Breadcrumb.Item>User Profile</Breadcrumb.Item>
       </Breadcrumb>
-      <Card>
-        <Card.Header>User Profile</Card.Header>
-        <Card.Body>
-          <div>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message variant="danger">{error}</Message>
-            ) : user ? (
-              <Row>
-                <Col></Col>
-                <Col>
-                  <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
-                    <div className="col-md-10 px-0">
-                      <span>
-                        {user.id}: {user.first_name} {user.last_name}
-                      </span>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            ) : (
-              <Message variant="info">No User details found.</Message>
-            )}
-          </div>
-        </Card.Body>
+
+      <Card title="User Profile">
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">{error}</Message>
+        ) : user ? (
+          <Row>
+            <Col>
+              <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
+                <div className="col-md-10 px-0">
+                  <span>
+                    {user.id}: {user.first_name} {user.last_name}
+                  </span>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        ) : (
+          <Message variant="info">No User details found.</Message>
+        )}
       </Card>
     </div>
   );

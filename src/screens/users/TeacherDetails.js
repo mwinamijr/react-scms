@@ -9,6 +9,7 @@ import {
   Card,
   Descriptions,
   Avatar,
+  Breadcrumb,
   Tag,
   Typography,
   Button,
@@ -39,6 +40,15 @@ const TeacherProfile = () => {
       <Link to="/users/teachers/" className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
+      <Breadcrumb style={{ marginBottom: 16 }}>
+        <Breadcrumb.Item>
+          <Link to="/">Home</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/users/teachers/">Teachers</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Teacher Profile</Breadcrumb.Item>
+      </Breadcrumb>
 
       <Card title="Teacher Profile">
         {loading ? (
