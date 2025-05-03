@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row, Breadcrumb } from "antd";
 import Loader from "./../../components/Loader";
 import Message from "./../../components/Message";
 import { getUserDetails } from "../../features/user/userSlice"; // Importing from userSlice
@@ -20,9 +20,15 @@ function UserProfile() {
 
   return (
     <div>
-      <Link to="/users/" className="btn btn-light my-3">
-        Go Back
-      </Link>
+      <Breadcrumb style={{ marginBottom: 16 }}>
+        <Breadcrumb.Item>
+          <Link to="/">Home</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/users/">Users</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>User Profile</Breadcrumb.Item>
+      </Breadcrumb>
       <Card>
         <Card.Header>User Profile</Card.Header>
         <Card.Body>

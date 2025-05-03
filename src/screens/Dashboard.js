@@ -37,12 +37,12 @@ const Dashboard = () => {
     const fetchData = async () => {
       // Helper function to track and log dispatch results
       const dispatchWithTracking = async (action, params, name) => {
-        console.log(`Starting to fetch ${name}...`);
+        //console.log(`Starting to fetch ${name}...`);
         setLoadingStates((prev) => ({ ...prev, [name]: true }));
 
         try {
           const resultAction = await dispatch(action(params));
-          console.log(`${name} fetch result:`, resultAction);
+          //console.log(`${name} fetch result:`, resultAction);
 
           if (resultAction.error) {
             throw new Error(
@@ -50,10 +50,10 @@ const Dashboard = () => {
             );
           }
 
-          console.log(`Successfully fetched ${name}`);
+          //console.log(`Successfully fetched ${name}`);
           return resultAction.payload;
         } catch (error) {
-          console.error(`Error fetching ${name}:`, error);
+          //console.error(`Error fetching ${name}:`, error);
           message.error(`Failed to load ${name}: ${error.message}`);
           return null;
         } finally {
@@ -78,37 +78,37 @@ const Dashboard = () => {
 
   // Get Redux state with proper null checking
   const studentCount = useSelector((state) => {
-    console.log("Student state:", state.getStudents);
+    //console.log("Student state:", state.getStudents);
     return state.getStudents?.students?.length || 0;
   });
 
   const userCount = useSelector((state) => {
-    console.log("User state:", state.getUsers);
+    //console.log("User state:", state.getUsers);
     return state.getUsers?.users?.length || 0;
   });
 
   const teacherCount = useSelector((state) => {
-    console.log("Teacher state:", state.getTeachers);
+    //console.log("Teacher state:", state.getTeachers);
     return state.getTeachers?.teachers?.length || 0;
   });
 
   const accountantCount = useSelector((state) => {
-    console.log("Accountant state:", state.getAccountants);
+    //console.log("Accountant state:", state.getAccountants);
     return state.getAccountants?.accountants?.length || 0;
   });
 
   const parentCount = useSelector((state) => {
-    console.log("Parent state:", state.getParents);
+    //console.log("Parent state:", state.getParents);
     return state.getParents?.parents?.length || 0;
   });
 
   const subjectCount = useSelector((state) => {
-    console.log("Subject state:", state.getSubjects);
+    //console.log("Subject state:", state.getSubjects);
     return state.getSubjects?.subjects?.length || 0;
   });
 
   const classCount = useSelector((state) => {
-    console.log("Class state:", state.getClassLevels);
+    //console.log("Class state:", state.getClassLevels);
     return state.getClassLevels?.classLevels?.length || 0;
   });
 

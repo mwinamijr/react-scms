@@ -109,24 +109,20 @@ export const getUserDetails = createAsyncThunk(
 
 export const listUsers = createAsyncThunk(
   "user/list",
-  async (
-    { first_name = "", last_name = "", email = "" },
-    { getState, rejectWithValue }
-  ) => {
+  async (filters = {}, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
+
       const config = {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
+        params: filters,
       };
-      const response = await axios.get(
-        `${djangoUrl}/api/users/users/?first_name=${first_name}&last_name=${last_name}&email=${email}`,
-        config
-      );
+      const response = await axios.get(`${djangoUrl}/api/users/users/`, config);
       return response.data; // Includes pagination metadata and the student results
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
@@ -172,9 +168,6 @@ const userSlice = createSlice({
     logout(state) {
       state.userInfo = null;
       localStorage.removeItem("userInfo");
-    },
-    resetSuccessDelete(state) {
-      state.successDelete = false; // Reset the success flag
     },
     resetError(state) {
       state.error = null; // Reset the error state
@@ -252,5 +245,5 @@ const userSlice = createSlice({
 });
 
 // Export Actions and Reducer
-export const { logout, resetSuccessDelete, resetError } = userSlice.actions;
+export const { logout, resetError } = userSlice.actions;
 export default userSlice.reducer;

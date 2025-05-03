@@ -45,22 +45,21 @@ export const parentDetails = createAsyncThunk(
 
 export const listParents = createAsyncThunk(
   "parent/list",
-  async (
-    { first_name = "", last_name = "", email = "" },
-    { getState, rejectWithValue }
-  ) => {
+  async (filters = {}, { getState, rejectWithValue }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
+
       const config = {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
+        params: filters,
       };
       const response = await axios.get(
-        `${djangoUrl}/api/users/parents/?first_name=${first_name}&last_name=${last_name}&email=${email}`,
+        `${djangoUrl}/api/users/parents/`,
         config
       );
       return response.data; // Includes pagination metadata and the parent results

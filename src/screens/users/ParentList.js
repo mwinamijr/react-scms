@@ -1,56 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Breadcrumb,
   Table,
   Space,
   Typography,
-  Spin,
   Button,
   Input,
   Row,
   Col,
-  Form,
   Popconfirm,
   message,
 } from "antd";
-import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  listParents,
-  deleteParent,
-  resetSuccessDelete,
-} from "../../features/user/parentSlice"; // Updated import
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { listParents, deleteParent } from "../../features/user/parentSlice"; // Updated import
 
 const { Title, Text } = Typography;
 
 const ParentList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
+    first_name: null,
+    last_name: null,
+    email: null,
   });
 
-  const { loading, error, parents, successDelete } = useSelector(
-    (state) => state.getParents
-  ); // Using the parent slice state
+  const { loading, error, parents } = useSelector((state) => state.getParents); // Using the parent slice state
 
   useEffect(() => {
-    dispatch(listParents(filters));
+    dispatch(listParents());
+  }, [dispatch]);
 
-    if (successDelete) {
-      message.success("Parent deleted successfully!");
-      dispatch(resetSuccessDelete());
-    }
-  }, [dispatch, successDelete, filters]);
+  const handleFilter = () => {
+    const query = {};
 
-  const handleSearch = () => {
-    dispatch(listParents(filters));
+    if (filters.first_name) query.first_name = filters.first_name;
+    if (filters.last_name) query.last_name = filters.last_name;
+    if (filters.email) query.email = filters.email;
+
+    dispatch(listParents(query));
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteParent(id));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const columns = [
@@ -68,10 +63,7 @@ const ParentList = () => {
       title: "Actions",
       key: "actions",
       render: (text, record) => (
-        <Space size="middle">
-          <Link to={`/users/parents/${record.id}`}>
-            <EyeOutlined style={{ color: "blue" }} />
-          </Link>
+        <Space size="middle" onClick={(e) => e.stopPropagation()}>
           <Link to={`/users/parents/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
@@ -88,6 +80,12 @@ const ParentList = () => {
     },
   ];
 
+  const handleDelete = (id) => {
+    dispatch(deleteParent(id))
+      .unwrap()
+      .then(() => message.success("Parent deleted successfully"));
+  };
+
   return (
     <div>
       <Breadcrumb style={{ marginBottom: 16 }}>
@@ -101,70 +99,58 @@ const ParentList = () => {
         Parents
       </Title>
 
-      <Form
-        layout="inline"
-        onFinish={handleSearch}
-        style={{ marginBottom: 16 }}
-      >
-        <Row gutter={16} style={{ width: "100%" }}>
-          <Col xs={24} md={6}>
-            <Form.Item>
-              <Input
-                placeholder="First Name"
-                value={filters.first_name}
-                onChange={(e) =>
-                  setFilters({ ...filters, first_name: e.target.value })
-                }
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={6}>
-            <Form.Item>
-              <Input
-                placeholder="Last Name"
-                value={filters.last_name}
-                onChange={(e) =>
-                  setFilters({ ...filters, last_name: e.target.value })
-                }
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={6}>
-            <Form.Item>
-              <Input
-                placeholder="Email"
-                value={filters.email}
-                onChange={(e) =>
-                  setFilters({ ...filters, email: e.target.value })
-                }
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={6}>
-            <Button type="primary" htmlType="submit" block>
-              Search
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+      <Row gutter={16} className="mb-4" align="middle" justify="start">
+        <Col xs={24} md={6}>
+          <Input
+            name="first_name"
+            placeholder="Enter first name"
+            value={filters.first_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Input
+            name="last_name"
+            placeholder="Enter last name"
+            value={filters.last_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Input
+            name="email"
+            placeholder="Enter email"
+            value={filters.email}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Button type="primary" onClick={handleFilter} block>
+            Apply Filters
+          </Button>
+        </Col>
+      </Row>
 
-      {loading ? (
-        <div style={{ textAlign: "center", marginTop: 20 }}>
-          <Spin size="large" />
-        </div>
-      ) : error ? (
+      {error && (
         <div style={{ textAlign: "center", marginTop: 20 }}>
           <Text type="danger">{error}</Text>
         </div>
-      ) : (
-        <Table
-          dataSource={parents}
-          columns={columns}
-          rowKey="id"
-          bordered
-          pagination={{ pageSize: 10 }}
-        />
       )}
+      <Table
+        dataSource={parents}
+        columns={columns}
+        rowKey="id"
+        bordered
+        pagination={{ pageSize: 10 }}
+        loading={loading}
+        onRow={(record) => ({
+          onClick: () => navigate(`/users/parents/${record.id}`),
+          style: { cursor: "pointer" },
+        })}
+      />
     </div>
   );
 };

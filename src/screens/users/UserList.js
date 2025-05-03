@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Breadcrumb,
   Table,
   Row,
   Col,
-  Form,
   Input,
   Button,
   Typography,
@@ -15,7 +14,7 @@ import {
   message,
 } from "antd";
 import {
-  EyeOutlined,
+  UserAddOutlined,
   EditOutlined,
   DeleteOutlined,
   CheckOutlined,
@@ -23,54 +22,40 @@ import {
 } from "@ant-design/icons";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import {
-  listUsers,
-  deleteUser,
-  resetSuccessDelete,
-} from "./../../features/user/userSlice";
+import { listUsers, deleteUser } from "./../../features/user/userSlice";
 
 const { Title } = Typography;
 
 const UserList = () => {
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
+  const navigate = useNavigate();
+
+  const { loading, error, users } = useSelector((state) => state.getUsers);
+
   const [filters, setFilters] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
+    first_name: null,
+    last_name: null,
+    email: null,
   });
 
-  const { loading, error, users, successDelete } = useSelector(
-    (state) => state.getUsers
-  );
-
-  // ✅ Memoized function to fetch users when searching
-  const fetchUsers = useCallback(() => {
-    dispatch(listUsers(filters));
-  }, [dispatch, filters]);
-
-  // ✅ Fetch users on mount & after deletion
   useEffect(() => {
-    fetchUsers(); // Only fetch when component mounts
+    dispatch(listUsers());
+  }, [dispatch]);
 
-    if (successDelete) {
-      message.success("User deleted successfully");
-      dispatch(resetSuccessDelete());
-    }
-  }, [fetchUsers, successDelete, dispatch]);
+  const handleFilter = () => {
+    const query = {};
 
-  const handleDelete = (id) => {
-    dispatch(deleteUser(id));
+    if (filters.first_name) query.first_name = filters.first_name;
+    if (filters.middle_name) query.middle_name = filters.middle_name;
+    if (filters.last_name) query.last_name = filters.last_name;
+    if (filters.email) query.email = filters.email;
+
+    dispatch(listUsers(query));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // ✅ Explicitly trigger search (prevents auto API calls)
-  const handleSearch = () => {
-    fetchUsers();
   };
 
   const columns = [
@@ -107,10 +92,7 @@ const UserList = () => {
       title: "Actions",
       key: "actions",
       render: (text, record) => (
-        <Space size="middle">
-          <Link to={`/users/${record.id}`}>
-            <EyeOutlined style={{ color: "blue" }} />
-          </Link>
+        <Space size="middle" onClick={(e) => e.stopPropagation()}>
           <Link to={`/users/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
@@ -127,6 +109,12 @@ const UserList = () => {
     },
   ];
 
+  const handleDelete = (id) => {
+    dispatch(deleteUser(id))
+      .unwrap()
+      .then(() => message.success("User deleted successfully"));
+  };
+
   return (
     <div>
       {/* Breadcrumb */}
@@ -137,65 +125,62 @@ const UserList = () => {
         <Breadcrumb.Item>Users</Breadcrumb.Item>
       </Breadcrumb>
 
-      {/* Title */}
       <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
         Users
       </Title>
 
-      {/* Add User Button */}
-      <Row justify="end" style={{ marginBottom: 16 }}>
-        <Col>
-          <Link to="/users/add">
-            <Button type="primary">Add User</Button>
-          </Link>
+      <Row gutter={[16, 16]} className="mb-4" align="middle" justify="start">
+        <Col xs={24} sm={12} lg={6}>
+          <Button type="default" block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <UserAddOutlined />
+              <Link to="/users/add">Add User</Link>
+            </span>
+          </Button>
         </Col>
       </Row>
 
-      {/* Search Filters */}
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSearch}
-        style={{ marginBottom: 24 }}
-      >
-        <Row gutter={16}>
-          <Col xs={24} md={6}>
-            <Form.Item>
-              <Input
-                name="first_name"
-                placeholder="Enter first name"
-                value={filters.first_name}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={6}>
-            <Form.Item>
-              <Input
-                name="last_name"
-                placeholder="Enter last name"
-                value={filters.last_name}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={6}>
-            <Form.Item>
-              <Input
-                name="email"
-                placeholder="Enter email"
-                value={filters.email}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={6}>
-            <Button type="primary" htmlType="submit" block>
-              Search
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+      <Row gutter={16} className="mb-4" align="middle" justify="start">
+        <Col xs={24} md={6}>
+          <Input
+            name="first_name"
+            placeholder="Enter first name"
+            value={filters.first_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Input
+            name="last_name"
+            placeholder="Enter last name"
+            value={filters.last_name}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Input
+            name="email"
+            placeholder="Enter email"
+            value={filters.email}
+            onChange={handleInputChange}
+            allowClear
+          />
+        </Col>
+        <Col xs={24} md={6}>
+          <Button type="primary" onClick={handleFilter} block>
+            Apply Filters
+          </Button>
+        </Col>
+      </Row>
 
       {/* Users Table */}
       {loading ? (
@@ -211,6 +196,10 @@ const UserList = () => {
           rowKey="id"
           pagination={{ pageSize: 20 }}
           bordered
+          onRow={(record) => ({
+            onClick: () => navigate(`/users/${record.id}`),
+            style: { cursor: "pointer" },
+          })}
         />
       )}
     </div>
