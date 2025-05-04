@@ -3,7 +3,6 @@ import axios from "axios";
 import { djangoUrl } from "../utils";
 import { getErrorMessage } from "../utils";
 
-// Async thunk for fetching the student list with advanced search and pagination
 export const listStudents = createAsyncThunk(
   "student/listStudents",
   async (filters = {}, { getState, rejectWithValue }) => {
@@ -17,7 +16,7 @@ export const listStudents = createAsyncThunk(
           "Content-type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
-        params: filters, // this enables sending query params like ?from_date=...&to_date=...
+        params: filters,
       };
       const response = await axios.get(
         `${djangoUrl}/api/sis/students/`,
@@ -81,13 +80,12 @@ export const createStudent = createAsyncThunk(
 
 export const bulkCreateStudents = createAsyncThunk(
   "student/bulkCreate",
-  async (file, { getState, rejectWithValue }) => {
+  async (file, { getState, rejectWithValue, dispatch }) => {
     try {
       const {
         getUsers: { userInfo },
       } = getState();
 
-      // Create FormData and append the file
       const formData = new FormData();
       formData.append("file", file);
 
@@ -96,7 +94,12 @@ export const bulkCreateStudents = createAsyncThunk(
           "Content-type": "multipart/form-data",
           Authorization: `Bearer ${userInfo.token}`,
         },
+        onUploadProgress: (e) => {
+          const percent = Math.round((e.loaded * 100) / e.total);
+          dispatch(updateUploadProgress(percent));
+        },
       };
+
       const { data } = await axios.post(
         `${djangoUrl}/api/sis/students/bulk-upload/`,
         formData,
@@ -123,7 +126,7 @@ export const deleteStudent = createAsyncThunk(
         },
       };
       await axios.delete(`${djangoUrl}/api/sis/students/${id}/`, config);
-      return id; // Return studentId to allow removal from state
+      return id;
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }
@@ -155,19 +158,24 @@ export const updateStudent = createAsyncThunk(
   }
 );
 
-// Slice for Student State Management
 const studentSlice = createSlice({
   name: "students",
   initialState: {
-    students: [], // List of students
-    search: "", // Search term for dynamic search
-    student: null, // Individual student details
-    loading: false, // Loading state
-    error: null, // Error state
+    students: [],
+    student: null,
+    loading: false,
+    error: null,
     createdStudent: null,
     successCreate: false,
     loadingCreate: false,
     errorCreate: null,
+
+    uploadProgress: 0,
+    uploadMessage: "",
+    updatedStudents: [],
+    uploadError: "",
+    notCreatedStudents: [],
+    skippedStudents: [],
   },
   reducers: {
     resetCreateState: (state) => {
@@ -175,11 +183,13 @@ const studentSlice = createSlice({
       state.createdStudent = null;
       state.errorCreate = null;
     },
+    updateUploadProgress: (state, action) => {
+      state.uploadProgress = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
     builder
-      // List Students
       .addCase(listStudents.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -192,7 +202,6 @@ const studentSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Get Student Details
       .addCase(studentDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -205,7 +214,6 @@ const studentSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Create Student
       .addCase(createStudent.pending, (state) => {
         state.loadingCreate = true;
         state.errorCreate = null;
@@ -219,19 +227,22 @@ const studentSlice = createSlice({
         state.loadingCreate = false;
         state.errorCreate = action.payload;
       })
-      // Bulk Create Students
       .addCase(bulkCreateStudents.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(bulkCreateStudents.fulfilled, (state) => {
+      .addCase(bulkCreateStudents.fulfilled, (state, action) => {
         state.loading = false;
+        state.uploadMessage = action.payload.message;
+        state.updatedStudents = action.payload.updated_students || [];
+        state.notCreatedStudents = action.payload.not_created || [];
+        state.skippedStudents = action.payload.skipped_students || [];
       })
       .addCase(bulkCreateStudents.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.uploadError =
+          action.payload || "Upload failed. Please try again.";
       })
-      // Delete Student
       .addCase(deleteStudent.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -246,7 +257,6 @@ const studentSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Update Student
       .addCase(updateStudent.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -262,7 +272,6 @@ const studentSlice = createSlice({
   },
 });
 
-export const { resetCreateState } = studentSlice.actions;
+export const { resetCreateState, updateUploadProgress } = studentSlice.actions;
 
-// Export reducer
 export default studentSlice.reducer;

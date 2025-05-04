@@ -5,6 +5,7 @@ import {
   Form,
   Input,
   Button,
+  Breadcrumb,
   Card,
   DatePicker,
   Select,
@@ -98,9 +99,15 @@ const EditStudentProfile = () => {
 
   return (
     <div className="edit-profile-container mt-4">
-      <Link to={`/sis/students/${id}`} className="ant-btn ant-btn-link mb-4">
-        Go Back
-      </Link>
+      <Breadcrumb className="mb-4">
+        <Breadcrumb.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/sis/students/">Students</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Update Student</Breadcrumb.Item>
+      </Breadcrumb>
 
       {loading && <Loader />}
       {error && <Message variant="danger">{error}</Message>}

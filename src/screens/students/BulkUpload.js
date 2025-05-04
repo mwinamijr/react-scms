@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Form, Button, Container, Table } from "react-bootstrap";
+import {
+  Card,
+  Form,
+  Button,
+  Container,
+  Table,
+  ProgressBar,
+} from "react-bootstrap";
 import { Breadcrumb } from "antd";
 import { Link } from "react-router-dom";
-import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { bulkCreateStudents } from "../../features/students/studentSlice";
 
 function StudentBulkUpload() {
-  const [file, setFile] = useState(null);
-  const [uploadMessage, setUploadMessage] = useState("");
-  const [notCreatedStudents, setNotCreatedStudents] = useState([]);
-
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.getStudents);
+  const [file, setFile] = useState(null);
+
+  const {
+    loading,
+    uploadMessage,
+    errorMessage,
+    notCreatedStudents,
+    updatedStudents,
+    skippedStudents,
+    uploadProgress,
+  } = useSelector((state) => state.getStudents);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -21,16 +33,7 @@ function StudentBulkUpload() {
       alert("Please select a file before uploading.");
       return;
     }
-
-    dispatch(bulkCreateStudents(file))
-      .unwrap()
-      .then((response) => {
-        setUploadMessage(response.message);
-        setNotCreatedStudents(response.not_created || []);
-      })
-      .catch((err) => {
-        console.error("Upload failed:", err);
-      });
+    dispatch(bulkCreateStudents(file));
   };
 
   return (
@@ -46,14 +49,31 @@ function StudentBulkUpload() {
       </Breadcrumb>
 
       <Card className="shadow">
-        <Card.Header className="text-white text-center">
+        <Card.Header className="text-white text-center bg-primary">
           <h5>Bulk Upload Students</h5>
         </Card.Header>
         <Card.Body>
-          {error && <Message variant="danger">{error}</Message>}
-          {loading && <Loader />}
+          {errorMessage && <Message variant="danger">{errorMessage}</Message>}
           {uploadMessage && (
             <Message variant="success">{uploadMessage}</Message>
+          )}
+
+          {updatedStudents.length > 0 ? (
+            <Message variant="success">
+              {updatedStudents.length} students was updated
+            </Message>
+          ) : (
+            <Message variant="success">No students was updated</Message>
+          )}
+
+          {loading && (
+            <ProgressBar
+              now={uploadProgress}
+              label={`${uploadProgress}%`}
+              animated
+              striped
+              className="mb-3"
+            />
           )}
 
           <Form onSubmit={submitHandler}>
@@ -71,13 +91,17 @@ function StudentBulkUpload() {
               </Form.Text>
             </Form.Group>
             <div className="text-center">
-              <Button variant="primary" type="submit" className="w-50">
-                Upload
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-50"
+                disabled={loading}
+              >
+                {loading ? "Uploading..." : "Upload"}
               </Button>
             </div>
           </Form>
 
-          {/* ✅ Display Not Created Students If Any */}
           {notCreatedStudents.length > 0 && (
             <Card className="mt-4">
               <Card.Header className="bg-danger text-white">
@@ -100,6 +124,64 @@ function StudentBulkUpload() {
                         <td>{student.first_name}</td>
                         <td>{student.last_name}</td>
                         <td>{student.error}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Card>
+          )}
+
+          {updatedStudents.length > 0 && (
+            <Card className="mt-4">
+              <Card.Header className="bg-success text-white">
+                <h6>{updatedStudents.length} Students were updated.</h6>
+              </Card.Header>
+              <Card.Body>
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>Admission Number</th>
+                      <th>Full Name</th>
+                      <th>Reason(s)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {updatedStudents.map((student, index) => (
+                      <tr key={index}>
+                        <td>{student.admission_number}</td>
+                        <td>{student.full_name}</td>
+                        <td>{student.reasons}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Card>
+          )}
+
+          {skippedStudents.length > 0 && (
+            <Card className="mt-4">
+              <Card.Header className="bg-warning text-white">
+                <h6>
+                  {skippedStudents.length} Students were <b>NOT</b> updated.
+                </h6>
+              </Card.Header>
+              <Card.Body>
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>Admission Number</th>
+                      <th>Full Name</th>
+                      <th>Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {skippedStudents.map((student, index) => (
+                      <tr key={index}>
+                        <td>{student.admission_number}</td>
+                        <td>{student.full_name}</td>
+                        <td>{student.reason}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -30,6 +30,7 @@ const UserList = () => {
   const navigate = useNavigate();
 
   const { loading, error, users } = useSelector((state) => state.getUsers);
+  console.log(users);
 
   const [filters, setFilters] = useState({
     first_name: null,
