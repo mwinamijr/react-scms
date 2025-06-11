@@ -10,7 +10,7 @@ import departmentReducer from "./features/academic/departmentSlice";
 import classLevelReducer from "./features/academic/classLevelSlice";
 import allocationReducer from "./features/finance/allocationSlice";
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     getUsers: userReducer,
     getTeachers: teacherReducer,
@@ -25,4 +25,5 @@ const store = configureStore({
   },
 });
 
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
