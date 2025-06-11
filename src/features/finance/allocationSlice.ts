@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getErrorMessage } from "../utils";
 import { djangoUrl } from "../utils";
-import type { RootState } from "../../store"; // Adjust path to your store definition
+import type { RootState } from "../../store";
 
 // === Types ===
 interface Allocation {
@@ -23,7 +23,6 @@ interface FinanceState {
   errorCreate: string | null;
 }
 
-
 interface UpdatePayload {
   id: number;
   receiptAllocationData?: Allocation;
@@ -41,7 +40,6 @@ export const listReceiptAllocations = createAsyncThunk<
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
-
 
     const config = {
       headers: {
@@ -70,7 +68,6 @@ export const receiptAllocationDetails = createAsyncThunk<
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -98,7 +95,6 @@ export const createReceiptAllocation = createAsyncThunk<
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -120,30 +116,32 @@ export const updateReceiptAllocation = createAsyncThunk<
   Allocation,
   UpdatePayload,
   { state: RootState; rejectValue: string }
->("receiptAllocation/update", async ({ id, receiptAllocationData }, thunkAPI) => {
-  try {
-    const { getState } = thunkAPI;
-    const {
-      getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+>(
+  "receiptAllocation/update",
+  async ({ id, receiptAllocationData }, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.put(
-      `${djangoUrl}/api/finance/receipt-allocations/${id}/`,
-      receiptAllocationData,
-      config
-    );
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${djangoUrl}/api/finance/receipt-allocations/${id}/`,
+        receiptAllocationData,
+        config
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
   }
-});
+);
 
 export const deleteReceiptAllocation = createAsyncThunk<
   { id: number },
@@ -156,14 +154,16 @@ export const deleteReceiptAllocation = createAsyncThunk<
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
     const config = {
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    await axios.delete(`${djangoUrl}/api/finance/receipt-allocations/${id}/`, config);
+    await axios.delete(
+      `${djangoUrl}/api/finance/receipt-allocations/${id}/`,
+      config
+    );
     return { id };
   } catch (error) {
     return thunkAPI.rejectWithValue(getErrorMessage(error));
@@ -181,7 +181,6 @@ export const listPaymentAllocations = createAsyncThunk<
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
-
 
     const config = {
       headers: {
@@ -210,7 +209,6 @@ export const paymentAllocationDetails = createAsyncThunk<
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -238,7 +236,6 @@ export const createPaymentAllocation = createAsyncThunk<
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -260,30 +257,32 @@ export const updatePaymentAllocation = createAsyncThunk<
   Allocation,
   UpdatePayload,
   { state: RootState; rejectValue: string }
->("paymentAllocation/update", async ({ id, paymentAllocationData }, thunkAPI) => {
-  try {
-    const { getState } = thunkAPI;
-    const {
-      getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+>(
+  "paymentAllocation/update",
+  async ({ id, paymentAllocationData }, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.put(
-      `${djangoUrl}/api/finance/payment-allocations/${id}/`,
-      paymentAllocationData,
-      config
-    );
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${djangoUrl}/api/finance/payment-allocations/${id}/`,
+        paymentAllocationData,
+        config
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
   }
-});
+);
 
 export const deletePaymentAllocation = createAsyncThunk<
   { id: number },
@@ -296,14 +295,16 @@ export const deletePaymentAllocation = createAsyncThunk<
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-
     const config = {
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    await axios.delete(`${djangoUrl}/api/finance/payment-allocations/${id}/`, config);
+    await axios.delete(
+      `${djangoUrl}/api/finance/payment-allocations/${id}/`,
+      config
+    );
     return { id };
   } catch (error) {
     return thunkAPI.rejectWithValue(getErrorMessage(error));
@@ -333,15 +334,18 @@ const financeSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(listReceiptAllocations.fulfilled, (state, action: PayloadAction<Allocation[]>) => {
-        state.loading = false;
-        state.receiptAllocations = action.payload;
-      })
+      .addCase(
+        listReceiptAllocations.fulfilled,
+        (state, action: PayloadAction<Allocation[]>) => {
+          state.loading = false;
+          state.receiptAllocations = action.payload;
+        }
+      )
       .addCase(listReceiptAllocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Error loading receipt allocations";
-      })
-      // ... continue handling all other thunks similarly
+      });
+    // ... continue handling all other thunks similarly
   },
 });
 
