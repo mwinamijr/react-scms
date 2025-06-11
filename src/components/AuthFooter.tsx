@@ -3,7 +3,7 @@ import { Layout, Typography, Row, Col } from "antd";
 
 const { Footer } = Layout;
 
-const AuthFooter = () => (
+const AuthFooter: React.FC = () => (
   <Footer style={{ textAlign: "center", padding: "16px 0" }}>
     <Row justify="space-between">
       <Col>
