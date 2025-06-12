@@ -5,7 +5,7 @@ import { UserAddOutlined, BellOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { logout } from "../features/user/userSlice";
-import type { RootState } from "../store";
+import type { RootState } from "../app/store";
 
 const TopHead: React.FC = () => {
   const dispatch = useDispatch();

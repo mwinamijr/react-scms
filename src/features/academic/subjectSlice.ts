@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import type { RootState } from "../../store";
+import type { RootState } from "../../app/store";
 
 const djangoUrl = "http://127.0.0.1:8000";
-
 
 interface Subject {
   id: number;
@@ -31,7 +30,6 @@ interface UpdateSubjectPayload extends Partial<Subject> {
   id: number;
 }
 
-
 const getErrorMessage = (error: any): string => {
   const err = error as AxiosError<any>;
   if (err.response) {
@@ -43,152 +41,175 @@ const getErrorMessage = (error: any): string => {
   return err.message || "An unknown error occurred";
 };
 
-
-export const getSubjectDetails = createAsyncThunk<Subject, number, { state: RootState; rejectValue: string }>(
-  "subject/details",
-  async (id, thunkAPI) => {
-    try {
-      const { getState } = thunkAPI;
+export const getSubjectDetails = createAsyncThunk<
+  Subject,
+  number,
+  { state: RootState; rejectValue: string }
+>("subject/details", async (id, thunkAPI) => {
+  try {
+    const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
-      const { data } = await axios.get<Subject>(`${djangoUrl}/api/academic/subjects/${id}/`, config);
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(getErrorMessage(error));
-    }
+    const { data } = await axios.get<Subject>(
+      `${djangoUrl}/api/academic/subjects/${id}/`,
+      config
+    );
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
-);
+});
 
-export const listSubjects = createAsyncThunk<Subject[], void, { state: RootState; rejectValue: string }>(
-  "subject/list",
-  async (_, thunkAPI) => {
-    try {
-      const { getState } = thunkAPI;
+export const listSubjects = createAsyncThunk<
+  Subject[],
+  void,
+  { state: RootState; rejectValue: string }
+>("subject/list", async (_, thunkAPI) => {
+  try {
+    const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
-      const { data } = await axios.get<Subject[]>(`${djangoUrl}/api/academic/subjects/`, config);
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(getErrorMessage(error));
-    }
+    const { data } = await axios.get<Subject[]>(
+      `${djangoUrl}/api/academic/subjects/`,
+      config
+    );
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
-);
+});
 
-export const createSubject = createAsyncThunk<Subject, Partial<Subject>, { state: RootState; rejectValue: string }>(
-  "subject/create",
-  async (subjectData, thunkAPI) => {
-    try {
-      const { getState } = thunkAPI;
+export const createSubject = createAsyncThunk<
+  Subject,
+  Partial<Subject>,
+  { state: RootState; rejectValue: string }
+>("subject/create", async (subjectData, thunkAPI) => {
+  try {
+    const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
-      const { data } = await axios.post<Subject>(`${djangoUrl}/api/academic/subjects/`, subjectData, config);
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(getErrorMessage(error));
-    }
+    const { data } = await axios.post<Subject>(
+      `${djangoUrl}/api/academic/subjects/`,
+      subjectData,
+      config
+    );
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
-);
+});
 
-export const bulkCreateSubjects = createAsyncThunk<void, File, { state: RootState; rejectValue: string }>(
-  "subject/bulkCreate",
-  async (file, thunkAPI) => {
-    try {
-      const { getState } = thunkAPI;
+export const bulkCreateSubjects = createAsyncThunk<
+  void,
+  File,
+  { state: RootState; rejectValue: string }
+>("subject/bulkCreate", async (file, thunkAPI) => {
+  try {
+    const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-      const formData = new FormData();
-      formData.append("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
 
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
-      await axios.post(`${djangoUrl}/api/academic/subjects/bulk-upload/`, formData, config);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(getErrorMessage(error));
-    }
+    await axios.post(
+      `${djangoUrl}/api/academic/subjects/bulk-upload/`,
+      formData,
+      config
+    );
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
-);
+});
 
-export const deleteSubject = createAsyncThunk<number, number, { state: RootState; rejectValue: string }>(
-  "subject/delete",
-  async (id, thunkAPI) => {
-    try {
-      const { getState } = thunkAPI;
+export const deleteSubject = createAsyncThunk<
+  number,
+  number,
+  { state: RootState; rejectValue: string }
+>("subject/delete", async (id, thunkAPI) => {
+  try {
+    const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
-      await axios.delete(`${djangoUrl}/api/academic/subjects/${id}/`, config);
-      return id;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(getErrorMessage(error));
-    }
+    await axios.delete(`${djangoUrl}/api/academic/subjects/${id}/`, config);
+    return id;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
-);
+});
 
-export const updateSubject = createAsyncThunk<Subject, UpdateSubjectPayload, { state: RootState; rejectValue: string }>(
-  "subject/update",
-  async ({ id, ...values }, thunkAPI) => {
-    try {
-      const { getState } = thunkAPI;
+export const updateSubject = createAsyncThunk<
+  Subject,
+  UpdateSubjectPayload,
+  { state: RootState; rejectValue: string }
+>("subject/update", async ({ id, ...values }, thunkAPI) => {
+  try {
+    const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
     } = getState() as { getUsers: { userInfo: { token: string } } };
 
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
 
-      const { data } = await axios.put<Subject>(`${djangoUrl}/api/academic/subjects/${id}/`, values, config);
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(getErrorMessage(error));
-    }
+    const { data } = await axios.put<Subject>(
+      `${djangoUrl}/api/academic/subjects/${id}/`,
+      values,
+      config
+    );
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
-);
+});
 
 // ====================
 
@@ -220,10 +241,13 @@ const subjectSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getSubjectDetails.fulfilled, (state, action: PayloadAction<Subject>) => {
-        state.loading = false;
-        state.subject = action.payload;
-      })
+      .addCase(
+        getSubjectDetails.fulfilled,
+        (state, action: PayloadAction<Subject>) => {
+          state.loading = false;
+          state.subject = action.payload;
+        }
+      )
       .addCase(getSubjectDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
@@ -234,10 +258,13 @@ const subjectSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(listSubjects.fulfilled, (state, action: PayloadAction<Subject[]>) => {
-        state.loading = false;
-        state.subjects = action.payload;
-      })
+      .addCase(
+        listSubjects.fulfilled,
+        (state, action: PayloadAction<Subject[]>) => {
+          state.loading = false;
+          state.subjects = action.payload;
+        }
+      )
       .addCase(listSubjects.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
@@ -248,11 +275,14 @@ const subjectSlice = createSlice({
         state.loadingCreate = true;
         state.errorCreate = null;
       })
-      .addCase(createSubject.fulfilled, (state, action: PayloadAction<Subject>) => {
-        state.loadingCreate = false;
-        state.successCreate = true;
-        state.createdSubject = action.payload;
-      })
+      .addCase(
+        createSubject.fulfilled,
+        (state, action: PayloadAction<Subject>) => {
+          state.loadingCreate = false;
+          state.successCreate = true;
+          state.createdSubject = action.payload;
+        }
+      )
       .addCase(createSubject.rejected, (state, action) => {
         state.loadingCreate = false;
         state.errorCreate = action.payload || null;
@@ -263,10 +293,15 @@ const subjectSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSubject.fulfilled, (state, action: PayloadAction<number>) => {
-        state.loading = false;
-        state.subjects = state.subjects.filter(subject => subject.id !== action.payload);
-      })
+      .addCase(
+        deleteSubject.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.loading = false;
+          state.subjects = state.subjects.filter(
+            (subject) => subject.id !== action.payload
+          );
+        }
+      )
       .addCase(deleteSubject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
@@ -277,10 +312,13 @@ const subjectSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateSubject.fulfilled, (state, action: PayloadAction<Subject>) => {
-        state.loading = false;
-        state.subject = action.payload;
-      })
+      .addCase(
+        updateSubject.fulfilled,
+        (state, action: PayloadAction<Subject>) => {
+          state.loading = false;
+          state.subject = action.payload;
+        }
+      )
       .addCase(updateSubject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
@@ -300,7 +338,6 @@ const subjectSlice = createSlice({
       });
   },
 });
-
 
 export const { resetCreateState } = subjectSlice.actions;
 export default subjectSlice.reducer;

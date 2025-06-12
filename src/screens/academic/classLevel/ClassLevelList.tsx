@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Table, Button, message, Popconfirm, Space, Col, Row } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   listClassLevels,
   deleteClassLevel,
@@ -13,22 +13,31 @@ import {
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const ClassLevelList = () => {
-  const dispatch = useDispatch();
+// Define ClassLevel type based on your data shape
+interface ClassLevel {
+  id: number;
+  grade_level: string;
+  name: string;
+}
+
+const ClassLevelList: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { classLevels, loading, error } = useSelector(
-    (state) => state.getClassLevels
+    (state: RootState) => state.getClassLevels
   );
 
   useEffect(() => {
     dispatch(listClassLevels());
   }, [dispatch]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     dispatch(deleteClassLevel(id))
       .unwrap()
       .then(() => message.success("ClassLevel deleted successfully"))
-      .catch((err) => message.error(err));
+      .catch((err: string) => message.error(err));
   };
 
   const columns = [
@@ -37,7 +46,7 @@ const ClassLevelList = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (record) => (
+      render: (_: any, record: ClassLevel) => (
         <Space size="middle">
           <Link to={`/academic/classLevels/${record.id}`}>
             <EyeOutlined style={{ color: "blue" }} />

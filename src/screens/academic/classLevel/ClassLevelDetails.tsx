@@ -1,20 +1,29 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Descriptions, Card, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getClassLevelDetails } from "../../../features/academic/classLevelSlice";
 import Message from "../../../components/Message";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import type { RootState } from "../../../app/store"; // Adjust path as needed
+import { useAppDispatch } from "../../../app/hooks"; // Adjust path as needed
 
-const ClassLevelDetails = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
+type RouteParams = {
+  id: string;
+};
+
+const ClassLevelDetails: React.FC = () => {
+  const { id } = useParams<RouteParams>();
+  const dispatch = useAppDispatch();
+
   const { classLevel, loading, error } = useSelector(
-    (state) => state.getClassLevels
+    (state: RootState) => state.getClassLevels
   );
 
   useEffect(() => {
-    dispatch(getClassLevelDetails(id));
+    if (id) {
+      dispatch(getClassLevelDetails(id));
+    }
   }, [dispatch, id]);
 
   return (
@@ -31,10 +40,10 @@ const ClassLevelDetails = () => {
         <Card title={classLevel.name} className="mt-4" loading={loading}>
           <Descriptions bordered column={1}>
             <Descriptions.Item label="Name">
-              {classLevel?.name}
+              {classLevel.name}
             </Descriptions.Item>
             <Descriptions.Item label="Grade Level">
-              {classLevel?.grade_level}
+              {classLevel.grade_level}
             </Descriptions.Item>
           </Descriptions>
           <div className="mt-4">

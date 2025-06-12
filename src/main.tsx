@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import App from "./App";
-import { store } from "./store";
+import { store } from "./app/store";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>

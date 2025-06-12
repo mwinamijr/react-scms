@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { djangoUrl } from "../utils";
 import { getErrorMessage } from "../utils";
 import axios from "axios";
-import type { RootState } from "../../store";
+import type { RootState } from "../../app/store";
 
 // Interfaces for Teacher and State
 interface Teacher {

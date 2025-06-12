@@ -1,16 +1,21 @@
 import React from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { createClassLevel } from "../../../features/academic/classLevelSlice";
 import { useNavigate, Link } from "react-router-dom";
+import type { RootState } from "../../../app/store"; // Adjust path as needed strong form typing
+import { useAppDispatch } from "../../../app/hooks";
 
-const AddClassLevel = () => {
-  const dispatch = useDispatch();
+const AddClassLevel: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loadingCreate } = useSelector((state) => state.getClassLevels);
 
-  const onFinish = (values) => {
+  const { loadingCreate } = useSelector(
+    (state: RootState) => state.getClassLevels
+  );
+
+  const onFinish = (values: { name: string; order_rank: number }) => {
     dispatch(createClassLevel(values)).then(() => {
       message.success("ClassLevel created successfully!");
       navigate("/academic/classLevels");
@@ -34,6 +39,7 @@ const AddClassLevel = () => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Order"
             name="order_rank"
@@ -41,6 +47,7 @@ const AddClassLevel = () => {
           >
             <Input type="number" />
           </Form.Item>
+
           <Button type="primary" htmlType="submit" loading={loadingCreate}>
             Add ClassLevel
           </Button>

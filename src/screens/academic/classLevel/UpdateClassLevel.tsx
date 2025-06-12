@@ -7,19 +7,33 @@ import {
   updateClassLevel,
 } from "../../../features/academic/classLevelSlice";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import type { RootState, AppDispatch } from "../../../app/store"; // Adjust the path to your store
 
-const UpdateClassLevel = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
+interface ClassLevel {
+  id: number;
+  name: string;
+  grade_level: number;
+}
+
+const UpdateClassLevel: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { classLevel, loading } = useSelector((state) => state.getClassLevels);
+
+  // Use selector with RootState type
+  const { classLevel, loading } = useSelector(
+    (state: RootState) => state.getClassLevels
+  );
 
   useEffect(() => {
-    dispatch(getClassLevelDetails(id));
+    if (id) {
+      dispatch(getClassLevelDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
-  const onFinish = (values) => {
-    dispatch(updateClassLevel({ id, ...values })).then(() => {
+  const onFinish = (values: Partial<ClassLevel>) => {
+    if (!id) return;
+    dispatch(updateClassLevel({ id: Number(id), ...values })).then(() => {
       message.success("ClassLevel updated successfully!");
       navigate("/academic/classLevels");
     });
@@ -29,11 +43,16 @@ const UpdateClassLevel = () => {
     <div>
       <Link to={`/academic/classLevels/${id}`}>
         <Button type="default" icon={<ArrowLeftOutlined />}>
-          Back to {classLevel.name}
+          Back to {classLevel?.name || "ClassLevel"}
         </Button>
       </Link>
       <Card title="Update ClassLevel" className="mt-4" loading={loading}>
-        <Form layout="vertical" onFinish={onFinish} initialValues={classLevel}>
+        <Form
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={classLevel}
+          key={classLevel?.id} // To reinitialize form when classLevel changes
+        >
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
