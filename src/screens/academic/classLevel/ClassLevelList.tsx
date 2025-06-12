@@ -19,7 +19,6 @@ import { useAppDispatch } from "../../../app/hooks";
 // Define ClassLevel type based on your data shape
 interface ClassLevel {
   id: number;
-  grade_level: string;
   name: string;
 }
 

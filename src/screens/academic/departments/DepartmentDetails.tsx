@@ -1,20 +1,26 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Descriptions, Card, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getDepartmentDetails } from "../../../features/academic/departmentSlice";
 import Message from "../../../components/Message";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import type { RootState } from "../../../app/store"; // Adjust path as needed
+import { useAppDispatch } from "../../../app/hooks";
 
-const DepartmentDetails = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
+type RouteParams = {
+  id: string;
+};
+
+const DepartmentDetails: React.FC = () => {
+  const { id } = useParams<RouteParams>();
+  const dispatch = useAppDispatch();
   const { department, loading, error } = useSelector(
-    (state) => state.getDepartments
+    (state: RootState) => state.getDepartments
   );
 
   useEffect(() => {
-    dispatch(getDepartmentDetails(id));
+    dispatch(getDepartmentDetails(Number(id)));
   }, [dispatch, id]);
 
   return (

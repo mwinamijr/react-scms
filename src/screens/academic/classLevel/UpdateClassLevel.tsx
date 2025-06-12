@@ -7,7 +7,8 @@ import {
   updateClassLevel,
 } from "../../../features/academic/classLevelSlice";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import type { RootState, AppDispatch } from "../../../app/store"; // Adjust the path to your store
+import type { RootState } from "../../../app/store";
+import type { AppDispatch } from "../../../app/store";
 
 interface ClassLevel {
   id: number;

@@ -22,7 +22,7 @@ const ClassLevelDetails: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(getClassLevelDetails(id));
+      dispatch(getClassLevelDetails(Number(id)));
     }
   }, [dispatch, id]);
 

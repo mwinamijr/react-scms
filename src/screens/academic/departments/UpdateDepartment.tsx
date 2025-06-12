@@ -7,19 +7,28 @@ import {
   updateDepartment,
 } from "../../../features/academic/departmentSlice";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const UpdateDepartment = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
+interface Department {
+  id: number;
+  name: string;
+}
+
+const UpdateDepartment: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { department, loading } = useSelector((state) => state.getDepartments);
+  const { department, loading } = useSelector(
+    (state: RootState) => state.getDepartments
+  );
 
   useEffect(() => {
-    dispatch(getDepartmentDetails(id));
+    dispatch(getDepartmentDetails(Number(id)));
   }, [dispatch, id]);
 
-  const onFinish = (values) => {
-    dispatch(updateDepartment({ id, ...values })).then(() => {
+  const onFinish = (values: Partial<Department>) => {
+    dispatch(updateDepartment({ id: Number(id), ...values })).then(() => {
       message.success("Department updated successfully!");
       navigate("/academic/departments");
     });
@@ -29,7 +38,7 @@ const UpdateDepartment = () => {
     <div>
       <Link to={`/academic/departments/${id}`}>
         <Button type="default" icon={<ArrowLeftOutlined />}>
-          Back to {department.name}
+          Back to {department?.name}
         </Button>
       </Link>
       <Card title="Update Department" className="mt-4" loading={loading}>

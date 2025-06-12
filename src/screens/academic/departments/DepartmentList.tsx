@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Table, Button, message, Popconfirm, Space, Col, Row } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   listDepartments,
   deleteDepartment,
@@ -13,22 +13,30 @@ import {
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const DepartmentList = () => {
-  const dispatch = useDispatch();
+// Define Department type based on your data shape
+interface Department {
+  id: number;
+  name: string;
+}
+
+const DepartmentList: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { departments, loading, error } = useSelector(
-    (state) => state.getDepartments
+    (state: RootState) => state.getDepartments
   );
 
   useEffect(() => {
     dispatch(listDepartments());
   }, [dispatch]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     dispatch(deleteDepartment(id))
       .unwrap()
       .then(() => message.success("Department deleted successfully"))
-      .catch((err) => message.error(err));
+      .catch((err: string) => message.error(err));
   };
 
   const columns = [
@@ -37,7 +45,7 @@ const DepartmentList = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (record) => (
+      render: (record: Department) => (
         <Space size="middle">
           <Link to={`/academic/departments/${record.id}`}>
             <EyeOutlined style={{ color: "blue" }} />

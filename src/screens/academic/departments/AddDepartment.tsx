@@ -1,16 +1,20 @@
 import React from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { createDepartment } from "../../../features/academic/departmentSlice";
 import { useNavigate, Link } from "react-router-dom";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const AddDepartment = () => {
-  const dispatch = useDispatch();
+const AddDepartment: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loadingCreate } = useSelector((state) => state.getDepartments);
+  const { loadingCreate } = useSelector(
+    (state: RootState) => state.getDepartments
+  );
 
-  const onFinish = (values) => {
+  const onFinish = (values: { name: string; order_rank: number }) => {
     dispatch(createDepartment(values)).then(() => {
       message.success("Department created successfully!");
       navigate("/academic/departments");
