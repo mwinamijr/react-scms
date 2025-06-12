@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Breadcrumb, Form, Input, Button, message, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import {
@@ -9,26 +9,28 @@ import {
 } from "../../../features/finance/allocationSlice";
 import Loader from "../../../components/Loader";
 import Message from "../../../components/Message";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const UpdateReceiptAllocation = () => {
-  const { id } = useParams();
+const UpdateReceiptAllocation: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { receiptAllocation, loading, error } = useSelector(
-    (state) => state.getAllocations
+    (state: RootState) => state.getAllocations
   );
 
   useEffect(() => {
-    dispatch(receiptAllocationDetails(id));
+    dispatch(receiptAllocationDetails(Number(id)));
   }, [dispatch, id]);
 
   useEffect(() => {
     if (receiptAllocation) form.setFieldsValue(receiptAllocation);
   }, [receiptAllocation, form]);
 
-  const handleSubmit = (values) => {
-    dispatch(updateReceiptAllocation({ id, ...values }))
+  const handleSubmit = (values: { name: string; abbr: string }) => {
+    dispatch(updateReceiptAllocation({ id: Number(id), ...values }))
       .unwrap()
       .then(() => {
         message.success("Updated successfully");
@@ -38,18 +40,15 @@ const UpdateReceiptAllocation = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <Breadcrumb
-        style={{ marginBottom: 16 }}
-        items={[
-          { title: <Link to="/dashboard">Dashboard</Link> },
-          {
-            title: (
-              <Link to="/finance/receipt-allocations">Receipt Allocations</Link>
-            ),
-          },
-          { title: "Update" },
-        ]}
-      />
+      <Breadcrumb style={{ marginBottom: 16 }}>
+        <Breadcrumb.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/finance/receipt-allocations">Receipt Allocations</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Update</Breadcrumb.Item>
+      </Breadcrumb>
 
       {loading && <Loader />}
       {error && <Message variant="danger">{error}</Message>}

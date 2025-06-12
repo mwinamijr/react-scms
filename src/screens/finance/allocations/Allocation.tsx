@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Breadcrumb,
   Table,
@@ -25,33 +25,44 @@ import {
   listPaymentAllocations,
   listReceiptAllocations,
 } from "../../../features/finance/allocationSlice";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
+import type { ColumnsType } from "antd/es/table";
 
 const { Title } = Typography;
 
-const Allocation = () => {
-  const dispatch = useDispatch();
+interface AllocationRecord {
+  id: number;
+  name: string;
+  abbr: string;
+}
+
+const Allocation: React.FC = () => {
+  const dispatch = useAppDispatch();
 
   const { loading, error, receiptAllocations, paymentAllocations } =
-    useSelector((state) => state.getAllocations);
+    useSelector((state: RootState) => state.getAllocations);
 
   useEffect(() => {
     dispatch(listPaymentAllocations());
     dispatch(listReceiptAllocations());
   }, [dispatch]);
 
-  const handlePaymentAllocationDelete = (id) => {
+  const handlePaymentAllocationDelete = (id: number) => {
     dispatch(deletePaymentAllocation(id))
       .unwrap()
-      .then(() => message.success("Payment allocation deleted successfully"));
+      .then(() => message.success("Payment allocation deleted successfully"))
+      .catch(() => message.error("Failed to delete payment allocation"));
   };
 
-  const handleReceiptAllocationDelete = (id) => {
+  const handleReceiptAllocationDelete = (id: number) => {
     dispatch(deleteReceiptAllocation(id))
       .unwrap()
-      .then(() => message.success("Allocation deleted successfully"));
+      .then(() => message.success("Allocation deleted successfully"))
+      .catch(() => message.error("Failed to delete receipt allocation"));
   };
 
-  const columns = (type) => [
+  const columns = (type: string): ColumnsType<AllocationRecord> => [
     {
       title: "Name",
       dataIndex: "name",
@@ -65,7 +76,7 @@ const Allocation = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
+      render: (_, record) => (
         <Space size="middle">
           <Link to={`/finance/allocations/${type}/${record.id}`}>
             <EyeOutlined style={{ color: "#1890ff" }} />
@@ -90,13 +101,12 @@ const Allocation = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <Breadcrumb
-        style={{ marginBottom: 16 }}
-        items={[
-          { title: <Link to="/dashboard">Dashboard</Link> },
-          { title: "Allocations" },
-        ]}
-      />
+      <Breadcrumb style={{ marginBottom: 16 }}>
+        <Breadcrumb.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Allocations</Breadcrumb.Item>
+      </Breadcrumb>
 
       <Row gutter={24}>
         {[
@@ -127,13 +137,17 @@ const Allocation = () => {
             {error && <Message variant="danger">{error}</Message>}
 
             <Table
-              dataSource={data}
+              dataSource={data.map((item) => ({
+                id: item.id,
+                name: item.name || "",
+                abbr: item.abbr || "",
+              }))}
               columns={columns(type)}
               rowKey="id"
               bordered
               pagination={{ pageSize: 10 }}
               loading={loading}
-              rowClassName={(record, index) =>
+              rowClassName={(_, index) =>
                 index % 2 === 0 ? "table-row-light" : "table-row-dark"
               }
             />
