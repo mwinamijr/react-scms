@@ -1,15 +1,29 @@
 import React from "react";
 import { Form, Input, Button, Card, message, Checkbox } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { createSubject } from "../../../features/academic/subjectSlice";
 import { useNavigate } from "react-router-dom";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const AddSubject = () => {
-  const dispatch = useDispatch();
+// Subject form value types
+interface SubjectFormValues {
+  name: string;
+  subject_code: string;
+  department: number;
+  graded: boolean;
+  is_selectable: boolean;
+  description?: string;
+}
+
+const AddSubject: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loadingCreate } = useSelector((state) => state.getSubjects);
+  const { loadingCreate } = useSelector(
+    (state: RootState) => state.getSubjects
+  );
 
-  const onFinish = (values) => {
+  const onFinish = (values: SubjectFormValues) => {
     dispatch(createSubject(values)).then(() => {
       message.success("Subject created successfully!");
       navigate("/academic/subjects");
@@ -18,7 +32,7 @@ const AddSubject = () => {
 
   return (
     <Card title="Add Subject">
-      <Form layout="vertical" onFinish={onFinish}>
+      <Form<SubjectFormValues> layout="vertical" onFinish={onFinish}>
         <Form.Item
           label="Name"
           name="name"
@@ -26,6 +40,7 @@ const AddSubject = () => {
         >
           <Input />
         </Form.Item>
+
         <Form.Item
           label="Code"
           name="subject_code"
@@ -33,6 +48,7 @@ const AddSubject = () => {
         >
           <Input />
         </Form.Item>
+
         <Form.Item
           label="Department"
           name="department"
@@ -40,15 +56,23 @@ const AddSubject = () => {
         >
           <Input type="number" />
         </Form.Item>
-        <Form.Item name="graded" valuePropName="checked">
+
+        <Form.Item name="graded" valuePropName="checked" initialValue={false}>
           <Checkbox>Graded</Checkbox>
         </Form.Item>
-        <Form.Item name="is_selectable" valuePropName="checked">
+
+        <Form.Item
+          name="is_selectable"
+          valuePropName="checked"
+          initialValue={false}
+        >
           <Checkbox>Selectable</Checkbox>
         </Form.Item>
+
         <Form.Item label="Description" name="description">
-          <Input.TextArea />
+          <Input.TextArea rows={4} />
         </Form.Item>
+
         <Button type="primary" htmlType="submit" loading={loadingCreate}>
           Add Subject
         </Button>

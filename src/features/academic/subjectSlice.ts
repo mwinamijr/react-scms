@@ -26,7 +26,7 @@ interface SubjectState {
   errorCreate: string | null;
 }
 
-interface UpdateSubjectPayload extends Partial<Subject> {
+interface UpdateSubjectPayload {
   id: number;
 }
 

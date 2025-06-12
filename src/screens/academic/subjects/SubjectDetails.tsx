@@ -1,18 +1,42 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Descriptions, Card, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { getSubjectDetails } from "../../../features/academic/subjectSlice";
-import Message from "../../../components/Message";
+import { useSelector } from "react-redux";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
-const SubjectDetails = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  const { subject, loading, error } = useSelector((state) => state.getSubjects);
+import { getSubjectDetails } from "../../../features/academic/subjectSlice";
+import Message from "../../../components/Message";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
+
+// Subject Type (adjust according to your API model)
+interface Subject {
+  id: number;
+  name: string;
+  subject_code: string;
+  department: string;
+  graded: boolean;
+  is_selectable: boolean;
+  description: string;
+}
+
+const SubjectDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+
+  const { subject, loading, error } = useSelector(
+    (state: RootState) =>
+      state.getSubjects as {
+        subject: Subject | null;
+        loading: boolean;
+        error: string | null;
+      }
+  );
 
   useEffect(() => {
-    dispatch(getSubjectDetails(id));
+    if (id) {
+      dispatch(getSubjectDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   return (
@@ -28,21 +52,21 @@ const SubjectDetails = () => {
       {subject && (
         <Card title={subject.name} className="mt-4" loading={loading}>
           <Descriptions bordered column={1}>
-            <Descriptions.Item label="Name">{subject?.name}</Descriptions.Item>
+            <Descriptions.Item label="Name">{subject.name}</Descriptions.Item>
             <Descriptions.Item label="Code">
-              {subject?.subject_code}
+              {subject.subject_code}
             </Descriptions.Item>
             <Descriptions.Item label="Department">
-              {subject?.department}
+              {subject.department}
             </Descriptions.Item>
             <Descriptions.Item label="Graded">
-              {subject?.graded ? "Yes" : "No"}
+              {subject.graded ? "Yes" : "No"}
             </Descriptions.Item>
             <Descriptions.Item label="Selectable">
-              {subject?.is_selectable ? "Yes" : "No"}
+              {subject.is_selectable ? "Yes" : "No"}
             </Descriptions.Item>
             <Descriptions.Item label="Description">
-              {subject?.description}
+              {subject.description}
             </Descriptions.Item>
           </Descriptions>
           <div className="mt-4">

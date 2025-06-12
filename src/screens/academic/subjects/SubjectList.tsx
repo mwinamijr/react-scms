@@ -14,25 +14,38 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
+import type { AppDispatch, RootState } from "../../../app/store";
 
-const SubjectList = () => {
-  const dispatch = useDispatch();
+// Subject Interface
+interface Subject {
+  id: number;
+  name: string;
+  subject_code: string;
+  department: string;
+  graded: boolean;
+  is_selectable: boolean;
+}
+
+const SubjectList: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const { subjects, loading, error } = useSelector(
-    (state) => state.getSubjects
+    (state: RootState) => state.getSubjects
   );
 
   useEffect(() => {
     dispatch(listSubjects());
   }, [dispatch]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     dispatch(deleteSubject(id))
       .unwrap()
       .then(() => message.success("Subject deleted successfully"))
-      .catch((err) => message.error(err));
+      .catch((err: string) => message.error(err));
   };
 
-  const columns = [
+  const columns: ColumnsType<Subject> = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Code", dataIndex: "subject_code", key: "subject_code" },
     { title: "Department", dataIndex: "department", key: "department" },
@@ -40,18 +53,18 @@ const SubjectList = () => {
       title: "Graded",
       dataIndex: "graded",
       key: "graded",
-      render: (graded) => (graded ? "Yes" : "No"),
+      render: (graded: boolean) => (graded ? "Yes" : "No"),
     },
     {
       title: "Selectable",
       dataIndex: "is_selectable",
       key: "is_selectable",
-      render: (selectable) => (selectable ? "Yes" : "No"),
+      render: (selectable: boolean) => (selectable ? "Yes" : "No"),
     },
     {
       title: "Actions",
       key: "actions",
-      render: (record) => (
+      render: (_: any, record: Subject) => (
         <Space size="middle">
           <Link to={`/academic/subjects/${record.id}`}>
             <EyeOutlined style={{ color: "blue" }} />

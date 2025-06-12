@@ -1,24 +1,37 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import type { ChangeEvent, FormEvent } from "react";
+import { useSelector } from "react-redux";
 import { Card, Form, Button, Container, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../../../components/Loader";
 import Message from "../../../components/Message";
+import { bulkCreateSubjects } from "../../../features/academic/subjectSlice";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-import { bulkCreateSubjects } from "../../../features/academic/subjectSlice"; // Import bulkCreateSubjects thunk from the slice
+// Define the structure for subjects that failed to be created
+interface NotCreatedSubject {
+  name: string;
+  subject_code: string;
+  department: string | number;
+  error: string;
+}
 
-function BulkUpload() {
-  const [file, setFile] = useState(null); // Use 'file' to store the uploaded file object
-  const [uploadMessage, setUploadMessage] = useState("");
-  const [notCreatedSubjects, setNotCreatedSubjects] = useState([]);
+const BulkUpload: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadMessage, setUploadMessage] = useState<string>("");
+  const [notCreatedSubjects, setNotCreatedSubjects] = useState<
+    NotCreatedSubject[]
+  >([]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useSelector(
+    (state: RootState) => state.getSubjects
+  );
 
-  // Accessing state from Redux store
-  const { loading, error } = useSelector((state) => state.getSubjects); // Assuming the state is in 'getSubjects'
-
-  const submitHandler = (e) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!file) {
       alert("Please select a file before uploading.");
       return;
@@ -26,22 +39,27 @@ function BulkUpload() {
 
     dispatch(bulkCreateSubjects(file))
       .unwrap()
-      .then((response) => {
+      .then((response: any) => {
         setUploadMessage(response.message);
         setNotCreatedSubjects(response.not_created || []);
       })
-      .catch((err) => {
+      .catch((err: string) => {
         console.error("Upload failed:", err);
       });
   };
 
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) setFile(selectedFile);
+  };
+
   return (
     <Container className="mt-4">
-      <Link to={`/academic/subjects/`} className="ant-btn ant-btn-link mb-4">
+      <Link to="/academic/subjects/" className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
       <Card className="shadow">
-        <Card.Header className="text-white text-center">
+        <Card.Header className="text-white text-center bg-primary">
           <h5>Bulk Upload Subjects</h5>
         </Card.Header>
         <Card.Body>
@@ -57,7 +75,7 @@ function BulkUpload() {
               <Form.Control
                 type="file"
                 name="file"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={onFileChange}
                 accept=".xlsx, .xls"
                 required
               />
@@ -72,7 +90,6 @@ function BulkUpload() {
             </div>
           </Form>
 
-          {/* ✅ Display Not Created Subjects If Any */}
           {notCreatedSubjects.length > 0 && (
             <Card className="mt-4">
               <Card.Header className="bg-danger text-white">
@@ -108,6 +125,6 @@ function BulkUpload() {
       </Card>
     </Container>
   );
-}
+};
 
 export default BulkUpload;

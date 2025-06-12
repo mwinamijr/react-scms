@@ -1,39 +1,69 @@
 import React, { useEffect } from "react";
 import { Form, Input, Button, Card, message, Checkbox } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   getSubjectDetails,
   updateSubject,
 } from "../../../features/academic/subjectSlice";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import type { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
 
-const UpdateSubject = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
+interface Subject {
+  id: number;
+  name: string;
+  subject_code: string;
+  department: string | number;
+  graded: boolean;
+  is_selectable: boolean;
+  description?: string;
+}
+
+const UpdateSubject: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { subject, loading } = useSelector((state) => state.getSubjects);
+
+  const { subject, loading } = useSelector(
+    (state: RootState) =>
+      state.getSubjects as { subject: Subject | null; loading: boolean }
+  );
 
   useEffect(() => {
-    dispatch(getSubjectDetails(id));
+    if (id) {
+      dispatch(getSubjectDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
-  const onFinish = (values) => {
-    dispatch(updateSubject({ id, ...values })).then(() => {
-      message.success("Subject updated successfully!");
-      navigate("/academic/subjects");
-    });
+  const onFinish = (values: Partial<Subject>) => {
+    if (id) {
+      dispatch(updateSubject({ id: Number(id), ...values }))
+        .unwrap()
+        .then(() => {
+          message.success("Subject updated successfully!");
+          navigate("/academic/subjects");
+        })
+        .catch((err: string) => {
+          message.error(err || "Failed to update subject");
+        });
+    }
   };
 
   return (
     <div>
       <Link to={`/academic/subjects/${id}`}>
         <Button type="default" icon={<ArrowLeftOutlined />}>
-          Back to {subject.name}
+          Back to {subject?.name || "Subject"}
         </Button>
       </Link>
       <Card title="Update Subject" className="mt-4" loading={loading}>
-        <Form layout="vertical" onFinish={onFinish} initialValues={subject}>
+        <Form
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={subject || {}}
+          key={subject?.id} // force reset form if subject changes
+        >
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
