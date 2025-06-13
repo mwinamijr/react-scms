@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Layout,
@@ -23,13 +23,24 @@ import {
 import { login } from "../features/user/userSlice";
 import AuthFooter from "../components/AuthFooter";
 import logo from "../assets/hayatul-logo.svg";
+import type { RootState } from "../app/store";
+import { useAppDispatch } from "../app/hooks";
 
 const { Title, Text } = Typography;
 
-const Login = () => {
-  const dispatch = useDispatch();
+interface LoginFormValues {
+  email: string;
+  password: string;
+  remember?: boolean;
+}
+
+const Login: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { error, loading, userInfo } = useSelector((state) => state.getUsers);
+
+  const { error, loading, userInfo } = useSelector(
+    (state: RootState) => state.getUsers
+  );
 
   const [form] = Form.useForm();
 
@@ -39,7 +50,7 @@ const Login = () => {
     }
   }, [userInfo, navigate]);
 
-  const handleLogin = (values) => {
+  const handleLogin = (values: LoginFormValues) => {
     dispatch(login({ email: values.email, password: values.password }));
   };
 
@@ -69,7 +80,7 @@ const Login = () => {
             </Title>
             <Text type="secondary">Enter your credentials to continue</Text>
 
-            {error && message.error(error)}
+            {error && <Text type="danger">{error}</Text>}
 
             <Form
               form={form}
@@ -85,7 +96,6 @@ const Login = () => {
                 <Input placeholder="Enter your email" />
               </Form.Item>
 
-              {/* Password */}
               <Form.Item
                 label="Password"
                 name="password"
@@ -101,7 +111,6 @@ const Login = () => {
                 />
               </Form.Item>
 
-              {/* Remember Me & Forgot Password */}
               <Row justify="space-between">
                 <Col>
                   <Form.Item name="remember" valuePropName="checked" noStyle>
@@ -113,7 +122,6 @@ const Login = () => {
                 </Col>
               </Row>
 
-              {/* Submit Button */}
               <Form.Item>
                 <Button
                   type="primary"
@@ -136,7 +144,7 @@ const Login = () => {
             </Text>
           </Card>
 
-          <AuthFooter style={{ marginTop: "24px", textAlign: "center" }} />
+          <AuthFooter />
         </Col>
       </Row>
     </Layout>

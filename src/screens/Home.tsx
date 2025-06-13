@@ -4,14 +4,14 @@ import { Typography, Button, Row, Col, Card } from "antd";
 
 const { Title, Paragraph } = Typography;
 
-function Home() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+const Home: React.FC = () => {
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    // Capture the PWA install prompt
-    const handleBeforeInstallPrompt = (e) => {
+    const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -120,6 +120,12 @@ function Home() {
       </footer>
     </div>
   );
-}
+};
 
 export default Home;
+
+// Type declaration for BeforeInstallPromptEvent
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice?: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}

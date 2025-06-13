@@ -1,7 +1,8 @@
-import { createHashRouter } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux"; // Import useSelector to access Redux store
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import type { ReactElement } from "react";
+import { createHashRouter, useNavigate } from "react-router-dom";
+import type { NavigateFunction } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import MinimalLayout from "./screens/MinimalLayout";
 import MainLayout from "./screens/MainLayout";
@@ -60,9 +61,19 @@ import ReceiptAllocationDetails from "./screens/finance/allocations/ReceiptAlloc
 import UpdatePaymentAllocation from "./screens/finance/allocations/UpdatePaymentAllocation";
 import UpdateReceiptAllocation from "./screens/finance/allocations/UpdateReceiptAllocation";
 
-const ProtectedRoute = ({ element }) => {
-  const navigate = useNavigate();
-  const { userInfo } = useSelector((state) => state.getUsers);
+interface RootState {
+  getUsers: {
+    userInfo?: any; // Adjust this type based on your user info shape
+  };
+}
+
+interface ProtectedRouteProps {
+  element: ReactElement;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
+  const navigate: NavigateFunction = useNavigate();
+  const { userInfo } = useSelector((state: RootState) => state.getUsers);
 
   useEffect(() => {
     if (!userInfo) {
@@ -179,13 +190,11 @@ const MainRoutes = {
   ],
 };
 
-// Authentication Routes
 const AuthenticationRoutes = {
   path: "/",
   element: <MinimalLayout />,
   children: [
     { path: "login", element: <Login /> },
-
     { path: "/", element: <Home /> },
     { path: "/getting-started/developers/", element: <Developers /> },
     { path: "/getting-started/teachers/", element: <Teachers /> },
@@ -193,13 +202,9 @@ const AuthenticationRoutes = {
   ],
 };
 
-// Combine Routes
 const router = createHashRouter([MainRoutes, AuthenticationRoutes], {
   basename: "/",
-  future: {
-    v7_startTransition: true, // Enables state transitions for v7
-    v7_relativeSplatPath: true, // Enables new relative splat route resolution
-  },
+  future: {},
 });
 
 export default router;

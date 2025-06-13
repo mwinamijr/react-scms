@@ -12,6 +12,7 @@ import {
   CalendarOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Grid } from "antd";
+import type { MenuProps } from "antd";
 import NotificationSection from "./header/NotificationSection";
 import ProfileSection from "./header/ProfileSection";
 import logo from "../assets/hayatul-logo.svg";
@@ -19,23 +20,31 @@ import logo from "../assets/hayatul-logo.svg";
 const { Content, Header, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
 
-function getItem(label, key, icon, children, onClick = null) {
+type MenuItem = Required<MenuProps>["items"][number];
+
+function getItem(
+  label: React.ReactNode,
+  key: string,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  onClick?: () => void
+): MenuItem {
   return {
     key,
     icon,
     children,
     label,
     onClick,
-  };
+  } as MenuItem;
 }
 
-const DashboardLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [openKeys, setOpenKeys] = useState([]);
+const DashboardLayout: React.FC = () => {
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
   const location = useLocation();
   const screens = useBreakpoint();
 
-  const items = [
+  const items: MenuItem[] = [
     getItem(
       <Link to="/dashboard">Dashboard</Link>,
       "/dashboard",
@@ -70,7 +79,7 @@ const DashboardLayout = () => {
         "/finance/allocations"
       ),
       getItem(<Link to="/finance/payroll">Payroll</Link>, "/finance/payroll"),
-      getItem("Reports", "finance/reports", null, [
+      getItem("Reports", "finance/reports", undefined, [
         getItem("Collections", "/finance/reports/collections"),
         getItem("Invoices", "/finance/reports/invoices"),
       ]),
@@ -90,11 +99,11 @@ const DashboardLayout = () => {
       ),
     ]),
     getItem("Exam", "exam", <FileDoneOutlined />, [
-      getItem("Setting", "exam/setting", null, [
+      getItem("Setting", "exam/setting", undefined, [
         getItem("Exam groups", "/exam/setting/groups"),
         getItem("School exams", "/exam/setting/school"),
       ]),
-      getItem("Reports", "exam/reports", null, [
+      getItem("Reports", "exam/reports", undefined, [
         getItem("Single Report", "/exam/reports/single"),
         getItem("Combined reports", "/exam/reports/combined"),
         getItem("CA Report", "/exam/reports/ca"),
@@ -118,27 +127,24 @@ const DashboardLayout = () => {
     getItem("School Calendar", "/calendar", <CalendarOutlined />),
   ];
 
-  // Memoize selectedKeys based on the current location
   const selectedKeys = useMemo(() => [location.pathname], [location.pathname]);
 
-  // Automatically open the parent menu of the active menu item
   useEffect(() => {
-    const parentKeys = selectedKeys[0].split("/").slice(1, -1).join("/");
-    setOpenKeys([parentKeys || ""]);
+    const parts = selectedKeys[0].split("/").slice(1, -1);
+    const parentKey = parts.length > 0 ? parts.join("/") : "";
+    setOpenKeys([parentKey]);
   }, [selectedKeys]);
 
-  // Handle submenu open/close events to allow only one open submenu
-  const onOpenChange = (keys) => {
+  const onOpenChange = (keys: string[]) => {
     const latestOpenKey = keys.find((key) => !openKeys.includes(key));
     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
   };
 
-  // Automatically collapse sidebar on small screens
   useEffect(() => {
     if (screens.md === false) {
-      setCollapsed(true); // Collapse only on small screens
+      setCollapsed(true);
     } else {
-      setCollapsed(false); // Ensure it stays open on larger screens
+      setCollapsed(false);
     }
   }, [screens]);
 

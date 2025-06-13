@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import type { RootState } from "../app/store"; // Adjust path as needed
 import { Card, Row, Col, Typography, Statistic, Space, message } from "antd";
 import {
   UserOutlined,
@@ -17,12 +18,23 @@ import { listAccountants } from "../features/user/accountantSlice";
 import { listParents } from "../features/user/parentSlice";
 import { listSubjects } from "../features/academic/subjectSlice";
 import { listClassLevels } from "../features/academic/classLevelSlice";
+import { useAppDispatch } from "../app/hooks";
 
 const { Title } = Typography;
 
-const Dashboard = () => {
-  const dispatch = useDispatch();
-  const [loadingStates, setLoadingStates] = useState({
+interface LoadingStates {
+  students: boolean;
+  users: boolean;
+  teachers: boolean;
+  accountants: boolean;
+  parents: boolean;
+  subjects: boolean;
+  classLevels: boolean;
+}
+
+const Dashboard: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const [loadingStates, setLoadingStates] = useState<LoadingStates>({
     students: false,
     users: false,
     teachers: false,
@@ -32,28 +44,23 @@ const Dashboard = () => {
     classLevels: false,
   });
 
-  // Fetch data on mount with proper parameters
   useEffect(() => {
     const fetchData = async () => {
-      // Helper function to track and log dispatch results
-      const dispatchWithTracking = async (action, params, name) => {
-        //console.log(`Starting to fetch ${name}...`);
+      const dispatchWithTracking = async (
+        action: any,
+        params: any,
+        name: keyof LoadingStates
+      ) => {
         setLoadingStates((prev) => ({ ...prev, [name]: true }));
-
         try {
           const resultAction = await dispatch(action(params));
-          //console.log(`${name} fetch result:`, resultAction);
-
           if (resultAction.error) {
             throw new Error(
               resultAction.error.message || `Failed to fetch ${name}`
             );
           }
-
-          //console.log(`Successfully fetched ${name}`);
           return resultAction.payload;
-        } catch (error) {
-          //console.error(`Error fetching ${name}:`, error);
+        } catch (error: any) {
           message.error(`Failed to load ${name}: ${error.message}`);
           return null;
         } finally {
@@ -61,13 +68,12 @@ const Dashboard = () => {
         }
       };
 
-      // Dispatch all actions with empty search parameters
       await Promise.all([
-        dispatchWithTracking(listStudents, "students"),
-        dispatchWithTracking(listUsers, "users"),
+        dispatchWithTracking(listStudents, undefined, "students"),
+        dispatchWithTracking(listUsers, undefined, "users"),
         dispatchWithTracking(listTeachers, {}, "teachers"),
         dispatchWithTracking(listAccountants, {}, "accountants"),
-        dispatchWithTracking(listParents, "parents"),
+        dispatchWithTracking(listParents, undefined, "parents"),
         dispatchWithTracking(listSubjects, {}, "subjects"),
         dispatchWithTracking(listClassLevels, {}, "classLevels"),
       ]);
@@ -76,43 +82,28 @@ const Dashboard = () => {
     fetchData();
   }, [dispatch]);
 
-  // Get Redux state with proper null checking
-  const studentCount = useSelector((state) => {
-    //console.log("Student state:", state.getStudents);
-    return state.getStudents?.students?.length || 0;
-  });
+  const studentCount = useSelector(
+    (state: RootState) => state.getStudents?.students?.length || 0
+  );
+  const userCount = useSelector(
+    (state: RootState) => state.getUsers?.users?.length || 0
+  );
+  const teacherCount = useSelector(
+    (state: RootState) => state.getTeachers?.teachers?.length || 0
+  );
+  const accountantCount = useSelector(
+    (state: RootState) => state.getAccountants?.accountants?.length || 0
+  );
+  const parentCount = useSelector(
+    (state: RootState) => state.getParents?.parents?.length || 0
+  );
+  const subjectCount = useSelector(
+    (state: RootState) => state.getSubjects?.subjects?.length || 0
+  );
+  const classCount = useSelector(
+    (state: RootState) => state.getClassLevels?.classLevels?.length || 0
+  );
 
-  const userCount = useSelector((state) => {
-    //console.log("User state:", state.getUsers);
-    return state.getUsers?.users?.length || 0;
-  });
-
-  const teacherCount = useSelector((state) => {
-    //console.log("Teacher state:", state.getTeachers);
-    return state.getTeachers?.teachers?.length || 0;
-  });
-
-  const accountantCount = useSelector((state) => {
-    //console.log("Accountant state:", state.getAccountants);
-    return state.getAccountants?.accountants?.length || 0;
-  });
-
-  const parentCount = useSelector((state) => {
-    //console.log("Parent state:", state.getParents);
-    return state.getParents?.parents?.length || 0;
-  });
-
-  const subjectCount = useSelector((state) => {
-    //console.log("Subject state:", state.getSubjects);
-    return state.getSubjects?.subjects?.length || 0;
-  });
-
-  const classCount = useSelector((state) => {
-    //console.log("Class state:", state.getClassLevels);
-    return state.getClassLevels?.classLevels?.length || 0;
-  });
-
-  // Dashboard cards data
   const dashboardData = [
     {
       title: "Students",
