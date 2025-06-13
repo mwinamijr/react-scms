@@ -3,23 +3,50 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Table } from "antd";
 import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 import { listPayments } from "../../features/finance/financeSlice";
 import Message from "../../components/Message";
+import { RootState, AppDispatch } from "../../store"; // Replace with your actual store type paths
+
+interface User {
+  first_name: string;
+  last_name: string;
+}
+
+interface PaidFor {
+  name: string;
+}
+
+interface Payment {
+  id: number;
+  payment_number: string;
+  paid_to: string;
+  paid_for: PaidFor;
+  paid_through: string;
+  amount: number;
+  paid_by: User;
+}
 
 function Payments() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { userInfo } = useSelector((state) => state.getUsers);
+  const { userInfo } = useSelector((state: RootState) => state.getUsers);
 
-  const { loading, error, payments } = useSelector((state) => state.getFinance);
-  console.log(payments);
+  const { loading, error, payments } = useSelector(
+    (state: RootState) =>
+      state.getFinance as {
+        loading: boolean;
+        error: string | null;
+        payments: Payment[];
+      }
+  );
 
   useEffect(() => {
     dispatch(listPayments());
   }, [dispatch]);
 
-  const columns = [
+  const columns: ColumnsType<Payment> = [
     {
       title: "Payment id",
       dataIndex: "payment_number",
@@ -34,7 +61,7 @@ function Payments() {
       title: "Paid For",
       dataIndex: "paid_for",
       key: "paid_for",
-      render: (_, record) => `${record?.paid_for?.name}`,
+      render: (_, record) => record?.paid_for?.name,
     },
     {
       title: "Through",
@@ -56,7 +83,7 @@ function Payments() {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
+      render: (_, record) => (
         <span>
           <Link to={`/finance/payments/${record.id}`}>
             <EyeOutlined style={{ marginRight: 8 }} />
@@ -78,30 +105,29 @@ function Payments() {
         </Breadcrumb.Item>
         <Breadcrumb.Item>Payments</Breadcrumb.Item>
       </Breadcrumb>
-      <div>
-        {userInfo.isAccountant || userInfo.isAdmin ? (
-          <div>
-            <h1 className="text-center">Payments</h1>
-            <Link to="/finance/payments/add" className="btn btn-light my-3">
-              Add Payment
-            </Link>
-            {error && <Message variant="danger">{error}</Message>}
 
-            <Table
-              columns={columns}
-              dataSource={payments}
-              rowKey="id"
-              pagination={{ pageSize: 10 }}
-              loading={loading}
-            />
-          </div>
-        ) : (
-          <Message>
-            You are not authorized to view this page. Please contact the Admin
-            for further details
-          </Message>
-        )}
-      </div>
+      {userInfo?.isAccountant || userInfo?.isAdmin ? (
+        <div>
+          <h1 className="text-center">Payments</h1>
+          <Link to="/finance/payments/add" className="btn btn-light my-3">
+            Add Payment
+          </Link>
+          {error && <Message variant="danger">{error}</Message>}
+
+          <Table
+            columns={columns}
+            dataSource={payments}
+            rowKey="id"
+            pagination={{ pageSize: 10 }}
+            loading={loading}
+          />
+        </div>
+      ) : (
+        <Message>
+          You are not authorized to view this page. Please contact the Admin for
+          further details.
+        </Message>
+      )}
     </div>
   );
 }

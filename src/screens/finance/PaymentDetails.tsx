@@ -4,26 +4,50 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, Breadcrumb, Table } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { paymentDetails } from "../../features/finance/financeSlice"; // Import the appropriate slice action
+import { AppDispatch, RootState } from "../../store"; // Update with your actual store paths
+import { paymentDetails } from "../../features/finance/financeSlice";
+
+// Define the shape of the payment object
+interface Payment {
+  date: string;
+  payment_no: string;
+  paid_to: string;
+  user: string;
+  paid_for: string;
+  amount: number;
+  paid_by: string;
+}
+
+interface RouteParams {
+  id: string;
+}
 
 function PaymentsDetails() {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const { id } = useParams<RouteParams>();
 
-  // Access payment details from the Redux store
-  const { loading, error, payment } = useSelector((state) => state.getFinance);
+  const { loading, error, payment } = useSelector(
+    (state: RootState) =>
+      state.getFinance as {
+        loading: boolean;
+        error: string | null;
+        payment: Payment;
+      }
+  );
 
   useEffect(() => {
-    dispatch(paymentDetails(id)); // Dispatch the action to fetch payment details
+    if (id) {
+      dispatch(paymentDetails(id));
+    }
   }, [dispatch, id]);
 
   return (
     <div>
       <Breadcrumb>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">
+        <Breadcrumb.Item>
           <Link to="/finance/payments/">Payments</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item active>Details</Breadcrumb.Item>

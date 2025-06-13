@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Breadcrumb,
@@ -14,37 +14,70 @@ import {
   Popconfirm,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import moment from "moment";
+import type { Moment } from "moment";
+import type { ColumnsType } from "antd/es/table";
 
 import {
   listReceipts,
   deleteReceipt,
 } from "../../features/finance/financeSlice";
 import Message from "../../components/Message";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-function Receipts() {
-  const dispatch = useDispatch();
+interface StudentDetails {
+  full_name: string;
+}
+
+interface PaidForDetails {
+  name: string;
+}
+
+interface ReceivedByDetails {
+  first_name: string;
+  last_name: string;
+}
+
+interface Receipt {
+  id: number;
+  receipt_number: string;
+  student_details?: StudentDetails;
+  paid_for_details?: PaidForDetails;
+  paid_through: string;
+  amount: number;
+  received_by_details?: ReceivedByDetails;
+}
+
+interface Filters {
+  from_date: string | null;
+  to_date: string | null;
+  class_level: string | null;
+}
+
+const Receipts: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { userInfo } = useSelector((state) => state.getUsers);
-  const { receipts, loading, error } = useSelector((state) => state.getFinance);
+  const { userInfo } = useSelector((state: RootState) => state.getUsers);
+  const { receipts, loading, error } = useSelector(
+    (state: RootState) => state.getFinance
+  );
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     from_date: null,
     to_date: null,
     class_level: null,
   });
 
   useEffect(() => {
-    dispatch(listReceipts());
+    dispatch(listReceipts({}));
   }, [dispatch]);
 
   const handleFilter = () => {
-    const query = {};
-
+    const query: any = {};
     if (filters.from_date) query.from_date = filters.from_date;
     if (filters.to_date) query.to_date = filters.to_date;
     if (filters.class_level) query.class_level = filters.class_level;
@@ -52,23 +85,30 @@ function Receipts() {
     dispatch(listReceipts(query));
   };
 
-  const handleDateChange = (dates) => {
+  const handleDateChange = (dates: [Moment, Moment] | null) => {
     if (dates && dates.length === 2) {
       setFilters({
         ...filters,
-        from_date: moment(dates[0]).format("YYYY-MM-DD"),
-        to_date: moment(dates[1]).format("YYYY-MM-DD"),
+        from_date: dates[0].format("YYYY-MM-DD"),
+        to_date: dates[1].format("YYYY-MM-DD"),
       });
     } else {
       setFilters({ ...filters, from_date: null, to_date: null });
     }
   };
 
-  const handleClassChange = (value) => {
+  const handleClassChange = (value: string) => {
     setFilters({ ...filters, class_level: value });
   };
 
-  const columns = [
+  const handleDelete = (id: number) => {
+    dispatch(deleteReceipt(id))
+      .unwrap()
+      .then(() => message.success("Receipt deleted successfully"))
+      .catch(() => message.error("Failed to delete receipt"));
+  };
+
+  const columns: ColumnsType<Receipt> = [
     {
       title: "Receipt No",
       dataIndex: "receipt_number",
@@ -76,15 +116,13 @@ function Receipts() {
     },
     {
       title: "Student",
-      dataIndex: "student_details",
       key: "student",
-      render: (_, record) => record?.student_details?.full_name,
+      render: (_, record) => record.student_details?.full_name || "-",
     },
     {
       title: "Paid For",
-      dataIndex: "paid_for_details",
       key: "paid_for",
-      render: (_, record) => `${record?.paid_for_details?.name}`,
+      render: (_, record) => record.paid_for_details?.name || "-",
     },
     {
       title: "Through",
@@ -98,15 +136,16 @@ function Receipts() {
     },
     {
       title: "Received By",
-      dataIndex: "received_by_details",
       key: "received_by",
       render: (_, record) =>
-        `${record?.received_by_details?.first_name} ${record?.received_by_details?.last_name}`,
+        record.received_by_details
+          ? `${record.received_by_details.first_name} ${record.received_by_details.last_name}`
+          : "-",
     },
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
+      render: (_, record) => (
         <Space onClick={(e) => e.stopPropagation()}>
           <Link to={`/finance/receipts/edit/${record.id}`}>
             <EditOutlined style={{ marginRight: 8 }} />
@@ -114,21 +153,16 @@ function Receipts() {
           <Popconfirm
             title="Delete this receipt?"
             onConfirm={() => handleDelete(record.id)}
-            onClick={(e) => e.stopPropagation()}
           >
-            <DeleteOutlined style={{ color: "red" }} />
+            <DeleteOutlined
+              style={{ color: "red" }}
+              onClick={(e) => e.stopPropagation()}
+            />
           </Popconfirm>
         </Space>
       ),
     },
   ];
-
-  // Handle delete action
-  const handleDelete = (id) => {
-    dispatch(deleteReceipt(id))
-      .unwrap()
-      .then(() => message.success("Receipt deleted successfully"));
-  };
 
   return (
     <div>
@@ -140,7 +174,7 @@ function Receipts() {
       </Breadcrumb>
 
       <div>
-        {userInfo.isAccountant || userInfo.isAdmin ? (
+        {userInfo?.isAccountant || userInfo?.isAdmin ? (
           <>
             <h1 className="text-center">Receipts</h1>
 
@@ -198,6 +232,6 @@ function Receipts() {
       </div>
     </div>
   );
-}
+};
 
 export default Receipts;

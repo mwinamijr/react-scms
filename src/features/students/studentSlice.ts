@@ -215,7 +215,7 @@ export const updateStudent = createAsyncThunk<
 // Slice
 
 const initialState: StudentsState = {
-  students: [],
+  students: [] as Student[],
   student: null,
   loading: false,
   error: null,

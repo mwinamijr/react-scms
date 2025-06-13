@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
@@ -13,32 +13,54 @@ import {
   message as AntMessage,
 } from "antd";
 import dayjs from "dayjs";
+import type { SelectProps } from "antd";
 import { createReceipt } from "../../features/finance/financeSlice";
-import { listStudents } from "../../features/students/studentSlice"; // Action to fetch students
+import { listStudents } from "../../features/students/studentSlice";
 import { listReceiptAllocations } from "../../features/finance/allocationSlice";
 import Message from "../../components/Message";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-function AddReceipt() {
+interface ReceiptFormValues {
+  payer: string;
+  student: number;
+  paid_for: number;
+  paid_through: string;
+  payment_date: any;
+  amount: number;
+}
+
+interface Student {
+  id: number;
+  first_name: string;
+  last_name: string;
+}
+
+interface ReceiptAllocation {
+  id: number;
+  name: string;
+}
+
+const AddReceipt: React.FC = () => {
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // Redux state
   const { loading, error, successCreate } = useSelector(
-    (state) => state.getFinance
+    (state: RootState) => state.getFinance
   );
-  const { userInfo } = useSelector((state) => state.getUsers);
+  const { userInfo } = useSelector((state: RootState) => state.getUsers);
   const { loading: loadStudents, students } = useSelector(
-    (state) => state.getStudents
+    (state: RootState) => state.getStudents
   );
-  const { receiptAllocations } = useSelector((state) => state.getAllocations);
+  const { receiptAllocations } = useSelector(
+    (state: RootState) => state.getAllocations
+  );
 
-  // Fetch student list and receipt allocations on component mount
   useEffect(() => {
-    // Dispatch with a callback to handle any potential errors
     dispatch(
       listStudents({
         first_name: "",
@@ -48,21 +70,20 @@ function AddReceipt() {
       })
     )
       .unwrap()
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error fetching students:", error);
         AntMessage.error("Failed to load students list");
       });
 
     dispatch(listReceiptAllocations())
       .unwrap()
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error fetching receipt allocations:", error);
         AntMessage.error("Failed to load payment categories");
       });
   }, [dispatch]);
 
-  // Handle form submission
-  const submitHandler = (values) => {
+  const submitHandler = (values: ReceiptFormValues) => {
     const formattedData = {
       ...values,
       received_by: userInfo?.id,
@@ -79,18 +100,20 @@ function AddReceipt() {
     }
   }, [navigate, successCreate]);
 
-  // Create a safe filter function that works with both string and React node children
-  const filterStudentOption = (input, option) => {
+  const filterStudentOption: SelectProps["filterOption"] = (input, option) => {
     if (!option || !option.children) return false;
 
-    // Handle when children is a string
     if (typeof option.children === "string") {
-      return option.children.toLowerCase().includes(input.toLowerCase());
+      return (option.children as string)
+        .toLowerCase()
+        .includes(input.toLowerCase());
     }
 
-    // Handle when children are React nodes (first_name + last_name)
-    const studentLabel = option.title || option["data-label"] || "";
-    return studentLabel.toLowerCase().includes(input.toLowerCase());
+    const studentLabel = (option as any).title || option["data-label"] || "";
+    return (
+      typeof studentLabel === "string" &&
+      studentLabel.toLowerCase().includes(input.toLowerCase())
+    );
   };
 
   return (
@@ -105,7 +128,7 @@ function AddReceipt() {
         <Breadcrumb.Item>Add Receipt</Breadcrumb.Item>
       </Breadcrumb>
 
-      {userInfo.isAccountant || userInfo.isAdmin ? (
+      {userInfo?.isAccountant || userInfo?.isAdmin ? (
         <Card>
           <Title level={4} className="text-center">
             Hayatul Islamiya Secondary <br />
@@ -149,17 +172,16 @@ function AddReceipt() {
                     loadStudents ? "Loading students..." : "No student found"
                   }
                 >
-                  {students &&
-                    students.map((student) => (
-                      <Option
-                        key={student.id}
-                        value={student.id}
-                        title={`${student.first_name} ${student.last_name}`}
-                        data-label={`${student.first_name} ${student.last_name}`}
-                      >
-                        {student.first_name} {student.last_name}
-                      </Option>
-                    ))}
+                  {students?.map((student: Student) => (
+                    <Option
+                      key={student.id}
+                      value={student.id}
+                      title={`${student.first_name} ${student.last_name}`}
+                      data-label={`${student.first_name} ${student.last_name}`}
+                    >
+                      {student.first_name} {student.last_name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
@@ -179,12 +201,11 @@ function AddReceipt() {
                     !receiptAllocations || receiptAllocations.length === 0
                   }
                 >
-                  {receiptAllocations &&
-                    receiptAllocations.map((allocation) => (
-                      <Option key={allocation.id} value={allocation.id}>
-                        {allocation.name}
-                      </Option>
-                    ))}
+                  {receiptAllocations?.map((allocation: ReceiptAllocation) => (
+                    <Option key={allocation.id} value={allocation.id}>
+                      {allocation.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
@@ -225,7 +246,7 @@ function AddReceipt() {
                 ]}
               >
                 <DatePicker
-                  placeholder="Date of Birth"
+                  placeholder="Payment Date"
                   style={{ width: "100%" }}
                 />
               </Form.Item>
@@ -264,7 +285,7 @@ function AddReceipt() {
                   loading={loading}
                   disabled={loading}
                 >
-                  {loading ? "submitting receipt" : "Submit Receipt"}
+                  {loading ? "Submitting Receipt..." : "Submit Receipt"}
                 </Button>
               </Form.Item>
             </Form>
@@ -280,6 +301,6 @@ function AddReceipt() {
       )}
     </div>
   );
-}
+};
 
 export default AddReceipt;

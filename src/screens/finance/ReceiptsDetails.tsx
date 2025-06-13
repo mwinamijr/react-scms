@@ -1,20 +1,51 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Card, Table } from "react-bootstrap";
 import { Breadcrumb } from "antd";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { receiptDetails } from "../../features/finance/financeSlice";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
-function ReceiptsDetails() {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+// Define receipt type
+interface ReceiptDetails {
+  id: number;
+  date: string;
+  receipt_number: string;
+  payer: string;
+  paid_through: string;
+  amount: number;
+  student_details: {
+    full_name: string;
+  };
+  paid_for_details: {
+    name: string;
+  };
+  received_by_details: {
+    first_name: string;
+    last_name: string;
+  };
+}
 
-  const { loading, error, receipt } = useSelector((state) => state.getFinance);
+const ReceiptsDetails: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+
+  const { loading, error, receipt } = useSelector(
+    (state: RootState) =>
+      state.getFinance as {
+        loading: boolean;
+        error: string | null;
+        receipt: ReceiptDetails | null;
+      }
+  );
 
   useEffect(() => {
-    dispatch(receiptDetails(id));
+    if (id) {
+      dispatch(receiptDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   return (
@@ -63,11 +94,11 @@ function ReceiptsDetails() {
                     </tr>
                     <tr>
                       <td>Student</td>
-                      <td>{receipt?.student_details.full_name}</td>
+                      <td>{receipt?.student_details?.full_name}</td>
                     </tr>
                     <tr>
                       <td>Paid for</td>
-                      <td>{receipt?.paid_for_details.name}</td>
+                      <td>{receipt?.paid_for_details?.name}</td>
                     </tr>
                     <tr>
                       <td>Paid through</td>
@@ -80,8 +111,8 @@ function ReceiptsDetails() {
                     <tr>
                       <td>Received by</td>
                       <td>
-                        {receipt?.received_by_details.first_name}{" "}
-                        {receipt?.received_by_details.last_name}
+                        {receipt?.received_by_details?.first_name}{" "}
+                        {receipt?.received_by_details?.last_name}
                       </td>
                     </tr>
                   </tbody>
@@ -93,6 +124,6 @@ function ReceiptsDetails() {
       </div>
     </div>
   );
-}
+};
 
 export default ReceiptsDetails;

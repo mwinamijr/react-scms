@@ -8,9 +8,11 @@ import { getErrorMessage } from "../utils";
 // Types
 interface Accountant {
   id: number;
-  name: string;
-  email: string;
-  [key: string]: any; // extend as needed
+  empId: string;
+  user: string;
+  tin_number: string;
+  nssf_number: string;
+  salary: number;
 }
 
 interface AccountantState {

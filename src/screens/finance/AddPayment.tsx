@@ -10,36 +10,46 @@ import {
   Select,
   message as AntMessage,
 } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { createPayment } from "../../features/finance/financeSlice";
 import { listTeachers } from "../../features/user/teacherSlice";
 import { listPaymentAllocations } from "../../features/finance/allocationSlice";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-function AddPayment() {
+interface PaymentFormValues {
+  user?: number;
+  paid_to?: string;
+  paid_for_id: number;
+  amount: number;
+}
+
+const AddPayment: React.FC = () => {
   const [form] = Form.useForm();
-  const [isEmployee, setIsEmployee] = useState(false);
-  const dispatch = useDispatch();
+  const [isEmployee, setIsEmployee] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { loading, error, successCreate } = useSelector(
-    (state) => state.getFinance
+    (state: RootState) => state.getFinance
   );
 
   const { loading: loadTeachers, teachers } = useSelector(
-    (state) => state.getTeachers
-  );
-  const { loading: allocationLoading, paymentAllocations } = useSelector(
-    (state) => state.getAllocations
+    (state: RootState) => state.getTeachers
   );
 
-  const { userInfo } = useSelector((state) => state.getUsers);
+  const { loading: allocationLoading, paymentAllocations } = useSelector(
+    (state: RootState) => state.getAllocations
+  );
+
+  const { userInfo } = useSelector((state: RootState) => state.getUsers);
 
   useEffect(() => {
-    dispatch(listTeachers());
+    dispatch(listTeachers({}));
     dispatch(listPaymentAllocations());
   }, [dispatch]);
 
@@ -48,35 +58,29 @@ function AddPayment() {
       navigate("/finance/payments");
       AntMessage.success("Payment created successfully!");
     }
-  }, [dispatch, successCreate, navigate]);
+  }, [successCreate, navigate]);
 
-  const submitHandler = (values) => {
+  const submitHandler = (values: PaymentFormValues) => {
+    if (!userInfo) return;
+
     if (isEmployee) {
-      const getTeacher = teachers.find((teacher) => {
-        return teacher.id === values.user;
-      });
+      const getTeacher = teachers.find((teacher) => teacher.id === values.user);
+      if (!getTeacher) return;
+
       const formattedData = {
         ...values,
         paid_to: `${getTeacher.first_name} ${getTeacher.last_name}`,
         paid_by_id: userInfo.id,
       };
       dispatch(createPayment(formattedData));
-      console.log("formated", formattedData);
     } else {
-      console.log("values:", values);
       dispatch(createPayment({ ...values, paid_by_id: userInfo.id }));
     }
   };
 
-  const filterUserOption = (input, option) => {
+  const filterUserOption = (input: string, option?: any) => {
     if (!option || !option.children) return false;
 
-    // Handle when children is a string
-    if (typeof option.children === "string") {
-      return option.children.toLowerCase().includes(input.toLowerCase());
-    }
-
-    // Handle when children are React nodes (first_name + last_name)
     const userLabel = option.title || option["data-label"] || "";
     return userLabel.toLowerCase().includes(input.toLowerCase());
   };
@@ -93,7 +97,7 @@ function AddPayment() {
         <Breadcrumb.Item>Add Payment</Breadcrumb.Item>
       </Breadcrumb>
 
-      {userInfo.isAccountant || userInfo.isAdmin ? (
+      {userInfo?.isAccountant || userInfo?.isAdmin ? (
         <Card>
           <Title level={4} className="text-center">
             Hayatul Islamiya Secondary <br />
@@ -117,6 +121,7 @@ function AddPayment() {
                   Is Employee?
                 </Checkbox>
               </Form.Item>
+
               {isEmployee ? (
                 <Form.Item
                   label="User"
@@ -178,6 +183,7 @@ function AddPayment() {
                     ))}
                 </Select>
               </Form.Item>
+
               <Form.Item
                 label="Amount"
                 name="amount"
@@ -187,6 +193,7 @@ function AddPayment() {
               >
                 <Input type="number" placeholder="Enter payment amount" />
               </Form.Item>
+
               <Form.Item>
                 <Button
                   type="primary"
@@ -194,7 +201,7 @@ function AddPayment() {
                   loading={loading}
                   disabled={loading}
                 >
-                  {loading ? "submitting payment" : "Submit Payment"}
+                  {loading ? "Submitting Payment..." : "Submit Payment"}
                 </Button>
               </Form.Item>
             </Form>
@@ -210,6 +217,6 @@ function AddPayment() {
       )}
     </div>
   );
-}
+};
 
 export default AddPayment;

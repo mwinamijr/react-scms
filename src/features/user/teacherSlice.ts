@@ -3,13 +3,15 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { djangoUrl } from "../utils";
 import { getErrorMessage } from "../utils";
 import axios from "axios";
-import type { RootState } from "../../app/store";
 
 // Interfaces for Teacher and State
 interface Teacher {
   id: number;
-  // Add other fields you expect in teacher objects here
-  [key: string]: any;
+  empId: string;
+  user: string;
+  tin_number: string;
+  nssf_number: string;
+  salary: number;
 }
 
 interface TeacherState {
@@ -25,8 +27,7 @@ interface TeacherState {
 
 export const getTeacherDetails = createAsyncThunk<
   Teacher, // Return type
-  number, // Argument type
-  { rejectValue: string; state: RootState }
+  number
 >("teacher/details", async (id, thunkAPI) => {
   try {
     const { getState } = thunkAPI;
@@ -50,66 +51,62 @@ export const getTeacherDetails = createAsyncThunk<
   }
 });
 
-export const listTeachers = createAsyncThunk<
-  Teacher[], // Assuming API returns array of teachers
-  Record<string, any>, // filters object can be any shape
-  { rejectValue: string; state: RootState }
->("teacher/list", async (filters = {}, thunkAPI) => {
-  try {
-    const { getState } = thunkAPI;
-    const {
-      getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+export const listTeachers = createAsyncThunk<Teacher[], Record<string, any>>(
+  "teacher/list",
+  async (_, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
 
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-      params: filters,
-    };
-    const { data } = await axios.get<Teacher[]>(
-      `${djangoUrl}/api/users/teachers/`,
-      config
-    );
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.get<Teacher[]>(
+        `${djangoUrl}/api/users/teachers/`,
+        config
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
   }
-});
+);
 
-export const createTeacher = createAsyncThunk<
-  Teacher,
-  Partial<Teacher>,
-  { rejectValue: string; state: RootState }
->("teacher/create", async (teacherData, thunkAPI) => {
-  try {
-    const { getState } = thunkAPI;
-    const {
-      getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+export const createTeacher = createAsyncThunk<Teacher, Partial<Teacher>>(
+  "teacher/create",
+  async (teacherData, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
 
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.post<Teacher>(
-      `${djangoUrl}/api/users/teachers/`,
-      teacherData,
-      config
-    );
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.post<Teacher>(
+        `${djangoUrl}/api/users/teachers/`,
+        teacherData,
+        config
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
   }
-});
+);
 
 export const bulkCreateTeachers = createAsyncThunk<
   any, // Adjust to the response type of bulk upload if known
-  File,
-  { rejectValue: string; state: RootState }
+  File
 >("teacher/bulkCreate", async (file, thunkAPI) => {
   try {
     const { getState } = thunkAPI;
@@ -139,8 +136,7 @@ export const bulkCreateTeachers = createAsyncThunk<
 
 export const deleteTeacher = createAsyncThunk<
   number, // Return deleted teacher ID
-  number,
-  { rejectValue: string; state: RootState }
+  number
 >("teacher/delete", async (id, thunkAPI) => {
   try {
     const { getState } = thunkAPI;
@@ -166,33 +162,32 @@ interface UpdateTeacherPayload {
   [key: string]: any;
 }
 
-export const updateTeacher = createAsyncThunk<
-  Teacher,
-  UpdateTeacherPayload,
-  { rejectValue: string; state: RootState }
->("teacher/update", async ({ id, ...values }, thunkAPI) => {
-  try {
-    const { getState } = thunkAPI;
-    const {
-      getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+export const updateTeacher = createAsyncThunk<Teacher, UpdateTeacherPayload>(
+  "teacher/update",
+  async ({ id, ...values }, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
 
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.put<Teacher>(
-      `${djangoUrl}/api/users/teachers/${id}/`,
-      values,
-      config
-    );
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.put<Teacher>(
+        `${djangoUrl}/api/users/teachers/${id}/`,
+        values,
+        config
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
   }
-});
+);
 
 // Slice initial state with type
 const initialState: TeacherState = {

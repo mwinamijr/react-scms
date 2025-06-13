@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message, Card, Breadcrumb } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   fetchStudentsDebt,
   updateStudentDebt,
   reverseStudentDebt,
 } from "../../features/students/debtSlice";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
-const StudentDebtManagement = () => {
-  const dispatch = useDispatch();
+interface StudentDebt {
+  id: number;
+  admission_number: string;
+  full_name: string;
+  current_term: string;
+  debt: number;
+}
+
+const StudentDebtManagement: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { students, loading, error } = useSelector(
-    (state) => state.studentDebt
+    (state: RootState) => state.studentDebt
   );
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
     dispatch(fetchStudentsDebt());
@@ -53,13 +64,21 @@ const StudentDebtManagement = () => {
       dataIndex: "admission_number",
       key: "admission_number",
     },
-    { title: "Student Name", dataIndex: "full_name", key: "full_name" },
-    { title: "Current Term", dataIndex: "current_term", key: "current_term" },
+    {
+      title: "Student Name",
+      dataIndex: "full_name",
+      key: "full_name",
+    },
+    {
+      title: "Current Term",
+      dataIndex: "current_term",
+      key: "current_term",
+    },
     {
       title: "Debt Amount",
       dataIndex: "debt",
       key: "debt",
-      render: (text) => `TSh ${text}`,
+      render: (text: number) => `TSh ${text.toLocaleString()}`,
     },
   ];
 
@@ -75,16 +94,18 @@ const StudentDebtManagement = () => {
 
       <Card title="Student Debt Management">
         {error && <p style={{ color: "red" }}>{error}</p>}
+
         <Table
           rowSelection={{
             selectedRowKeys,
-            onChange: setSelectedRowKeys,
+            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
           }}
           loading={loading}
           columns={columns}
           dataSource={students}
           rowKey="id"
         />
+
         <Button
           type="primary"
           onClick={handleUpdateDebt}
