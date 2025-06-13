@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Breadcrumb, Table, Space, Typography, Row, Col, Button } from "antd";
 import {
   EyeOutlined,
@@ -10,23 +10,42 @@ import {
 } from "@ant-design/icons";
 import Message from "../../components/Message";
 import { listAccountants } from "../../features/user/accountantSlice";
+import type { RootState } from "../../app/store";
+import type { ColumnsType } from "antd/es/table";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title } = Typography;
 
-const AccountantList = () => {
-  const dispatch = useDispatch();
+interface PersonName {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+}
 
-  // Access teacher state from the store
+interface Accountant extends PersonName {
+  id: number;
+  phone_number: string;
+  gender: string;
+  salary: number;
+}
+
+const AccountantList: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const { loading, error, accountants } = useSelector(
-    (state) => state.getAccountants
+    (state: RootState) => state.getAccountants
   );
 
   useEffect(() => {
-    dispatch(listAccountants()); // Dispatch the action to fetch accountants
+    dispatch(listAccountants());
   }, [dispatch]);
 
-  // Define columns for the Ant Design Table
-  const columns = [
+  const handleDelete = (id: number) => {
+    console.log("Delete accountant with ID:", id);
+    // Add delete logic here
+  };
+
+  const columns: ColumnsType<Accountant> = [
     {
       title: "Emp ID",
       dataIndex: "empId",
@@ -35,7 +54,8 @@ const AccountantList = () => {
     {
       title: "Full Name",
       key: "fullName",
-      render: (text, record) => `${record.first_name} ${record.last_name}`,
+      render: (_: unknown, record: Accountant) =>
+        `${record.first_name} ${record.last_name}`,
     },
     {
       title: "Salary",
@@ -45,7 +65,7 @@ const AccountantList = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
+      render: (_: unknown, record: Accountant) => (
         <Space size="middle">
           <Link to={`/users/accountants/${record.id}`}>
             <EyeOutlined style={{ color: "blue" }} />
@@ -62,12 +82,6 @@ const AccountantList = () => {
     },
   ];
 
-  // Handle delete action
-  const handleDelete = (id) => {
-    console.log("Delete teacher with ID:", id);
-    // Add delete logic here
-  };
-
   return (
     <div>
       {/* Breadcrumb Navigation */}
@@ -82,6 +96,8 @@ const AccountantList = () => {
       <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
         Accountants
       </Title>
+
+      {/* Add Accountant Button */}
       <Row gutter={[16, 16]} className="mb-4">
         <Col xs={24} sm={12} lg={6}>
           <Button type="default" block>

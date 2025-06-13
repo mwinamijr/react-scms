@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getAccountantDetails } from "../../features/user/accountantSlice";
-
 import {
   Card,
   Descriptions,
@@ -22,18 +21,21 @@ import {
   PhoneOutlined,
   DollarCircleOutlined,
 } from "@ant-design/icons";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title, Text } = Typography;
 
-const AccountantProfile = () => {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+const AccountantProfile: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+
   const { loading, error, accountant } = useSelector(
-    (state) => state.getAccountants
+    (state: RootState) => state.getAccountants
   );
 
   useEffect(() => {
-    dispatch(getAccountantDetails(id));
+    if (id) dispatch(getAccountantDetails(Number(id)));
   }, [dispatch, id]);
 
   return (
@@ -50,11 +52,10 @@ const AccountantProfile = () => {
         ) : accountant ? (
           <div className="profile-container">
             {/* Profile Header */}
-
             <div className="profile-header">
               <Avatar
                 size={120}
-                src={accountant.image}
+                src={accountant.image || undefined}
                 icon={!accountant.image && <UserOutlined />}
                 className="profile-avatar"
               />
@@ -72,16 +73,15 @@ const AccountantProfile = () => {
                     <Link to={`/users/accountants/${id}/edit`}>
                       <Button type="primary">Edit Profile</Button>
                     </Link>
-
                     <Link to={`/users/accountants/${id}/print`}>
-                      <Button type="default">Print Profile</Button>
+                      <Button>Print Profile</Button>
                     </Link>
                   </Space>
                 </Col>
               </Row>
             </div>
 
-            {/* Basic Information */}
+            {/* Basic Info */}
             <Descriptions title="Basic Information" bordered column={2}>
               <Descriptions.Item label="Full Name">
                 {accountant.first_name} {accountant.middle_name}{" "}
@@ -104,7 +104,7 @@ const AccountantProfile = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            {/* Contact Information */}
+            {/* Contact Info */}
             <Descriptions
               title="Contact Information"
               bordered
@@ -125,7 +125,7 @@ const AccountantProfile = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            {/* Employment & Salary Details */}
+            {/* Salary Details */}
             <Descriptions
               title="Employment & Salary Details"
               bordered
@@ -134,9 +134,6 @@ const AccountantProfile = () => {
             >
               <Descriptions.Item label="Employee ID">
                 {accountant.empId}
-              </Descriptions.Item>
-              <Descriptions.Item label="Designation">
-                {accountant.designation || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Salary">
                 <DollarCircleOutlined />{" "}

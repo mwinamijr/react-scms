@@ -7,11 +7,26 @@ import axios from "axios";
 // Interfaces for Teacher and State
 interface Teacher {
   id: number;
-  empId: string;
-  user: string;
-  tin_number: string;
-  nssf_number: string;
-  salary: number;
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  username: string;
+  image?: string;
+  short_name?: string;
+  gender?: string;
+  date_of_birth?: string;
+  national_id?: string;
+  tin_number?: string;
+  nssf_number?: string;
+  email?: string;
+  phone_number?: string;
+  alt_email?: string;
+  address?: string;
+  empId?: string;
+  designation?: string;
+  salary?: number;
+  unpaid_salary?: number;
+  subject_specialization_display: string[];
 }
 
 interface TeacherState {
@@ -272,7 +287,7 @@ const teacherSlice = createSlice({
         (state, action: PayloadAction<number>) => {
           state.loading = false;
           state.teachers = state.teachers.filter(
-            (teacher) => teacher.id !== action.payload
+            (teacher) => Number(teacher.id) !== action.payload
           );
         }
       )

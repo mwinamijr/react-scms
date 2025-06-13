@@ -1,15 +1,29 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Input, Row, Col, Button, Card, Checkbox, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import type { CheckboxValueType } from "antd/es/checkbox/Group";
+import type { RootState } from "../../app/store";
 import Loader from "../../components/Loader";
 import { register, resetError } from "../../features/user/userSlice";
+import { useAppDispatch } from "../../app/hooks";
 
-const AddUser = () => {
-  const [form] = Form.useForm();
-  const dispatch = useDispatch();
+// Type for form values
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  roles: CheckboxValueType[];
+}
 
-  const { error, loading } = useSelector((state) => state.getUsers);
+const AddUser: React.FC = () => {
+  const [form] = Form.useForm<FormValues>();
+  const dispatch = useAppDispatch();
+
+  const { error, loading } = useSelector((state: RootState) => state.getUsers);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -20,13 +34,14 @@ const AddUser = () => {
     }
   }, [error, dispatch, messageApi]);
 
-  const submitHandler = (values) => {
+  const submitHandler = (values: FormValues) => {
     if (values.password !== values.confirmPassword) {
       messageApi.error("Passwords do not match!");
       return;
     }
 
     const { firstName, lastName, email, phone, password, roles } = values;
+
     const userData = {
       firstName,
       lastName,
@@ -49,7 +64,7 @@ const AddUser = () => {
       </Link>
       <Card title="Register User" className="shadow">
         {loading && <Loader />}
-        <Form
+        <Form<FormValues>
           form={form}
           layout="vertical"
           onFinish={submitHandler}
@@ -114,7 +129,7 @@ const AddUser = () => {
           </Row>
           <Form.Item label="User Roles" name="roles">
             <Checkbox.Group>
-              <Row>
+              <Row gutter={[8, 8]}>
                 <Col>
                   <Checkbox value="Admin">Admin</Checkbox>
                 </Col>

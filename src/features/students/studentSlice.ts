@@ -13,14 +13,14 @@ export interface Student {
   last_name: string;
   admission_number: number;
   class_level: string;
-  date_of_birth?: string; // ISO date string
+  date_of_birth?: string | null;
   gender: string;
-  class_level_display?: string; // Display name for class level
-  class_of_year_display?: string; // Display name for class of year
-  admission_date?: string; // ISO date string
-  graduation_date?: string; // ISO date string
-  date_dismissed?: string; // ISO date string
-  reason_left?: string; // Reason for leaving
+  class_level_display?: string;
+  class_of_year_display?: string;
+  admission_date?: string | null;
+  graduation_date?: string | null;
+  date_dismissed?: string | null;
+  reason_left?: string;
   religion: string;
   region?: string;
   city?: string;
@@ -28,11 +28,11 @@ export interface Student {
   image?: string; // URL to the student's image
   std_vii_number?: string;
   prems_number?: string;
-  parent_guardian_display?: string; // Display name for parent/guardian
+  parent_guardian_display?: string;
   parent_contact: string;
-  debt?: number; // Outstanding debt amount
-  cache_gpa?: number; // Cached GPA value
-  siblings?: Student[]; // List of siblings if applicable
+  debt?: number;
+  cache_gpa?: number;
+  siblings?: Student[];
 }
 
 interface StudentsState {

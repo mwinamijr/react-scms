@@ -9,12 +9,11 @@ interface UserInfo {
   id: number;
   email: string;
   token: string;
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
   isAdmin?: boolean;
   isTeacher?: boolean;
   isAccountant?: boolean;
-  [key: string]: any;
 }
 
 interface User extends UserInfo {}

@@ -1,21 +1,35 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import type { FormEvent, ChangeEvent } from "react";
+import { useSelector } from "react-redux";
 import { Card, Form, Button, Container, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { bulkCreateTeachers } from "../../features/user/teacherSlice";
+import type { RootState } from "../../app/store"; // Adjust path
+import { useAppDispatch } from "../../app/hooks";
 
-function TeacherBulkUpload() {
-  const [file, setFile] = useState(null);
-  const [uploadMessage, setUploadMessage] = useState("");
-  const [notCreatedTeachers, setNotCreatedTeachers] = useState([]);
+interface NotCreatedTeacher {
+  first_name: string;
+  last_name: string;
+  error: string;
+}
 
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.getTeachers);
+const TeacherBulkUpload: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadMessage, setUploadMessage] = useState<string>("");
+  const [notCreatedTeachers, setNotCreatedTeachers] = useState<
+    NotCreatedTeacher[]
+  >([]);
 
-  const submitHandler = (e) => {
+  const dispatch = useAppDispatch();
+  const { loading, error } = useSelector(
+    (state: RootState) => state.getTeachers
+  );
+
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!file) {
       alert("Please select a file before uploading.");
       return;
@@ -23,13 +37,21 @@ function TeacherBulkUpload() {
 
     dispatch(bulkCreateTeachers(file))
       .unwrap()
-      .then((response) => {
-        setUploadMessage(response.message);
-        setNotCreatedTeachers(response.not_created || []);
-      })
-      .catch((err) => {
+      .then(
+        (response: { message: string; not_created?: NotCreatedTeacher[] }) => {
+          setUploadMessage(response.message);
+          setNotCreatedTeachers(response.not_created || []);
+        }
+      )
+      .catch((err: any) => {
         console.error("Upload failed:", err);
       });
+  };
+
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
   };
 
   return (
@@ -54,7 +76,7 @@ function TeacherBulkUpload() {
               <Form.Control
                 type="file"
                 name="file"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={onFileChange}
                 accept=".xlsx, .xls"
                 required
               />
@@ -69,7 +91,6 @@ function TeacherBulkUpload() {
             </div>
           </Form>
 
-          {/* ✅ Display Not Created Teachers If Any */}
           {notCreatedTeachers.length > 0 && (
             <Card className="mt-4">
               <Card.Header className="bg-danger text-white">
@@ -103,6 +124,6 @@ function TeacherBulkUpload() {
       </Card>
     </Container>
   );
-}
+};
 
 export default TeacherBulkUpload;

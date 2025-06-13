@@ -8,11 +8,23 @@ import { getErrorMessage } from "../utils";
 // Types
 interface Accountant {
   id: number;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  username: string;
+  phone_number: string;
+  image: string | null;
+  email: string;
   empId: string;
-  user: string;
+  date_of_birth: string | null;
+  gender: string;
+  national_id: string;
+  alt_email: string;
+  address: string;
   tin_number: string;
   nssf_number: string;
   salary: number;
+  unpaid_salary: number;
 }
 
 interface AccountantState {

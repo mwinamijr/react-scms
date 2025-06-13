@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Form,
   Input,
@@ -14,54 +14,86 @@ import {
   Row,
 } from "antd";
 import dayjs from "dayjs";
+import type { RootState } from "../../app/store";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import {
-  getAccountantDetails,
-  updateAccountant,
-} from "../../features/user/accountantSlice";
+  getTeacherDetails,
+  updateTeacher,
+} from "../../features/user/teacherSlice";
+import { listSubjects } from "../../features/academic/subjectSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Option } = Select;
 const { Title } = Typography;
 
-const EditAccountantProfile = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [form] = Form.useForm();
+interface TeacherFormValues {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  email?: string;
+  phone_number?: string;
+  short_name?: string;
+  alt_email?: string;
+  gender?: string;
+  empId?: string;
+  tin_number?: string;
+  nssf_number?: string;
+  salary?: number;
+  national_id?: string;
+  address?: string;
+  date_of_birth?: dayjs.Dayjs;
+  subject_specialization?: string[];
+}
 
-  // Get accountant details from Redux store
-  const { loading, error, accountant } = useSelector(
-    (state) => state.getAccountants
+const EditTeacherProfile: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [form] = Form.useForm<TeacherFormValues>();
+
+  const { loading, loadingCreate, error, teacher } = useSelector(
+    (state: RootState) => state.getTeachers
   );
 
+  const {
+    subjects,
+    loading: subjectsLoading,
+    error: subjectsError,
+  } = useSelector((state: RootState) => state.getSubjects);
+
   useEffect(() => {
-    dispatch(getAccountantDetails(id)); // Fetch accountant details
+    if (id) {
+      dispatch(getTeacherDetails(Number(id)));
+    }
+    dispatch(listSubjects());
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (accountant) {
+    if (teacher && subjects.length) {
       form.setFieldsValue({
-        first_name: accountant.first_name,
-        middle_name: accountant.middle_name,
-        last_name: accountant.last_name,
-        email: accountant.email,
-        phone_number: accountant.phone_number,
-        gender: accountant.gender,
-        empId: accountant.empId,
-        tin_number: accountant.tin_number,
-        nssf_number: accountant.nssf_number,
-        salary: accountant.salary,
-        nida: accountant.nida,
-        address: accountant.address,
-        date_of_birth: accountant.date_of_birth
-          ? dayjs(accountant.date_of_birth)
-          : null,
+        first_name: teacher.first_name,
+        middle_name: teacher.middle_name,
+        last_name: teacher.last_name,
+        email: teacher.email,
+        short_name: teacher.short_name,
+        phone_number: teacher.phone_number,
+        gender: teacher.gender,
+        empId: teacher.empId,
+        tin_number: teacher.tin_number,
+        nssf_number: teacher.nssf_number,
+        salary: teacher.salary,
+        national_id: teacher.national_id,
+        address: teacher.address,
+        date_of_birth: teacher.date_of_birth
+          ? dayjs(teacher.date_of_birth)
+          : undefined,
+        subject_specialization: teacher.subject_specialization_display || [],
       });
     }
-  }, [accountant, form]);
+  }, [teacher, subjects, form]);
 
-  const onFinish = (values) => {
+  const onFinish = (values: TeacherFormValues) => {
     const formattedValues = {
       ...values,
       date_of_birth: values.date_of_birth
@@ -69,29 +101,33 @@ const EditAccountantProfile = () => {
         : null,
     };
 
-    dispatch(updateAccountant({ id, ...formattedValues }))
+    if (!id) return;
+
+    dispatch(updateTeacher({ id: Number(id), ...formattedValues }))
       .unwrap()
       .then(() => {
         message.success("Profile updated successfully!");
-        navigate(`/users/accountants/${id}`);
+        navigate(`/users/teachers/${id}`);
       })
       .catch(() => message.error("Failed to update profile"));
   };
 
   return (
     <div className="edit-profile-container mt-4">
-      <Link
-        to={`/users/accountants/${id}`}
-        className="ant-btn ant-btn-link mb-4"
-      >
+      <Link to={`/users/teachers/${id}`} className="ant-btn ant-btn-link mb-4">
         Go Back
       </Link>
 
       {loading && <Loader />}
       {error && <Message variant="danger">{error}</Message>}
+      {subjectsError && <Message variant="danger">{subjectsError}</Message>}
 
-      <Card title="Edit Accountant Profile" className="shadow">
-        <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Card title="Edit Teacher Profile" className="shadow">
+        <Form<TeacherFormValues>
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+        >
           {/* Personal Information */}
           <Title level={5}>Personal Information</Title>
           <Row gutter={[16, 16]}>
@@ -133,6 +169,11 @@ const EditAccountantProfile = () => {
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
+            <Col xs={24} md={6}>
+              <Form.Item label="Short Name" name="short_name">
+                <Input />
+              </Form.Item>
+            </Col>
             <Col xs={24} md={18}>
               <Form.Item label="Alternative Email" name="alt_email">
                 <Input type="email" />
@@ -166,7 +207,7 @@ const EditAccountantProfile = () => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
-              <Form.Item label="NIDA Number" name="nida">
+              <Form.Item label="NIDA Number" name="national_id">
                 <Input />
               </Form.Item>
             </Col>
@@ -192,10 +233,33 @@ const EditAccountantProfile = () => {
             <Input />
           </Form.Item>
 
+          {/* Subject Specialization */}
+          <Title level={5} className="mt-4">
+            Subject Specialization
+          </Title>
+          <Form.Item label="Subjects Taught" name="subject_specialization">
+            <Select
+              mode="multiple"
+              placeholder="Select subjects"
+              loading={subjectsLoading}
+            >
+              {subjects.map((subject) => (
+                <Option key={subject.id} value={subject.name}>
+                  {subject.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
           {/* Submit Button */}
           <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={loading}>
-              {loading ? "Saving Changes..." : "Save Changes"}
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={loadingCreate}
+            >
+              {loadingCreate ? "Saving Changes..." : "Save Changes"}
             </Button>
           </Form.Item>
         </Form>
@@ -204,4 +268,4 @@ const EditAccountantProfile = () => {
   );
 };
 
-export default EditAccountantProfile;
+export default EditTeacherProfile;

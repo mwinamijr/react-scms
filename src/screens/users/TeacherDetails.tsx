@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getTeacherDetails } from "../../features/user/teacherSlice";
@@ -23,16 +23,57 @@ import {
   PhoneOutlined,
   DollarCircleOutlined,
 } from "@ant-design/icons";
+import { useAppDispatch } from "../../app/hooks";
+import type { RootState } from "../../app/store";
 
 const { Title, Text } = Typography;
 
-const TeacherProfile = () => {
-  const dispatch = useDispatch();
-  const { id } = useParams();
-  const { loading, error, teacher } = useSelector((state) => state.getTeachers);
+interface Payment {
+  id: number;
+  date: string;
+  amount: number;
+  status: string;
+  description?: string;
+}
+
+interface Teacher {
+  id: number;
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  username: string;
+  image?: string;
+  short_name?: string;
+  gender?: string;
+  date_of_birth?: string;
+  national_id?: string;
+  tin_number?: string;
+  nssf_number?: string;
+  email?: string;
+  phone_number?: string;
+  alt_email?: string;
+  address?: string;
+  empId?: string;
+  designation?: string;
+  salary?: number;
+  unpaid_salary?: number;
+  subject_specialization_display: string[];
+  payments?: Payment[];
+}
+
+const teacherPayments: Payment[] = [];
+
+const TeacherProfile: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+  const { loading, error, teacher } = useSelector(
+    (state: RootState) => state.getTeachers
+  );
 
   useEffect(() => {
-    dispatch(getTeacherDetails(id));
+    if (id) {
+      dispatch(getTeacherDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   return (
@@ -58,7 +99,6 @@ const TeacherProfile = () => {
         ) : teacher ? (
           <div className="profile-container">
             {/* Profile Header */}
-
             <div className="profile-header">
               <Avatar
                 size={120}
@@ -176,7 +216,7 @@ const TeacherProfile = () => {
       </Card>
 
       <Card title="Payments History" className="mt-3" loading={loading}>
-        {teacher?.payments?.length > 0 ? (
+        {teacherPayments && teacherPayments.length > 0 ? (
           <table className="payment-table">
             <thead>
               <tr>
@@ -187,7 +227,7 @@ const TeacherProfile = () => {
               </tr>
             </thead>
             <tbody>
-              {teacher.payments.map((payment) => (
+              {teacherPayments.map((payment) => (
                 <tr key={payment.id}>
                   <td>{new Date(payment.date).toLocaleDateString()}</td>
                   <td>${payment.amount}</td>

@@ -1,21 +1,35 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Card, Col, Row, Breadcrumb } from "antd";
-import Loader from "./../../components/Loader";
-import Message from "./../../components/Message";
-import { getUserDetails } from "../../features/user/userSlice"; // Importing from userSlice
+import Loader from "../../components/Loader";
+import Message from "../../components/Message";
+import { getUserDetails } from "../../features/user/userSlice";
+import type { RootState } from "../../app/store"; // Adjust path based on your setup
+import { useAppDispatch } from "../../app/hooks";
 
-function UserProfile() {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email?: string;
+  isAdmin?: boolean;
+  isTeacher?: boolean;
+  isAccountant?: boolean;
+}
 
-  const { loading, error, user } = useSelector((state) => state.getUsers);
+const UserProfile: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
 
-  console.log(user);
+  const { loading, error, user } = useSelector(
+    (state: RootState) => state.getUsers
+  );
 
   useEffect(() => {
-    dispatch(getUserDetails(id));
+    if (id) {
+      dispatch(getUserDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   return (
@@ -53,6 +67,6 @@ function UserProfile() {
       </Card>
     </div>
   );
-}
+};
 
 export default UserProfile;

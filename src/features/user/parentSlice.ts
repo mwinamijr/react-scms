@@ -7,10 +7,11 @@ import { getErrorMessage } from "../utils";
 // Define TypeScript interfaces for Parent and state
 interface Parent {
   id: number;
-  // Add other parent fields as needed, e.g.:
-  // name: string;
-  // email: string;
-  // ...
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  image: string | null;
 }
 
 interface ParentListResponse {

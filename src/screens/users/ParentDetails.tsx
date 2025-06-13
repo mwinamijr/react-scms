@@ -1,19 +1,38 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store"; // Adjust if your store file is elsewhere
 import { Card, Col, Row, Breadcrumb } from "antd";
-import Loader from "./../../components/Loader";
-import Message from "./../../components/Message";
-import { parentDetails } from "../../features/user/parentSlice"; // Importing from parentSlice
+import Loader from "../../components/Loader";
+import Message from "../../components/Message";
+import { parentDetails } from "../../features/user/parentSlice";
+import { useAppDispatch } from "../../app/hooks";
 
-function ParentDetails() {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+// Type for parent object
+interface Parent {
+  id: number;
+  first_name: string;
+  last_name: string;
+  // add more fields as needed
+}
 
-  const { loading, error, parent } = useSelector((state) => state.getParents);
+const ParentDetails: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+
+  const { loading, error, parent } = useSelector(
+    (state: RootState) =>
+      state.getParents as {
+        loading: boolean;
+        error: string | null;
+        parent: Parent | null;
+      }
+  );
 
   useEffect(() => {
-    dispatch(parentDetails(id));
+    if (id) {
+      dispatch(parentDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   return (
@@ -34,8 +53,7 @@ function ParentDetails() {
         ) : error ? (
           <Message variant="danger">{error}</Message>
         ) : parent ? (
-          <Row>
-            <Col></Col>
+          <Row justify="center">
             <Col>
               <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
                 <div className="col-md-10 px-0">
@@ -52,6 +70,6 @@ function ParentDetails() {
       </Card>
     </div>
   );
-}
+};
 
 export default ParentDetails;

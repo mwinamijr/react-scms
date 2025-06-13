@@ -12,35 +12,66 @@ import {
   message,
   Typography,
 } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import {
-  createAccountant,
+  createTeacher,
   resetCreateState,
-} from "../../features/user/accountantSlice";
+} from "../../features/user/teacherSlice";
+import { listSubjects } from "../../features/academic/subjectSlice";
 import dayjs from "dayjs";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Option } = Select;
 const { Title } = Typography;
 
-const AddAccountant = () => {
+interface TeacherFormValues {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  phone: string;
+  gender: string;
+  empId?: string;
+  tin_number?: string;
+  nssf_number?: string;
+  salary?: number;
+  nida?: string;
+  address?: string;
+  birthday: any; // Keep as `any` due to DatePicker returning Moment
+  password?: string;
+  subjects: string[];
+}
+
+const AddTeacher: React.FC = () => {
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const {
+    subjects,
+    loading: subjectsLoading,
+    error: subjectsError,
+  } = useSelector((state: RootState) => state.getSubjects);
+
   const { loadingCreate, errorCreate, successCreate } = useSelector(
-    (state) => state.getAccountants
+    (state: RootState) => state.getTeachers
   );
+
+  useEffect(() => {
+    dispatch(listSubjects());
+  }, [dispatch]);
 
   useEffect(() => {
     if (successCreate) {
       dispatch(resetCreateState());
-      message.success("Accountant added successfully!");
-      navigate("/users/accountants");
+      message.success("Teacher added successfully!");
+      navigate("/users/teachers");
     }
   }, [dispatch, successCreate, navigate]);
 
-  const submitHandler = (values) => {
+  const submitHandler = (values: TeacherFormValues) => {
     const {
       firstName,
       middleName,
@@ -55,12 +86,13 @@ const AddAccountant = () => {
       address,
       birthday,
       password,
+      subjects,
     } = values;
 
     const email = `${firstName}.${lastName}@hayatul.com`.toLowerCase();
-    const formattedDate = dayjs(birthday).format("YYYY-MM-DD"); // Format date
+    const formattedDate = dayjs(birthday).format("YYYY-MM-DD");
 
-    const accountantData = {
+    const teacherData = {
       first_name: firstName,
       middle_name: middleName,
       last_name: lastName,
@@ -73,11 +105,12 @@ const AddAccountant = () => {
       salary,
       nida,
       address,
-      date_of_birth: formattedDate, // Use formatted date
+      date_of_birth: formattedDate,
       password,
+      subject_specialization: subjects,
     };
 
-    dispatch(createAccountant(accountantData));
+    dispatch(createTeacher(teacherData));
   };
 
   return (
@@ -88,10 +121,10 @@ const AddAccountant = () => {
 
       {loadingCreate && <Loader />}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+      {subjectsError && <Message variant="danger">{subjectsError}</Message>}
 
-      <Card title="Register Accountant" className="shadow">
+      <Card title="Register Teacher" className="shadow">
         <Form form={form} layout="vertical" onFinish={submitHandler}>
-          {/* Personal Information Section */}
           <Title level={5}>Personal Information</Title>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
@@ -127,7 +160,6 @@ const AddAccountant = () => {
             <Input placeholder="Enter phone number" />
           </Form.Item>
 
-          {/* Additional Information Section */}
           <Title level={5} className="mt-4">
             Additional Information
           </Title>
@@ -196,6 +228,29 @@ const AddAccountant = () => {
             </Col>
           </Row>
 
+          <Title level={5} className="mt-4">
+            Subject Specialization
+          </Title>
+          <Form.Item
+            label="Subjects Taught"
+            name="subjects"
+            rules={[
+              { required: true, message: "Please select at least one subject" },
+            ]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select subjects"
+              loading={subjectsLoading}
+            >
+              {subjects?.map((subject) => (
+                <Option key={subject.id} value={subject.name}>
+                  {subject.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
           <Form.Item>
             <Button
               type="primary"
@@ -203,7 +258,7 @@ const AddAccountant = () => {
               block
               disabled={loadingCreate}
             >
-              {loadingCreate ? "Registering..." : "Register Accountant"}
+              {loadingCreate ? "Registering..." : "Register Teacher"}
             </Button>
           </Form.Item>
         </Form>
@@ -212,4 +267,4 @@ const AddAccountant = () => {
   );
 };
 
-export default AddAccountant;
+export default AddTeacher;

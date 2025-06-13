@@ -1,21 +1,41 @@
 import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getTeacherDetails } from "../../features/user/teacherSlice";
 import { Button } from "antd";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
-const PrintTeacherProfile = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  const { teacher } = useSelector((state) => state.getTeachers);
-  const printRef = useRef();
+interface Teacher {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  address: string;
+  designation: string;
+  salary: number;
+}
+
+const PrintTeacherProfile: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+  const teacher = useSelector(
+    (state: RootState) => state.getTeachers.teacher
+  ) as Teacher | null;
+
+  const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    dispatch(getTeacherDetails(id));
+    if (id) {
+      dispatch(getTeacherDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   const handlePrint = () => {
-    window.print();
+    if (printRef.current) {
+      window.print();
+    }
   };
 
   return (
