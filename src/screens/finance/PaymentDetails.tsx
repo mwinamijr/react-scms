@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Card, Breadcrumb, Table } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { AppDispatch, RootState } from "../../store"; // Update with your actual store paths
+import type { RootState } from "../../app/store"; // Update with your actual store paths
 import { paymentDetails } from "../../features/finance/financeSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 // Define the shape of the payment object
 interface Payment {
@@ -18,26 +19,17 @@ interface Payment {
   paid_by: string;
 }
 
-interface RouteParams {
-  id: string;
-}
-
-function PaymentsDetails() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { id } = useParams<RouteParams>();
+const PaymentsDetails: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
 
   const { loading, error, payment } = useSelector(
-    (state: RootState) =>
-      state.getFinance as {
-        loading: boolean;
-        error: string | null;
-        payment: Payment;
-      }
+    (state: RootState) => state.getFinance
   );
 
   useEffect(() => {
     if (id) {
-      dispatch(paymentDetails(id));
+      dispatch(paymentDetails(Number(id)));
     }
   }, [dispatch, id]);
 
@@ -110,6 +102,6 @@ function PaymentsDetails() {
       </div>
     </div>
   );
-}
+};
 
 export default PaymentsDetails;

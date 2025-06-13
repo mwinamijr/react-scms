@@ -4,6 +4,15 @@ import axios from "axios";
 import { getErrorMessage } from "../utils";
 import { djangoUrl } from "../utils";
 
+interface User {
+  first_name: string;
+  last_name: string;
+}
+
+interface PaidFor {
+  name: string;
+}
+
 interface Receipt {
   id: number;
   date: string;
@@ -16,8 +25,13 @@ interface Receipt {
 
 interface Payment {
   id: number;
-  // add other relevant fields as needed
-  [key: string]: any;
+  date: string;
+  payment_number: string;
+  paid_to: string;
+  paid_for: PaidFor;
+  paid_through: string;
+  amount: number;
+  paid_by: User;
 }
 
 interface FinanceState {

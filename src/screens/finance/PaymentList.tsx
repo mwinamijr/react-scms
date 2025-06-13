@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Table } from "antd";
 import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -7,7 +7,8 @@ import type { ColumnsType } from "antd/es/table";
 
 import { listPayments } from "../../features/finance/financeSlice";
 import Message from "../../components/Message";
-import { RootState, AppDispatch } from "../../store"; // Replace with your actual store type paths
+import type { RootState } from "../../app/store"; // Replace with your actual store type paths
+import { useAppDispatch } from "../../app/hooks";
 
 interface User {
   first_name: string;
@@ -28,18 +29,13 @@ interface Payment {
   paid_by: User;
 }
 
-function Payments() {
-  const dispatch = useDispatch<AppDispatch>();
+const Payments: React.FC = () => {
+  const dispatch = useAppDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
 
   const { loading, error, payments } = useSelector(
-    (state: RootState) =>
-      state.getFinance as {
-        loading: boolean;
-        error: string | null;
-        payments: Payment[];
-      }
+    (state: RootState) => state.getFinance
   );
 
   useEffect(() => {
@@ -130,6 +126,6 @@ function Payments() {
       )}
     </div>
   );
-}
+};
 
 export default Payments;
