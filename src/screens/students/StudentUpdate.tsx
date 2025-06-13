@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Form,
   Input,
@@ -14,27 +14,55 @@ import {
   Col,
   Row,
 } from "antd";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import {
   studentDetails,
   updateStudent,
 } from "../../features/students/studentSlice";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Option } = Select;
 const { Title } = Typography;
 
-const EditStudentProfile = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [form] = Form.useForm();
+interface StudentFormValues {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  gender?: string;
+  religion?: string;
+  region?: string;
+  city?: string;
+  street?: string;
+  blood_group?: string;
+  parent_guardian?: string;
+  parent_contact?: string;
+  admission_number?: number;
+  prems_number?: string;
+  class_level?: string;
+  class_of_year?: string;
+  date_of_birth?: Dayjs | null;
+  admission_date?: Dayjs | null;
+  graduation_date?: Dayjs | null;
+  date_dismissed?: Dayjs | null;
+}
 
-  const { loading, error, student } = useSelector((state) => state.getStudents);
+const EditStudentProfile: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [form] = Form.useForm<StudentFormValues>();
+
+  const { loading, error, student } = useSelector(
+    (state: RootState) => state.getStudents
+  );
 
   useEffect(() => {
-    dispatch(studentDetails(id));
+    if (id) {
+      dispatch(studentDetails(Number(id)));
+    }
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -48,11 +76,10 @@ const EditStudentProfile = () => {
         region: student.region,
         city: student.city,
         street: student.street,
-        blood_group: student.blood_group,
         parent_guardian: student.parent_guardian_display,
         parent_contact: student.parent_contact,
         admission_number: student.admission_number,
-        prem_number: student.prem_number,
+        prems_number: student.prems_number,
         class_level: student.class_level_display,
         class_of_year: student.class_of_year_display,
         date_of_birth: student.date_of_birth
@@ -71,30 +98,24 @@ const EditStudentProfile = () => {
     }
   }, [student, form]);
 
-  const onFinish = (values) => {
+  const onFinish = (values: StudentFormValues) => {
     const formattedValues = {
       ...values,
-      date_of_birth: values.date_of_birth
-        ? dayjs(values.date_of_birth).format("YYYY-MM-DD")
-        : null,
-      admission_date: values.admission_date
-        ? dayjs(values.admission_date).format("YYYY-MM-DD")
-        : null,
-      graduation_date: values.graduation_date
-        ? dayjs(values.graduation_date).format("YYYY-MM-DD")
-        : null,
-      date_dismissed: values.date_dismissed
-        ? dayjs(values.date_dismissed).format("YYYY-MM-DD")
-        : null,
+      date_of_birth: values.date_of_birth?.format("YYYY-MM-DD") || null,
+      admission_date: values.admission_date?.format("YYYY-MM-DD") || null,
+      graduation_date: values.graduation_date?.format("YYYY-MM-DD") || null,
+      date_dismissed: values.date_dismissed?.format("YYYY-MM-DD") || null,
     };
 
-    dispatch(updateStudent({ id, ...formattedValues }))
+    dispatch(updateStudent({ id: Number(id), ...formattedValues }))
       .unwrap()
       .then(() => {
         message.success("Student profile updated successfully!");
         navigate(`/sis/students/${id}`);
       })
-      .catch(() => message.error("Failed to update student profile"));
+      .catch(() => {
+        message.error("Failed to update student profile");
+      });
   };
 
   return (

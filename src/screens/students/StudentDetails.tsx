@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store"; // adjust path to your store
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { studentDetails } from "../../features/students/studentSlice";
@@ -21,29 +22,90 @@ import {
 } from "antd";
 import {
   UserOutlined,
-  MailOutlined,
   PhoneOutlined,
   HomeOutlined,
   BookOutlined,
   DollarCircleOutlined,
 } from "@ant-design/icons";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title, Text } = Typography;
 
-const StudentDetailsScreen = () => {
-  const dispatch = useDispatch();
+interface PersonName {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+}
+
+interface Sibling extends PersonName {
+  id: number;
+  full_name: string;
+  class_level: string;
+}
+
+interface Receipt {
+  id: number;
+  date: string;
+  amount: number;
+  status: "pending" | "paid" | string;
+  paid_for_details?: {
+    name: string;
+  };
+}
+
+interface Student {
+  id: number;
+  full_name: string;
+  admission_number: string;
+  gender: string;
+  date_of_birth: string;
+  religion?: string;
+  blood_group?: string;
+  class_level_display: string;
+  class_of_year_display?: string;
+  admission_date?: string;
+  graduation_date?: string;
+  date_dismissed?: string;
+  reason_left?: string;
+  parent_guardian_display: string;
+  parent_contact?: string;
+  email?: string;
+  region: string;
+  city: string;
+  street?: string;
+  debt: number;
+  cache_gpa?: string;
+  image?: string;
+  siblings: Sibling[];
+  attendance_count?: number;
+  exam_score?: number;
+}
+
+function getFullName(person: PersonName): string {
+  return [person.first_name, person.middle_name, person.last_name]
+    .filter(Boolean)
+    .join(" ");
+}
+
+const StudentDetailsScreen: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { loading, error, student } = useSelector((state) => state.getStudents);
+  const { id } = useParams<{ id: string }>();
+
+  const { loading, error, student } = useSelector(
+    (state: RootState) => state.getStudents
+  );
   const {
     loading: receiptLoading,
     error: receiptError,
     studentReceipts,
-  } = useSelector((state) => state.getFinance);
+  } = useSelector((state: RootState) => state.getFinance);
 
   useEffect(() => {
-    dispatch(studentDetails(id));
-    dispatch(listStudentReceipts(id));
+    if (id) {
+      dispatch(studentDetails(Number(id)));
+      dispatch(listStudentReceipts(Number(id)));
+    }
   }, [dispatch, id]);
 
   return (
@@ -65,28 +127,25 @@ const StudentDetailsScreen = () => {
           <Message variant="danger">{error}</Message>
         ) : student ? (
           <div className="profile-container">
-            {/* Profile Header */}
             <div className="profile-header">
               <Avatar
                 size={120}
-                src={student.image}
-                icon={!student.image && <UserOutlined />}
+                src={student?.image}
+                icon={!student?.image && <UserOutlined />}
                 className="profile-avatar"
               />
-              <Title level={3} className="profile-name">
-                {student.full_name}
+              <Title level={3}>
+                {student.first_name} {student.middle_name} {student.last_name}
               </Title>
-              <Text type="secondary" className="profile-username">
+              <Text type="secondary">
                 Admission #: {student.admission_number}
               </Text>
-
               <Row justify="center" className="profile-actions">
                 <Col>
                   <Space>
                     <Link to={`/sis/students/${id}/edit`}>
                       <Button type="primary">Edit Profile</Button>
                     </Link>
-
                     <Link to={`/sis/students/${id}/print`}>
                       <Button type="default">Print Profile</Button>
                     </Link>
@@ -95,10 +154,9 @@ const StudentDetailsScreen = () => {
               </Row>
             </div>
 
-            {/* Basic Information */}
             <Descriptions title="Basic Information" bordered column={2}>
               <Descriptions.Item label="Full Name">
-                {student.full_name}
+                {student.first_name} {student.middle_name} {student.last_name}
               </Descriptions.Item>
               <Descriptions.Item label="Gender">
                 {student.gender}
@@ -109,12 +167,8 @@ const StudentDetailsScreen = () => {
               <Descriptions.Item label="Religion">
                 {student.religion || "N/A"}
               </Descriptions.Item>
-              <Descriptions.Item label="Blood Group">
-                {student.blood_group || "N/A"}
-              </Descriptions.Item>
             </Descriptions>
 
-            {/* Academic Information */}
             <Descriptions title="Academic Information" bordered column={2}>
               <Descriptions.Item label="Class Level">
                 {student.class_level_display}
@@ -123,9 +177,7 @@ const StudentDetailsScreen = () => {
                 {student.class_of_year_display || "N/A"}
               </Descriptions.Item>
               <Descriptions.Item label="Admission Date">
-                {student.admission_date
-                  ? new Date(student.admission_date).toLocaleDateString()
-                  : "N/A"}
+                {student.admission_date}
               </Descriptions.Item>
               <Descriptions.Item label="Graduation Date">
                 {student.graduation_date
@@ -142,7 +194,6 @@ const StudentDetailsScreen = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            {/* Contact Information */}
             <Descriptions title="Contact Information" bordered column={2}>
               <Descriptions.Item label="Parent/Guardian">
                 {student.parent_guardian_display}
@@ -150,20 +201,16 @@ const StudentDetailsScreen = () => {
               <Descriptions.Item label="Parent Contact">
                 <PhoneOutlined /> {student.parent_contact || "N/A"}
               </Descriptions.Item>
-              <Descriptions.Item label="Email">
-                <MailOutlined /> {student.email || "N/A"}
-              </Descriptions.Item>
               <Descriptions.Item label="Address">
                 <HomeOutlined /> {student.region}, {student.city},{" "}
                 {student.street || "N/A"}
               </Descriptions.Item>
             </Descriptions>
 
-            {/* Financial Information */}
             <Descriptions title="Financial Information" bordered column={2}>
               <Descriptions.Item label="Debt">
                 <DollarCircleOutlined
-                  style={{ color: student.debt > 0 ? "red" : "green" }}
+                  style={{ color: student?.debt > 0 ? "red" : "green" }}
                 />{" "}
                 ${student.debt}
               </Descriptions.Item>
@@ -172,7 +219,6 @@ const StudentDetailsScreen = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            {/* Sibling Information */}
             <Card title="Siblings" className="mt-3">
               {student.siblings && student.siblings.length > 0 ? (
                 <Table
@@ -180,20 +226,19 @@ const StudentDetailsScreen = () => {
                   columns={[
                     {
                       title: "Full Name",
-                      dataIndex: ["student"],
                       key: "fullName",
-                      render: (_, record) => record?.full_name || "N/A",
+                      render: (_, record: Sibling) => getFullName(record),
                     },
                     {
                       title: "Class Level",
-                      dataIndex: ["class_level"],
-                      key: "class_level",
-                      render: (_, record) => record?.class_level || "N/A",
+                      key: "classLevel",
+                      render: (_, record: Sibling) => record.class_level,
                     },
                   ]}
                   rowKey="id"
                   onRow={(record) => ({
-                    onClick: () => navigate(`/sis/students/${record.id}`),
+                    onClick: () =>
+                      navigate(`/sis/students/${(record as Sibling).id}`),
                     style: { cursor: "pointer" },
                   })}
                 />
@@ -202,7 +247,6 @@ const StudentDetailsScreen = () => {
               )}
             </Card>
 
-            {/* Payments History */}
             <Card title="Payments History" className="mt-3">
               {receiptError && (
                 <Message variant="danger">{receiptError}</Message>
@@ -213,29 +257,26 @@ const StudentDetailsScreen = () => {
                   columns={[
                     {
                       title: "Date",
-                      dataIndex: ["date"],
+                      dataIndex: "date",
                       key: "date",
-                      render: (_, record) => record?.date || "N/A",
                     },
                     {
                       title: "Description",
-                      dataIndex: ["student", "description"],
                       key: "description",
-                      render: (_, record) =>
-                        record?.paid_for_details?.name || "N/A",
+                      render: (_, record: Receipt) =>
+                        record.paid_for_details?.name || "N/A",
                     },
                     {
                       title: "Amount Paid",
-                      dataIndex: ["student", "price"],
                       key: "amount",
-                      render: (_, record) =>
-                        `TSH ${record?.amount?.toLocaleString()}` || "N/A",
+                      render: (_, record: Receipt) =>
+                        `TSH ${record.amount.toLocaleString()}`,
                     },
                     {
                       title: "Status",
                       dataIndex: "status",
                       key: "status",
-                      render: (status) => (
+                      render: (status: string) => (
                         <Tag color={status === "pending" ? "orange" : "green"}>
                           {status}
                         </Tag>
@@ -246,7 +287,8 @@ const StudentDetailsScreen = () => {
                   rowKey="id"
                   pagination={{ pageSize: 10 }}
                   onRow={(record) => ({
-                    onClick: () => navigate(`/finance/receipts/${record.id}`),
+                    onClick: () =>
+                      navigate(`/finance/receipts/${(record as Receipt).id}`),
                     style: { cursor: "pointer" },
                   })}
                 />
@@ -255,14 +297,13 @@ const StudentDetailsScreen = () => {
               )}
             </Card>
 
-            {/* Attendance & Examination Records */}
             <Card title="Attendance & Examination Records" className="mt-3">
               <Descriptions bordered column={2}>
                 <Descriptions.Item label="Total Attendance">
-                  {student.attendance_count || "N/A"}
+                  {"N/A"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Examination Score">
-                  <BookOutlined /> {student.exam_score || "N/A"}
+                  <BookOutlined /> {"N/A"}
                 </Descriptions.Item>
               </Descriptions>
             </Card>

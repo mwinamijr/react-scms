@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Form,
   Input,
@@ -15,24 +15,48 @@ import {
   Breadcrumb,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import type { Moment } from "moment";
+
 import {
   createStudent,
   resetCreateState,
 } from "../../features/students/studentSlice";
-import { listClassLevels } from "../../features/academic/classLevelSlice"; // Import class levels action
+import { listClassLevels } from "../../features/academic/classLevelSlice";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-function AddStudent() {
-  const [form] = Form.useForm();
-  const dispatch = useDispatch();
+interface FormValues {
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  admission_number: string;
+  class_level: string;
+  birthday?: Moment;
+  gender: string;
+  religion: string;
+  region?: string;
+  city?: string;
+  street?: string;
+  std_vii_number?: string;
+  prems_number?: string;
+  parent_contact: string;
+}
+
+const AddStudent: React.FC = () => {
+  const [form] = Form.useForm<FormValues>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { loadingCreate, errorCreate, successCreate } = useSelector(
-    (state) => state.getStudents
+    (state: RootState) => state.getStudents
   );
-  const { classLevels, loading } = useSelector((state) => state.getClassLevels);
+
+  const { classLevels, loading } = useSelector(
+    (state: RootState) => state.getClassLevels
+  );
 
   useEffect(() => {
     if (successCreate) {
@@ -42,28 +66,27 @@ function AddStudent() {
     }
   }, [dispatch, successCreate, navigate]);
 
-  // Fetch class levels when component mounts
   useEffect(() => {
     dispatch(listClassLevels());
   }, [dispatch]);
 
-  const submitHandler = (values) => {
+  const submitHandler = (values: FormValues) => {
     const formattedValues = {
       first_name: values.first_name,
-      middle_name: values.middle_name || "", // Optional field
+      middle_name: values.middle_name || "",
       last_name: values.last_name,
-      admission_number: values.admission_number,
+      admission_number: Number(values.admission_number),
       class_level: values.class_level,
       date_of_birth: values.birthday
         ? values.birthday.format("YYYY-MM-DD")
-        : null, // Format date
+        : null,
       gender: values.gender,
       religion: values.religion,
-      region: values.region || "", // Optional field
-      city: values.city || "", // Optional field
-      street: values.street || "", // Optional field
-      std_vii_number: values.std_vii_number || "", // Optional field
-      prems_number: values.prems_number || "", // Optional field
+      region: values.region || "",
+      city: values.city || "",
+      street: values.street || "",
+      std_vii_number: values.std_vii_number || "",
+      prems_number: values.prems_number || "",
       parent_contact: values.parent_contact,
     };
 
@@ -94,7 +117,6 @@ function AddStudent() {
           onFinish={submitHandler}
           className="mt-3"
         >
-          {/* Personal Information */}
           <Title level={5}>Personal Information</Title>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
@@ -122,7 +144,6 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Academic Details */}
           <Title level={5} className="mt-4">
             Academic Details
           </Title>
@@ -155,7 +176,6 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Additional Information */}
           <Title level={5} className="mt-4">
             Additional Information
           </Title>
@@ -196,7 +216,6 @@ function AddStudent() {
             </Col>
           </Row>
 
-          {/* Contact Information */}
           <Title level={5} className="mt-4">
             Contact Information
           </Title>
@@ -238,7 +257,6 @@ function AddStudent() {
             <Input placeholder="Enter parent phone number" />
           </Form.Item>
 
-          {/* Submit Button */}
           <Form.Item>
             <Button
               type="primary"
@@ -250,7 +268,6 @@ function AddStudent() {
             </Button>
           </Form.Item>
 
-          {/* Error Message */}
           {errorCreate && (
             <Text type="danger" className="mt-3">
               {errorCreate}
@@ -260,6 +277,6 @@ function AddStudent() {
       </Card>
     </div>
   );
-}
+};
 
 export default AddStudent;

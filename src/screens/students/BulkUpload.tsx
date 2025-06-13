@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
@@ -11,29 +12,57 @@ import {
 import { Breadcrumb } from "antd";
 import { Link } from "react-router-dom";
 import Message from "../../components/Message";
+import type { RootState } from "../../app/store";
 import { bulkCreateStudents } from "../../features/students/studentSlice";
+import { useAppDispatch } from "../../app/hooks";
 
-function StudentBulkUpload() {
-  const dispatch = useDispatch();
-  const [file, setFile] = useState(null);
+// Types for not created/updated/skipped students
+interface NotCreatedStudent {
+  first_name: string;
+  last_name: string;
+  error: string;
+}
+
+interface UpdatedStudent {
+  admission_number: string;
+  full_name: string;
+  reasons: string;
+}
+
+interface SkippedStudent {
+  admission_number: string;
+  full_name: string;
+  reason: string;
+}
+
+const StudentBulkUpload: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const [file, setFile] = useState<File | null>(null);
 
   const {
     loading,
     uploadMessage,
-    errorMessage,
+    error,
     notCreatedStudents,
     updatedStudents,
     skippedStudents,
     uploadProgress,
-  } = useSelector((state) => state.getStudents);
+  } = useSelector((state: RootState) => state.getStudents);
 
-  const submitHandler = (e) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) {
       alert("Please select a file before uploading.");
       return;
     }
     dispatch(bulkCreateStudents(file));
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
   };
 
   return (
@@ -53,18 +82,16 @@ function StudentBulkUpload() {
           <h5>Bulk Upload Students</h5>
         </Card.Header>
         <Card.Body>
-          {errorMessage && <Message variant="danger">{errorMessage}</Message>}
+          {error && <Message variant="danger">{error}</Message>}
           {uploadMessage && (
             <Message variant="success">{uploadMessage}</Message>
           )}
 
-          {updatedStudents.length > 0 ? (
-            <Message variant="success">
-              {updatedStudents.length} students was updated
-            </Message>
-          ) : (
-            <Message variant="success">No students was updated</Message>
-          )}
+          <Message variant="success">
+            {updatedStudents.length > 0
+              ? `${updatedStudents.length} students were updated`
+              : "No students were updated"}
+          </Message>
 
           {loading && (
             <ProgressBar
@@ -82,7 +109,7 @@ function StudentBulkUpload() {
               <Form.Control
                 type="file"
                 name="file"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={handleFileChange}
                 accept=".xlsx, .xls"
                 required
               />
@@ -118,14 +145,16 @@ function StudentBulkUpload() {
                     </tr>
                   </thead>
                   <tbody>
-                    {notCreatedStudents.map((student, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{student.first_name}</td>
-                        <td>{student.last_name}</td>
-                        <td>{student.error}</td>
-                      </tr>
-                    ))}
+                    {notCreatedStudents.map(
+                      (student: NotCreatedStudent, index: number) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{student.first_name}</td>
+                          <td>{student.last_name}</td>
+                          <td>{student.error}</td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </Table>
               </Card.Body>
@@ -147,13 +176,15 @@ function StudentBulkUpload() {
                     </tr>
                   </thead>
                   <tbody>
-                    {updatedStudents.map((student, index) => (
-                      <tr key={index}>
-                        <td>{student.admission_number}</td>
-                        <td>{student.full_name}</td>
-                        <td>{student.reasons}</td>
-                      </tr>
-                    ))}
+                    {updatedStudents.map(
+                      (student: UpdatedStudent, index: number) => (
+                        <tr key={index}>
+                          <td>{student.admission_number}</td>
+                          <td>{student.full_name}</td>
+                          <td>{student.reasons}</td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </Table>
               </Card.Body>
@@ -177,13 +208,15 @@ function StudentBulkUpload() {
                     </tr>
                   </thead>
                   <tbody>
-                    {skippedStudents.map((student, index) => (
-                      <tr key={index}>
-                        <td>{student.admission_number}</td>
-                        <td>{student.full_name}</td>
-                        <td>{student.reason}</td>
-                      </tr>
-                    ))}
+                    {skippedStudents.map(
+                      (student: SkippedStudent, index: number) => (
+                        <tr key={index}>
+                          <td>{student.admission_number}</td>
+                          <td>{student.full_name}</td>
+                          <td>{student.reason}</td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </Table>
               </Card.Body>
@@ -193,6 +226,6 @@ function StudentBulkUpload() {
       </Card>
     </Container>
   );
-}
+};
 
 export default StudentBulkUpload;

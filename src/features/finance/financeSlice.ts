@@ -6,8 +6,12 @@ import { djangoUrl } from "../utils";
 
 interface Receipt {
   id: number;
-  // add other relevant fields as needed
-  [key: string]: any;
+  date: string;
+  amount: number;
+  status: "pending" | "paid" | string;
+  paid_for_details?: {
+    name: string;
+  };
 }
 
 interface Payment {

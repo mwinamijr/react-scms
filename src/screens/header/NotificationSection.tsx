@@ -9,24 +9,30 @@ import {
   Button,
   Space,
 } from "antd";
+import type { MenuProps } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 
-const status = [
+const { Text } = Typography;
+const { Option } = Select;
+
+const statusOptions = [
   { value: "all", label: "All Notification" },
   { value: "new", label: "New" },
   { value: "unread", label: "Unread" },
   { value: "other", label: "Other" },
-];
+] as const;
 
-const NotificationSection = () => {
-  const [value, setValue] = useState("all");
+type StatusValue = (typeof statusOptions)[number]["value"];
 
-  const menuItems = [
+const NotificationSection: React.FC = () => {
+  const [value, setValue] = useState<StatusValue>("all");
+
+  const menuItems: MenuProps["items"] = [
     {
       key: "header",
       label: (
         <Space>
-          <Typography.Text strong>All Notifications</Typography.Text>
+          <Text strong>All Notifications</Text>
           <Badge count={1} />
         </Space>
       ),
@@ -44,14 +50,14 @@ const NotificationSection = () => {
       label: (
         <Select
           value={value}
-          onChange={setValue}
+          onChange={(val: StatusValue) => setValue(val)}
           style={{ width: "100%" }}
           size="small"
         >
-          {status.map((option) => (
-            <Select.Option key={option.value} value={option.value}>
+          {statusOptions.map((option) => (
+            <Option key={option.value} value={option.value}>
               {option.label}
-            </Select.Option>
+            </Option>
           ))}
         </Select>
       ),

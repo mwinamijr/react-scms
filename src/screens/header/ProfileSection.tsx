@@ -6,11 +6,14 @@ import {
   LogoutOutlined,
   BellOutlined,
 } from "@ant-design/icons";
+import type { MenuProps } from "antd";
 import User1 from "../../assets/user-round.svg";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 
-const ProfileSection = () => {
+const { Text } = Typography;
+
+const ProfileSection: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,14 +23,14 @@ const ProfileSection = () => {
     navigate("/login");
   };
 
-  const menuItems = [
+  const menuItems: MenuProps["items"] = [
     {
       key: "profile",
-      label: <Typography.Text>Good Morning, John Doe</Typography.Text>,
+      label: <Text>Good Morning, John Doe</Text>,
     },
     {
       key: "role",
-      label: <Typography.Text type="secondary">Project Admin</Typography.Text>,
+      label: <Text type="secondary">Project Admin</Text>,
     },
     {
       key: "divider1",
@@ -45,7 +48,7 @@ const ProfileSection = () => {
       key: "social",
       label: (
         <Space>
-          <UserOutlined /> Social Profile{" "}
+          <UserOutlined /> Social Profile
           <BellOutlined style={{ marginLeft: 10 }} />
         </Space>
       ),

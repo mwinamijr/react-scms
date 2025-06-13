@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Breadcrumb,
   Table,
@@ -25,19 +26,38 @@ import {
   listStudents,
   deleteStudent,
 } from "../../features/students/studentSlice";
+import type { RootState } from "../../app/store";
+import { useAppDispatch } from "../../app/hooks";
 
 const { Title } = Typography;
 const { Option } = Select;
 
-const Students = () => {
-  const dispatch = useDispatch();
+interface Student {
+  id: number;
+  admission_number: number;
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  class_level_display: string;
+  gender: string;
+}
+
+interface Filters {
+  first_name: string | null;
+  middle_name: string | null;
+  last_name: string | null;
+  class_level: string | null;
+}
+
+const Students: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { loading, error, students } = useSelector(
-    (state) => state.getStudents
+    (state: RootState) => state.getStudents
   );
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     first_name: null,
     middle_name: null,
     last_name: null,
@@ -45,11 +65,11 @@ const Students = () => {
   });
 
   useEffect(() => {
-    dispatch(listStudents());
+    dispatch(listStudents({}));
   }, [dispatch]);
 
   const handleFilter = () => {
-    const query = {};
+    const query: Partial<Filters> = {};
 
     if (filters.first_name) query.first_name = filters.first_name;
     if (filters.middle_name) query.middle_name = filters.middle_name;
@@ -59,19 +79,24 @@ const Students = () => {
     dispatch(listStudents(query));
   };
 
-  const handleClassChange = (value) => {
-    setFilters({ ...filters, class_level: value });
+  const handleClassChange = (value: string | undefined) => {
+    setFilters({ ...filters, class_level: value ?? null });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters({ ...filters, [name]: value || null });
   };
 
-  // Define columns for the Ant Design Table
+  const handleDelete = (id: number) => {
+    dispatch(deleteStudent(id))
+      .unwrap()
+      .then(() => message.success("Student deleted successfully"));
+  };
+
   const columns = [
     {
-      title: "Addmission No",
+      title: "Admission No",
       dataIndex: "admission_number",
       key: "admission_number",
     },
@@ -93,15 +118,17 @@ const Students = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
+      render: (_text: any, record: Student) => (
         <Space size="middle" onClick={(e) => e.stopPropagation()}>
           <Link to={`/sis/students/${record.id}/edit`}>
             <EditOutlined style={{ color: "green" }} />
           </Link>
           <Popconfirm
             title="Delete this student?"
-            onConfirm={() => handleDelete(record.id)}
-            onClick={(e) => e.stopPropagation()}
+            onConfirm={(e) => {
+              e?.stopPropagation();
+              handleDelete(record.id);
+            }}
           >
             <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
           </Popconfirm>
@@ -109,13 +136,6 @@ const Students = () => {
       ),
     },
   ];
-
-  // Handle delete action
-  const handleDelete = (id) => {
-    dispatch(deleteStudent(id))
-      .unwrap()
-      .then(() => message.success("Student deleted successfully"));
-  };
 
   return (
     <div className="students-page">
@@ -126,7 +146,6 @@ const Students = () => {
         <Breadcrumb.Item>Students</Breadcrumb.Item>
       </Breadcrumb>
 
-      {/* Title */}
       <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
         Students
       </Title>
@@ -167,30 +186,27 @@ const Students = () => {
       <Row gutter={16} className="mb-4">
         <Col xs={24} sm={12} md={5}>
           <Input
-            label="First Name"
             name="first_name"
             placeholder="Enter first name"
-            value={filters.first_name}
+            value={filters.first_name ?? ""}
             onChange={handleInputChange}
             allowClear
           />
         </Col>
         <Col xs={24} sm={12} md={5}>
           <Input
-            label="Middle Name"
             name="middle_name"
             placeholder="Enter middle name"
-            value={filters.middle_name}
+            value={filters.middle_name ?? ""}
             onChange={handleInputChange}
             allowClear
           />
         </Col>
         <Col xs={24} sm={12} md={5}>
           <Input
-            label="Last Name"
             name="last_name"
             placeholder="Enter last name"
-            value={filters.last_name}
+            value={filters.last_name ?? ""}
             onChange={handleInputChange}
             allowClear
           />
@@ -201,6 +217,7 @@ const Students = () => {
             onChange={handleClassChange}
             allowClear
             style={{ width: "100%" }}
+            value={filters.class_level ?? undefined}
           >
             <Option value="Form One">Form One</Option>
             <Option value="Form Two">Form Two</Option>
@@ -215,7 +232,6 @@ const Students = () => {
         </Col>
       </Row>
 
-      {/* Content */}
       {error && <Message variant="danger">{error}</Message>}
 
       <Table
