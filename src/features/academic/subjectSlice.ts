@@ -11,7 +11,7 @@ interface Subject {
   subject_code: string;
   is_selectable: boolean;
   graded: boolean;
-  department: number;
+  department: string;
   description: string;
 }
 

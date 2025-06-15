@@ -9,6 +9,7 @@ import subjectReducer from "../features/academic/subjectSlice";
 import departmentReducer from "../features/academic/departmentSlice";
 import classLevelReducer from "../features/academic/classLevelSlice";
 import allocationReducer from "../features/finance/allocationSlice";
+import schoolEventReducer from "../features/administration/schoolEventSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     getSubjects: subjectReducer,
     getDepartments: departmentReducer,
     getClassLevels: classLevelReducer,
+    getSchoolEvents: schoolEventReducer,
   },
 });
 

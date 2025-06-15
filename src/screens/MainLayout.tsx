@@ -124,7 +124,12 @@ const DashboardLayout: React.FC = () => {
       getItem(<Link to="/notification/sms">SMS</Link>, "/notification/sms"),
       getItem("Compose", "/notification/compose"),
     ]),
-    getItem("School Calendar", "/calendar", <CalendarOutlined />),
+    getItem(" School Calendar", "calendar", <CalendarOutlined />, [
+      getItem(
+        <Link to="/administration/school-events">School Events</Link>,
+        "/administration/school-events"
+      ),
+    ]),
   ];
 
   const selectedKeys = useMemo(() => [location.pathname], [location.pathname]);

@@ -86,7 +86,6 @@ export const receiptAllocationDetails = createAsyncThunk<
 
 export const createReceiptAllocation = createAsyncThunk<
   Allocation,
-  Allocation,
   { state: RootState; rejectValue: string }
 >("receiptAllocation/create", async (payload, thunkAPI) => {
   try {
