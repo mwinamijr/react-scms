@@ -129,6 +129,10 @@ const DashboardLayout: React.FC = () => {
         <Link to="/administration/school-events">School Events</Link>,
         "/administration/school-events"
       ),
+      getItem(
+        <Link to="/administration/school-calendar">Calendar</Link>,
+        "/administration/school-calendar"
+      ),
     ]),
   ];
 

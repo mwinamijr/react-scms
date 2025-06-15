@@ -58,6 +58,7 @@ import ReceiptAllocationDetails from "../screens/finance/allocations/ReceiptAllo
 import UpdatePaymentAllocation from "../screens/finance/allocations/UpdatePaymentAllocation";
 import UpdateReceiptAllocation from "../screens/finance/allocations/UpdateReceiptAllocation";
 import SchoolEvents from "../screens/academic/SchoolEvents";
+import SchoolEventsCalendar from "../screens/academic/SchoolCalendar";
 
 const MainRoutes = {
   path: "/",
@@ -168,7 +169,10 @@ const MainRoutes = {
         },
         {
           path: "administration/",
-          children: [{ path: "school-events", element: <SchoolEvents /> }],
+          children: [
+            { path: "school-events", element: <SchoolEvents /> },
+            { path: "school-calendar", element: <SchoolEventsCalendar /> },
+          ],
         },
       ],
     },
