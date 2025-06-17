@@ -26,6 +26,10 @@ interface TermAndAcademicYearState {
   terms: Term[];
   loading: boolean;
   error: string | null;
+  loadingCreate: boolean;
+  loadingUpdate: boolean;
+  successCreate: boolean;
+  successUpdate: boolean;
 }
 
 const initialState: TermAndAcademicYearState = {
@@ -33,6 +37,10 @@ const initialState: TermAndAcademicYearState = {
   terms: [],
   loading: false,
   error: null,
+  loadingCreate: false,
+  loadingUpdate: false,
+  successCreate: false,
+  successUpdate: false,
 };
 
 export const fetchAcademicYears = createAsyncThunk(
@@ -160,7 +168,7 @@ export const fetchTerms = createAsyncThunk(
         },
       };
       const res = await axios.get(
-        `${djangoUrl}/api/administration/school-events/`,
+        `${djangoUrl}/api/administration/terms/`,
         config
       );
       return res.data;
@@ -186,7 +194,7 @@ export const createTerm = createAsyncThunk(
         },
       };
       const res = await axios.post(
-        `${djangoUrl}/api/administration/school-events/`,
+        `${djangoUrl}/api/administration/terms/`,
         data,
         config
       );
@@ -213,7 +221,7 @@ export const updateTerm = createAsyncThunk(
         },
       };
       const res = await axios.put(
-        `${djangoUrl}/api/administration/school-events/${id}/`,
+        `${djangoUrl}/api/administration/terms/${id}/`,
         data,
         config
       );
@@ -240,7 +248,7 @@ export const deleteTerm = createAsyncThunk(
         },
       };
       await axios.delete(
-        `${djangoUrl}/api/administration/school-events/${id}/`,
+        `${djangoUrl}/api/administration/terms/${id}/`,
         config
       );
       return id;
@@ -273,29 +281,34 @@ const termAndAcademicYearSlice = createSlice({
       })
 
       .addCase(createAcademicYear.pending, (state) => {
-        state.loading = true;
+        state.loadingCreate = true;
+        state.successCreate = false;
         state.error = null;
       })
       .addCase(
         createAcademicYear.fulfilled,
         (state, action: PayloadAction<AcademicYear>) => {
-          state.loading = false;
+          state.loadingCreate = false;
+          state.successCreate = true;
           state.academicYears.push(action.payload);
         }
       )
       .addCase(createAcademicYear.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingCreate = false;
+        state.successCreate = false;
         state.error = action.payload as string;
       })
 
       .addCase(updateAcademicYear.pending, (state) => {
-        state.loading = true;
+        state.loadingUpdate = true;
+        state.successUpdate = false;
         state.error = null;
       })
       .addCase(
         updateAcademicYear.fulfilled,
         (state, action: PayloadAction<AcademicYear>) => {
-          state.loading = false;
+          state.loadingUpdate = false;
+          state.successUpdate = true;
           state.academicYears = state.academicYears.map((academicYear) =>
             academicYear.id === action.payload.id
               ? action.payload
@@ -304,7 +317,8 @@ const termAndAcademicYearSlice = createSlice({
         }
       )
       .addCase(updateAcademicYear.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingUpdate = false;
+        state.successUpdate = false;
         state.error = action.payload as string;
       })
 
@@ -339,30 +353,30 @@ const termAndAcademicYearSlice = createSlice({
       })
 
       .addCase(createTerm.pending, (state) => {
-        state.loading = true;
+        state.loadingCreate = true;
         state.error = null;
       })
       .addCase(createTerm.fulfilled, (state, action: PayloadAction<Term>) => {
-        state.loading = false;
+        state.loadingCreate = false;
         state.terms.push(action.payload);
       })
       .addCase(createTerm.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingCreate = false;
         state.error = action.payload as string;
       })
 
       .addCase(updateTerm.pending, (state) => {
-        state.loading = true;
+        state.loadingUpdate = true;
         state.error = null;
       })
       .addCase(updateTerm.fulfilled, (state, action: PayloadAction<Term>) => {
-        state.loading = false;
+        state.loadingUpdate = false;
         state.terms = state.terms.map((term) =>
           term.id === action.payload.id ? action.payload : term
         );
       })
       .addCase(updateTerm.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingUpdate = false;
         state.error = action.payload as string;
       })
 

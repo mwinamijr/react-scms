@@ -32,22 +32,32 @@ import {
   resetCreateState,
 } from "../../features/students/studentSlice";
 import { listClassLevels } from "../../features/academic/classLevelSlice";
+import Loader from "../../components/Loader";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Admission: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { terms, academicYears, loading, error } = useAppSelector(
-    (state) => state.getTermsAndAcademicYears
-  );
+  const {
+    terms,
+    academicYears,
+    loading,
+    error,
+    successCreate,
+    successUpdate,
+    loadingCreate,
+    loadingUpdate,
+  } = useAppSelector((state) => state.getTermsAndAcademicYears);
   const { classLevels, loading: classLevelLoading } = useAppSelector(
     (state) => state.getClassLevels
   );
-  const { loadingCreate, errorCreate, successCreate } = useAppSelector(
-    (state) => state.getStudents
-  );
+  const {
+    loadingCreate: studentLoadingCreate,
+    errorCreate,
+    successCreate: studentSuccessCreate,
+  } = useAppSelector((state) => state.getStudents);
 
   const [form] = Form.useForm();
   const [editingTerm, setEditingTerm] = useState<any>(null);
@@ -64,7 +74,7 @@ const Admission: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (successCreate) {
+    if (studentSuccessCreate) {
       dispatch(resetCreateState());
       message.success("Student added successfully!");
       setStudentModalOpen(false);
@@ -114,8 +124,12 @@ const Admission: React.FC = () => {
       await dispatch(createTerm(payload));
     }
 
-    setIsTermModalOpen(false);
-    dispatch(fetchTerms());
+    if (successCreate || successUpdate) {
+      form.resetFields();
+      message.success("Term saved successfully!");
+      setIsTermModalOpen(false);
+      dispatch(fetchTerms());
+    }
   };
 
   const handleDeleteTerm = async (id: number) => {
@@ -156,8 +170,12 @@ const Admission: React.FC = () => {
       await dispatch(createAcademicYear(payload));
     }
 
-    setIsYearModalOpen(false);
-    dispatch(fetchAcademicYears());
+    if (successCreate || successUpdate) {
+      form.resetFields();
+      message.success("Academic year saved successfully!");
+      setIsYearModalOpen(false);
+      dispatch(fetchAcademicYears());
+    }
   };
 
   const handleDeleteYear = async (id: number) => {
@@ -187,10 +205,8 @@ const Admission: React.FC = () => {
         </Button>
       </Space>
 
-      {error && <Message variant="danger">{error}</Message>}
-
       <Row gutter={24}>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
           <h3>Academic Years</h3>
           <Table
             dataSource={academicYears}
@@ -219,7 +235,7 @@ const Admission: React.FC = () => {
             ]}
           />
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
           <h3>Terms</h3>
           <Table
             dataSource={terms}
@@ -250,11 +266,11 @@ const Admission: React.FC = () => {
       <Modal
         title={editingYear ? "Edit Academic Year" : "Add Academic Year"}
         open={isYearModalOpen}
-        onOk={handleYearSubmit}
+        footer={null}
         onCancel={() => setIsYearModalOpen(false)}
-        okText="Save"
       >
-        <Form form={form} layout="vertical">
+        {error && <Message variant="danger">{error}</Message>}
+        <Form form={form} layout="vertical" onFinish={handleYearSubmit}>
           <Form.Item name="name" label="Year Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -277,6 +293,17 @@ const Admission: React.FC = () => {
               ]}
             />
           </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loadingCreate || loadingUpdate}
+              disabled={loadingCreate || loadingUpdate}
+              block
+            >
+              {editingYear ? "Update Year" : "Add Year"}
+            </Button>
+          </Form.Item>
         </Form>
       </Modal>
 
@@ -284,11 +311,11 @@ const Admission: React.FC = () => {
       <Modal
         title={editingTerm ? "Edit Term" : "Add Term"}
         open={isTermModalOpen}
-        onOk={handleTermSubmit}
+        footer={null}
         onCancel={() => setIsTermModalOpen(false)}
-        okText="Save"
       >
-        <Form form={form} layout="vertical">
+        {error && <Message variant="danger">{error}</Message>}
+        <Form form={form} layout="vertical" onFinish={handleTermSubmit}>
           <Form.Item name="name" label="Term Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -311,6 +338,17 @@ const Admission: React.FC = () => {
           >
             <RangePicker />
           </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loadingCreate || loadingUpdate}
+              disabled={loadingCreate || loadingUpdate}
+              block
+            >
+              {editingTerm ? "Update Term" : "Add Term"}
+            </Button>
+          </Form.Item>
         </Form>
       </Modal>
 
@@ -322,6 +360,7 @@ const Admission: React.FC = () => {
         footer={null}
         width={800}
       >
+        {errorCreate && <Message variant="danger">{errorCreate}</Message>}
         <Form form={studentForm} layout="vertical" onFinish={submitStudent}>
           <Title level={5}>Personal Information</Title>
           <Row gutter={16}>
@@ -460,14 +499,12 @@ const Admission: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              loading={loadingCreate}
+              loading={studentLoadingCreate}
               block
             >
               Add Student
             </Button>
           </Form.Item>
-
-          {errorCreate && <Text type="danger">{errorCreate}</Text>}
         </Form>
       </Modal>
     </div>
