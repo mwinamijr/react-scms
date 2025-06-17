@@ -11,6 +11,7 @@ import {
   message,
   Row,
   Col,
+  Typography,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -26,13 +27,26 @@ import {
   updateTerm,
   updateAcademicYear,
 } from "../../features/administration/termAndAcademicYearSlice";
+import {
+  createStudent,
+  resetCreateState,
+} from "../../features/students/studentSlice";
+import { listClassLevels } from "../../features/academic/classLevelSlice";
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
+const { Title, Text } = Typography;
 
 const Admission: React.FC = () => {
   const dispatch = useAppDispatch();
   const { terms, academicYears, loading, error } = useAppSelector(
     (state) => state.getTermsAndAcademicYears
+  );
+  const { classLevels, loading: classLevelLoading } = useAppSelector(
+    (state) => state.getClassLevels
+  );
+  const { loadingCreate, errorCreate, successCreate } = useAppSelector(
+    (state) => state.getStudents
   );
 
   const [form] = Form.useForm();
@@ -40,11 +54,32 @@ const Admission: React.FC = () => {
   const [editingYear, setEditingYear] = useState<any>(null);
   const [isTermModalOpen, setIsTermModalOpen] = useState(false);
   const [isYearModalOpen, setIsYearModalOpen] = useState(false);
+  const [studentModalOpen, setStudentModalOpen] = useState(false);
+  const [studentForm] = Form.useForm();
 
   useEffect(() => {
     dispatch(fetchTerms());
     dispatch(fetchAcademicYears());
+    dispatch(listClassLevels());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (successCreate) {
+      dispatch(resetCreateState());
+      message.success("Student added successfully!");
+      setStudentModalOpen(false);
+      studentForm.resetFields();
+    }
+  }, [successCreate, dispatch]);
+
+  const submitStudent = (values: any) => {
+    const payload = {
+      ...values,
+      date_of_birth: values.birthday?.format("YYYY-MM-DD") || null,
+      admission_number: Number(values.admission_number),
+    };
+    dispatch(createStudent(payload));
+  };
 
   // === TERM ===
   const openTermModal = (record?: any) => {
@@ -142,6 +177,13 @@ const Admission: React.FC = () => {
         </Button>
         <Button icon={<PlusOutlined />} onClick={() => openTermModal()}>
           Add Term
+        </Button>
+        <Button
+          icon={<PlusOutlined />}
+          type="primary"
+          onClick={() => setStudentModalOpen(true)}
+        >
+          Add Student
         </Button>
       </Space>
 
@@ -269,6 +311,163 @@ const Admission: React.FC = () => {
           >
             <RangePicker />
           </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Add Student Modal */}
+      <Modal
+        title="Add Student"
+        open={studentModalOpen}
+        onCancel={() => setStudentModalOpen(false)}
+        footer={null}
+        width={800}
+      >
+        <Form form={studentForm} layout="vertical" onFinish={submitStudent}>
+          <Title level={5}>Personal Information</Title>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                name="first_name"
+                label="First Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="middle_name" label="Middle Name">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name="last_name"
+                label="Last Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="admission_number"
+                label="Admission Number"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="class_level"
+                label="Class Level"
+                rules={[{ required: true }]}
+              >
+                <Select
+                  placeholder="Select class level"
+                  loading={classLevelLoading}
+                >
+                  {classLevels.map((level) => (
+                    <Option key={level.id} value={level.name}>
+                      {level.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                name="birthday"
+                label="Birthday"
+                rules={[{ required: true }]}
+              >
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name="gender"
+                label="Gender"
+                rules={[{ required: true }]}
+              >
+                <Select>
+                  <Option value="Male">Male</Option>
+                  <Option value="Female">Female</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name="religion"
+                label="Religion"
+                rules={[{ required: true }]}
+              >
+                <Select>
+                  <Option value="Islam">Islam</Option>
+                  <Option value="Christian">Christian</Option>
+                  <Option value="Other">Other</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item name="region" label="Region">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="city" label="City">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="street" label="Street">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="std_vii_number" label="STD VII Number">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="prems_number" label="PREMS Number">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="parent_contact"
+            label="Parent Contact"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loadingCreate}
+              block
+            >
+              Add Student
+            </Button>
+          </Form.Item>
+
+          {errorCreate && <Text type="danger">{errorCreate}</Text>}
         </Form>
       </Modal>
     </div>
