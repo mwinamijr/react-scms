@@ -59,6 +59,7 @@ import UpdatePaymentAllocation from "../screens/finance/allocations/UpdatePaymen
 import UpdateReceiptAllocation from "../screens/finance/allocations/UpdateReceiptAllocation";
 import SchoolEvents from "../screens/academic/SchoolEvents";
 import SchoolEventsCalendar from "../screens/academic/SchoolCalendar";
+import Admission from "../screens/academic/Admission";
 
 const MainRoutes = {
   path: "/",
@@ -72,6 +73,10 @@ const MainRoutes = {
         {
           path: "dashboard",
           children: [{ path: "", element: <Dashboard /> }],
+        },
+        {
+          path: "admission",
+          children: [{ path: "/admission", element: <Admission /> }],
         },
         {
           path: "academic",
