@@ -50,12 +50,19 @@ const DashboardLayout: React.FC = () => {
       "/dashboard",
       <PieChartOutlined />
     ),
-    getItem("Admission", "/admission", <DesktopOutlined />),
+
+    getItem(
+      <Link to="/admission">Admission</Link>,
+      "/admission",
+      <DesktopOutlined />
+    ),
+
     getItem(
       <Link to="/sis/students">Students</Link>,
       "/sis/students",
       <UserOutlined />
     ),
+
     getItem("Users", "users", <TeamOutlined />, [
       getItem(
         <Link to="/users/accountants">Accountants</Link>,
@@ -65,6 +72,7 @@ const DashboardLayout: React.FC = () => {
       getItem(<Link to="/users/parents">Parents</Link>, "/users/parents"),
       getItem(<Link to="/users">Users</Link>, "/users"),
     ]),
+
     getItem("Finance", "finance", <CalculatorOutlined />, [
       getItem(
         <Link to="/finance/receipts">Receipts</Link>,
@@ -80,10 +88,17 @@ const DashboardLayout: React.FC = () => {
       ),
       getItem(<Link to="/finance/payroll">Payroll</Link>, "/finance/payroll"),
       getItem("Reports", "finance/reports", undefined, [
-        getItem("Collections", "/finance/reports/collections"),
-        getItem("Invoices", "/finance/reports/invoices"),
+        getItem(
+          <Link to="/finance/reports/collections">Collections</Link>,
+          "/finance/reports/collections"
+        ),
+        getItem(
+          <Link to="/finance/reports/invoices">Invoices</Link>,
+          "/finance/reports/invoices"
+        ),
       ]),
     ]),
+
     getItem("Academic", "academic", <TeamOutlined />, [
       getItem(
         <Link to="/academic/departments">Departments</Link>,
@@ -98,33 +113,74 @@ const DashboardLayout: React.FC = () => {
         "/academic/subjects"
       ),
     ]),
+
     getItem("Exam", "exam", <FileDoneOutlined />, [
       getItem("Setting", "exam/setting", undefined, [
-        getItem("Exam groups", "/exam/setting/groups"),
-        getItem("School exams", "/exam/setting/school"),
+        getItem(
+          <Link to="/exam/setting/groups">Exam groups</Link>,
+          "/exam/setting/groups"
+        ),
+        getItem(
+          <Link to="/exam/setting/school">School exams</Link>,
+          "/exam/setting/school"
+        ),
       ]),
       getItem("Reports", "exam/reports", undefined, [
-        getItem("Single Report", "/exam/reports/single"),
-        getItem("Combined reports", "/exam/reports/combined"),
-        getItem("CA Report", "/exam/reports/ca"),
+        getItem(
+          <Link to="/exam/reports/single">Single Report</Link>,
+          "/exam/reports/single"
+        ),
+        getItem(
+          <Link to="/exam/reports/combined">Combined reports</Link>,
+          "/exam/reports/combined"
+        ),
+        getItem(
+          <Link to="/exam/reports/ca">CA Report</Link>,
+          "/exam/reports/ca"
+        ),
       ]),
-      getItem("Exam Schedule", "/exam/schedule"),
+      getItem(<Link to="/exam/schedule">Exam Schedule</Link>, "/exam/schedule"),
     ]),
+
     getItem("Teaching Records", "teachingR", <FileDoneOutlined />, [
-      getItem("Schemes", "/teachingR/schemes"),
-      getItem("Subject Teachers", "/teachingR/teachers"),
-      getItem("Class Journals", "/teachingR/journals"),
+      getItem(
+        <Link to="/teachingR/schemes">Schemes</Link>,
+        "/teachingR/schemes"
+      ),
+      getItem(
+        <Link to="/teachingR/teachers">Subject Teachers</Link>,
+        "/teachingR/teachers"
+      ),
+      getItem(
+        <Link to="/teachingR/journals">Class Journals</Link>,
+        "/teachingR/journals"
+      ),
     ]),
+
     getItem("Attendance", "attendance", <FileExcelOutlined />, [
-      getItem("Student Attendance", "/attendance/students"),
-      getItem("Employee Attendance", "/attendance/employees"),
-      getItem("Attendance report", "/attendance/reports"),
+      getItem(
+        <Link to="/attendance/students">Student Attendance</Link>,
+        "/attendance/students"
+      ),
+      getItem(
+        <Link to="/attendance/employees">Employee Attendance</Link>,
+        "/attendance/employees"
+      ),
+      getItem(
+        <Link to="/attendance/reports">Attendance report</Link>,
+        "/attendance/reports"
+      ),
     ]),
+
     getItem("Email / SMS", "email", <MailOutlined />, [
       getItem(<Link to="/notification/sms">SMS</Link>, "/notification/sms"),
-      getItem("Compose", "/notification/compose"),
+      getItem(
+        <Link to="/notification/compose">Compose</Link>,
+        "/notification/compose"
+      ),
     ]),
-    getItem(" School Calendar", "calendar", <CalendarOutlined />, [
+
+    getItem("School Calendar", "calendar", <CalendarOutlined />, [
       getItem(
         <Link to="/administration/school-events">School Events</Link>,
         "/administration/school-events"

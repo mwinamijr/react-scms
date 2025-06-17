@@ -10,6 +10,7 @@ import departmentReducer from "../features/academic/departmentSlice";
 import classLevelReducer from "../features/academic/classLevelSlice";
 import allocationReducer from "../features/finance/allocationSlice";
 import schoolEventReducer from "../features/administration/schoolEventSlice";
+import termAndAcademicYearReducer from "../features/administration/termAndAcademicYearSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     getDepartments: departmentReducer,
     getClassLevels: classLevelReducer,
     getSchoolEvents: schoolEventReducer,
+    getTermsAndAcademicYears: termAndAcademicYearReducer,
   },
 });
 

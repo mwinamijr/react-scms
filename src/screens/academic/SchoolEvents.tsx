@@ -26,12 +26,15 @@ import {
 } from "../../features/administration/schoolEventSlice";
 import axios from "axios";
 import dayjs from "dayjs";
+import Message from "../../components/Message";
 
 const { RangePicker } = DatePicker;
 
 const SchoolEvents: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { events, loading } = useAppSelector((state) => state.getSchoolEvents);
+  const { events, loading, error } = useAppSelector(
+    (state) => state.getSchoolEvents
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);
@@ -116,6 +119,8 @@ const SchoolEvents: React.FC = () => {
           Download Template
         </Button>
       </Space>
+
+      {error && <Message variant="danger">{error}</Message>}
 
       <Table
         dataSource={events}

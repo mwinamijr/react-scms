@@ -173,8 +173,10 @@ const schoolEventSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // FETCH EVENTS
       .addCase(fetchEvents.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(
         fetchEvents.fulfilled,
@@ -185,10 +187,79 @@ const schoolEventSlice = createSlice({
       )
       .addCase(fetchEvents.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch events";
+        state.error = action.payload as string;
       })
-      .addCase(deleteEvent.fulfilled, (state, action) => {
-        state.events = state.events.filter((e) => e.id !== action.payload);
+
+      // CREATE EVENT
+      .addCase(createEvent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        createEvent.fulfilled,
+        (state, action: PayloadAction<SchoolEvent>) => {
+          state.loading = false;
+          state.events.push(action.payload);
+        }
+      )
+      .addCase(createEvent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // UPDATE EVENT
+      .addCase(updateEvent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        updateEvent.fulfilled,
+        (state, action: PayloadAction<SchoolEvent>) => {
+          state.loading = false;
+          state.events = state.events.map((event) =>
+            event.id === action.payload.id ? action.payload : event
+          );
+        }
+      )
+      .addCase(updateEvent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // DELETE EVENT
+      .addCase(deleteEvent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteEvent.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.loading = false;
+          state.events = state.events.filter(
+            (event) => event.id !== action.payload
+          );
+        }
+      )
+      .addCase(deleteEvent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // UPLOAD EXCEL
+      .addCase(uploadExcel.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        uploadExcel.fulfilled,
+        (state, action: PayloadAction<SchoolEvent[]>) => {
+          state.loading = false;
+          state.events = [...state.events, ...action.payload];
+        }
+      )
+      .addCase(uploadExcel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
