@@ -15,6 +15,7 @@ export interface AcademicYear {
 export interface Term {
   id: number;
   name: string;
+  display_name: string;
   academic_year: string;
   default_term_fee: number;
   start_date: string;

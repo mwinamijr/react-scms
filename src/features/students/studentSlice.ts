@@ -11,6 +11,7 @@ export interface Student {
   first_name: string;
   middle_name?: string;
   last_name: string;
+  full_name?: string;
   admission_number: number;
   class_level: string;
   date_of_birth?: string | null;

@@ -18,7 +18,9 @@ export const updateCurrentTermDebts = createAsyncThunk(
   "debt/updateCurrent",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${djangoUrl}/debts/update-current/`);
+      const res = await axios.post(
+        `${djangoUrl}/api/finance/debts/update-current/`
+      );
       return res.data.detail;
     } catch (err) {
       return rejectWithValue(getErrorMessage(err));
@@ -30,7 +32,9 @@ export const updateAllMissingDebts = createAsyncThunk(
   "debt/updateAllMissing",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${djangoUrl}/debts/update-all-missing/`);
+      const res = await axios.post(
+        `${djangoUrl}/api/finance/debts/update-all-missing/`
+      );
       return res.data.detail;
     } catch (err) {
       return rejectWithValue(getErrorMessage(err));
@@ -42,9 +46,12 @@ export const updatePastTermDebts = createAsyncThunk(
   "debt/updatePast",
   async (term_ids: number[], { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${djangoUrl}/debts/update-past/`, {
-        term_ids,
-      });
+      const res = await axios.post(
+        `${djangoUrl}/api/finance/debts/update-past/`,
+        {
+          term_ids,
+        }
+      );
       return res.data.detail;
     } catch (err) {
       return rejectWithValue(getErrorMessage(err));

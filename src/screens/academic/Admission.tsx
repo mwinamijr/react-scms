@@ -256,7 +256,7 @@ const Admission: React.FC = () => {
             loading={loading}
             rowKey="id"
             columns={[
-              { title: "Name", dataIndex: "name" },
+              { title: "Name", dataIndex: "display_name" },
               { title: "Academic Year", dataIndex: "academic_year_name" },
               { title: "Start Date", dataIndex: "start_date" },
               { title: "End Date", dataIndex: "end_date" },

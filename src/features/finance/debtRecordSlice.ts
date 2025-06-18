@@ -30,7 +30,7 @@ export const fetchDebtRecords = createAsyncThunk(
   "debtRecords/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${djangoUrl}/debt-records/`);
+      const res = await axios.get(`${djangoUrl}/api/finance/debt-records/`);
       return res.data;
     } catch (err) {
       return rejectWithValue(getErrorMessage(err));
@@ -43,7 +43,7 @@ export const fetchDebtRecordsByStudent = createAsyncThunk(
   async (studentId: number, { rejectWithValue }) => {
     try {
       const res = await axios.get(
-        `${djangoUrl}/students/${studentId}/debt-records/`
+        `${djangoUrl}/students/${studentId}/api/finance/debt-records/`
       );
       return res.data;
     } catch (err) {
@@ -56,7 +56,10 @@ export const createDebtRecord = createAsyncThunk(
   "debtRecords/create",
   async (data: Partial<DebtRecord>, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${djangoUrl}/debt-records/`, data);
+      const res = await axios.post(
+        `${djangoUrl}/api/finance/debt-records/`,
+        data
+      );
       return res.data;
     } catch (err) {
       return rejectWithValue(getErrorMessage(err));

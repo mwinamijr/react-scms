@@ -11,6 +11,9 @@ import classLevelReducer from "../features/academic/classLevelSlice";
 import allocationReducer from "../features/finance/allocationSlice";
 import schoolEventReducer from "../features/administration/schoolEventSlice";
 import termAndAcademicYearReducer from "../features/administration/termAndAcademicYearSlice";
+import debtRecordReducer from "../features/finance/debtRecordSlice";
+import debtBulkActionsReducer from "../features/finance/debtBulkActionSlice";
+import paymentRecordReducer from "../features/finance/paymentRecordSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +29,9 @@ export const store = configureStore({
     getClassLevels: classLevelReducer,
     getSchoolEvents: schoolEventReducer,
     getTermsAndAcademicYears: termAndAcademicYearReducer,
+    getDebtRecords: debtRecordReducer,
+    getDebtBulkActions: debtBulkActionsReducer,
+    getPaymentRecords: paymentRecordReducer,
   },
 });
 
