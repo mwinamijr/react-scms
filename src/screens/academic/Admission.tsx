@@ -32,7 +32,6 @@ import {
   resetCreateState,
 } from "../../features/students/studentSlice";
 import { listClassLevels } from "../../features/academic/classLevelSlice";
-import Loader from "../../components/Loader";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -91,6 +90,27 @@ const Admission: React.FC = () => {
     dispatch(createStudent(payload));
   };
 
+  const safeDateRange = (
+    start: string | null | undefined,
+    end?: string | null | undefined
+  ) => {
+    console.log("🔍 safeDateRange called with:", { start, end });
+
+    const startDate = dayjs(start);
+    const endDate = dayjs(end);
+
+    if (!startDate.isValid()) {
+      const fallback = dayjs();
+      return [fallback, endDate.isValid() ? endDate : fallback];
+    }
+
+    if (!endDate.isValid()) {
+      return [startDate, startDate];
+    }
+
+    return [startDate, endDate];
+  };
+
   // === TERM ===
   const openTermModal = (record?: any) => {
     setEditingTerm(record || null);
@@ -99,10 +119,7 @@ const Admission: React.FC = () => {
       record
         ? {
             ...record,
-            date_range: [
-              dayjs(record.start_date),
-              record.end_date ? dayjs(record.end_date) : null,
-            ],
+            date_range: safeDateRange(record.start_date, record.end_date),
           }
         : {}
     );
@@ -145,10 +162,7 @@ const Admission: React.FC = () => {
       record
         ? {
             ...record,
-            date_range: [
-              dayjs(record.start_date),
-              record.end_date ? dayjs(record.end_date) : null,
-            ],
+            date_range: safeDateRange(record.start_date, record.end_date),
           }
         : {}
     );
@@ -243,7 +257,7 @@ const Admission: React.FC = () => {
             rowKey="id"
             columns={[
               { title: "Name", dataIndex: "name" },
-              { title: "Academic Year", dataIndex: "academic_year" },
+              { title: "Academic Year", dataIndex: "academic_year_name" },
               { title: "Start Date", dataIndex: "start_date" },
               { title: "End Date", dataIndex: "end_date" },
               {

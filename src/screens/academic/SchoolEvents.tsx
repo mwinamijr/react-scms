@@ -35,6 +35,7 @@ const SchoolEvents: React.FC = () => {
   const { events, loading, error } = useAppSelector(
     (state) => state.getSchoolEvents
   );
+  const { terms } = useAppSelector((state) => state.getTermsAndAcademicYears);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);
@@ -178,8 +179,13 @@ const SchoolEvents: React.FC = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item name="term" label="Term ID" rules={[{ required: true }]}>
-            <Input type="number" />
+          <Form.Item name="term" label="Term" rules={[{ required: true }]}>
+            <Select
+              options={terms.map((term) => ({
+                label: term.name,
+                value: term.id,
+              }))}
+            />
           </Form.Item>
           <Form.Item
             name="date_range"
