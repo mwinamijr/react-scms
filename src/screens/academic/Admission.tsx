@@ -12,8 +12,9 @@ import {
   Row,
   Col,
   Typography,
+  Popconfirm,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import dayjs from "dayjs";
 import Message from "../../components/Message";
@@ -57,6 +58,7 @@ const Admission: React.FC = () => {
     errorCreate,
     successCreate: studentSuccessCreate,
   } = useAppSelector((state) => state.getStudents);
+  console.log("Academic Years:", academicYears);
 
   const [form] = Form.useForm();
   const [editingTerm, setEditingTerm] = useState<any>(null);
@@ -80,6 +82,17 @@ const Admission: React.FC = () => {
       studentForm.resetFields();
     }
   }, [successCreate, dispatch]);
+
+  useEffect(() => {
+    if (successCreate || successUpdate) {
+      message.success("Saved successfully!");
+      setIsYearModalOpen(false);
+      setIsTermModalOpen(false);
+      form.resetFields();
+      dispatch(fetchAcademicYears());
+      dispatch(fetchTerms());
+    }
+  }, [successCreate, successUpdate, dispatch]);
 
   const submitStudent = (values: any) => {
     const payload = {
@@ -140,13 +153,7 @@ const Admission: React.FC = () => {
     } else {
       await dispatch(createTerm(payload));
     }
-
-    if (successCreate || successUpdate) {
-      form.resetFields();
-      message.success("Term saved successfully!");
-      setIsTermModalOpen(false);
-      dispatch(fetchTerms());
-    }
+    setEditingTerm(null);
   };
 
   const handleDeleteTerm = async (id: number) => {
@@ -183,13 +190,7 @@ const Admission: React.FC = () => {
     } else {
       await dispatch(createAcademicYear(payload));
     }
-
-    if (successCreate || successUpdate) {
-      form.resetFields();
-      message.success("Academic year saved successfully!");
-      setIsYearModalOpen(false);
-      dispatch(fetchAcademicYears());
-    }
+    setEditingYear(null);
   };
 
   const handleDeleteYear = async (id: number) => {
@@ -239,10 +240,19 @@ const Admission: React.FC = () => {
                 title: "Actions",
                 render: (_, record) => (
                   <Space>
-                    <Button onClick={() => openYearModal(record)}>Edit</Button>
-                    <Button danger onClick={() => handleDeleteYear(record.id)}>
-                      Delete
-                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<EditOutlined />}
+                      onClick={() => openYearModal(record)}
+                    />
+                    <Popconfirm
+                      title="Are you sure you want to delete this academic year?"
+                      onConfirm={() => handleDeleteYear(record.id)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button danger icon={<DeleteOutlined />} />
+                    </Popconfirm>
                   </Space>
                 ),
               },
@@ -257,17 +267,26 @@ const Admission: React.FC = () => {
             rowKey="id"
             columns={[
               { title: "Name", dataIndex: "display_name" },
-              { title: "Academic Year", dataIndex: "academic_year_name" },
+              { title: "Academic Year", dataIndex: "academic_year" },
               { title: "Start Date", dataIndex: "start_date" },
               { title: "End Date", dataIndex: "end_date" },
               {
                 title: "Actions",
                 render: (_, record) => (
                   <Space>
-                    <Button onClick={() => openTermModal(record)}>Edit</Button>
-                    <Button danger onClick={() => handleDeleteTerm(record.id)}>
-                      Delete
-                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<EditOutlined />}
+                      onClick={() => openTermModal(record)}
+                    />
+                    <Popconfirm
+                      title="Are you sure you want to delete this academic year?"
+                      onConfirm={() => handleDeleteYear(record.id)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button danger icon={<DeleteOutlined />} />
+                    </Popconfirm>
                   </Space>
                 ),
               },
@@ -334,7 +353,7 @@ const Admission: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="academic_year"
+            name="academic_year_name"
             label="Academic Year"
             rules={[{ required: true }]}
           >
