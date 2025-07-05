@@ -16,6 +16,7 @@ import type { MenuProps } from "antd";
 import NotificationSection from "./header/NotificationSection";
 import ProfileSection from "./header/ProfileSection";
 import logo from "../assets/hayatul-logo.svg";
+import { useAppSelector } from "../app/hooks";
 
 const { Content, Header, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
@@ -43,6 +44,11 @@ const DashboardLayout: React.FC = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const location = useLocation();
   const screens = useBreakpoint();
+
+  const { academicYears } = useAppSelector(
+    (state) => state.getTermsAndAcademicYears
+  );
+  const currentAcademicYear = academicYears.find((year) => year.active_year);
 
   const items: MenuItem[] = [
     getItem(
@@ -217,28 +223,53 @@ const DashboardLayout: React.FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Header
         style={{
-          padding: "0 20px",
+          padding: "0 32px",
           background: "#2a4b8d",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          height: 64,
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <img
-            src={logo}
-            alt="techdometz"
-            style={{ height: 40, marginRight: 10 }}
-          />
-          <h1 style={{ color: "#fff", fontSize: "20px", margin: 0 }}>
+        {/* Left side: Logo + Title */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <img src={logo} alt="techdometz" style={{ height: 40 }} />
+          <h1
+            style={{
+              color: "#fff",
+              fontSize: "22px",
+              fontWeight: 600,
+              margin: 0,
+              letterSpacing: "0.5px",
+            }}
+          >
             Tech HMS
           </h1>
+          <span
+            style={{
+              color: "#fff",
+              fontSize: "16px",
+              fontWeight: 500,
+              backgroundColor: "#1e3c72",
+              padding: "4px 12px",
+              borderRadius: "16px",
+            }}
+          >
+            Academic Year:{" "}
+            <strong>
+              {currentAcademicYear ? currentAcademicYear.name : "N/A"}
+            </strong>
+          </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+
+        {/* Right side: Academic year + Notifications + Profile */}
+        <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
           <NotificationSection />
           <ProfileSection />
         </div>
       </Header>
+
       <Layout>
         <Sider
           collapsible

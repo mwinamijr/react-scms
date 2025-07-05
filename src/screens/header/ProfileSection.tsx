@@ -8,14 +8,17 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import User1 from "../../assets/user-round.svg";
-import { useDispatch } from "react-redux";
 import { logout } from "../../features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 const { Text } = Typography;
 
 const ProfileSection: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { userInfo } = useAppSelector((state) => state.getUsers);
+  console.log("User Info:", userInfo?.email);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -23,10 +26,22 @@ const ProfileSection: React.FC = () => {
     navigate("/login");
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  };
+
   const menuItems: MenuProps["items"] = [
     {
       key: "profile",
-      label: <Text>Good Morning, John Doe</Text>,
+      label: (
+        <Text>
+          {getGreeting()}, {userInfo?.email}
+        </Text>
+      ),
     },
     {
       key: "role",

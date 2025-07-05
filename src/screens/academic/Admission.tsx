@@ -50,6 +50,7 @@ const Admission: React.FC = () => {
     loadingCreate,
     loadingUpdate,
   } = useAppSelector((state) => state.getTermsAndAcademicYears);
+  console.log(error);
   const { classLevels, loading: classLevelLoading } = useAppSelector(
     (state) => state.getClassLevels
   );
@@ -266,8 +267,8 @@ const Admission: React.FC = () => {
             loading={loading}
             rowKey="id"
             columns={[
-              { title: "Name", dataIndex: "display_name" },
-              { title: "Academic Year", dataIndex: "academic_year" },
+              { title: "Name", dataIndex: "name" },
+              { title: "Academic Year", dataIndex: "academic_year_name" },
               { title: "Start Date", dataIndex: "start_date" },
               { title: "End Date", dataIndex: "end_date" },
               {
@@ -281,7 +282,7 @@ const Admission: React.FC = () => {
                     />
                     <Popconfirm
                       title="Are you sure you want to delete this academic year?"
-                      onConfirm={() => handleDeleteYear(record.id)}
+                      onConfirm={() => handleDeleteTerm(record.id)}
                       okText="Yes"
                       cancelText="No"
                     >
@@ -317,7 +318,7 @@ const Admission: React.FC = () => {
           <Form.Item
             name="active_year"
             label="Active Year"
-            valuePropName="checked"
+            initialValue={false}
           >
             <Select
               options={[
@@ -326,6 +327,7 @@ const Admission: React.FC = () => {
               ]}
             />
           </Form.Item>
+
           <Form.Item>
             <Button
               type="primary"
@@ -353,7 +355,7 @@ const Admission: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="academic_year_name"
+            name="academic_year"
             label="Academic Year"
             rules={[{ required: true }]}
           >
