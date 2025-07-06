@@ -50,7 +50,7 @@ interface StudentsState {
   uploadProgress: number;
   uploadMessage: string;
   updatedStudents: Student[];
-  uploadError: string;
+  uploadError: string | null;
   notCreatedStudents: Student[];
   skippedStudents: Student[];
 }
@@ -319,7 +319,7 @@ const studentSlice = createSlice({
       })
       .addCase(bulkCreateStudents.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.uploadError = null;
       })
       .addCase(
         bulkCreateStudents.fulfilled,

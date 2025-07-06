@@ -18,7 +18,6 @@ const ProfileSection: React.FC = () => {
   const navigate = useNavigate();
 
   const { userInfo } = useAppSelector((state) => state.getUsers);
-  console.log("User Info:", userInfo?.email);
 
   const handleLogout = () => {
     dispatch(logout());

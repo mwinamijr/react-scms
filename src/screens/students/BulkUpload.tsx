@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
   Form,
@@ -14,7 +13,7 @@ import { Link } from "react-router-dom";
 import Message from "../../components/Message";
 import type { RootState } from "../../app/store";
 import { bulkCreateStudents } from "../../features/students/studentSlice";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 // Types for not created/updated/skipped students
 interface NotCreatedStudent {
@@ -42,12 +41,12 @@ const StudentBulkUpload: React.FC = () => {
   const {
     loading,
     uploadMessage,
-    error,
+    uploadError,
     notCreatedStudents,
     updatedStudents,
     skippedStudents,
     uploadProgress,
-  } = useSelector((state: RootState) => state.getStudents);
+  } = useAppSelector((state: RootState) => state.getStudents);
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,16 +81,18 @@ const StudentBulkUpload: React.FC = () => {
           <h5>Bulk Upload Students</h5>
         </Card.Header>
         <Card.Body>
-          {error && <Message variant="danger">{error}</Message>}
+          {uploadError && <Message variant="danger">{uploadError}</Message>}
           {uploadMessage && (
             <Message variant="success">{uploadMessage}</Message>
           )}
 
-          <Message variant="success">
-            {updatedStudents.length > 0
-              ? `${updatedStudents.length} students were updated`
-              : "No students were updated"}
-          </Message>
+          {updatedStudents.length > 0 && (
+            <Message variant="success">
+              {updatedStudents.length > 0
+                ? `${updatedStudents.length} students were updated`
+                : "No students were updated"}
+            </Message>
+          )}
 
           {loading && (
             <ProgressBar

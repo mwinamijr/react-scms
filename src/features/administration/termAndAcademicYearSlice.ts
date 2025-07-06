@@ -31,6 +31,7 @@ interface TermAndAcademicYearState {
   loadingUpdate: boolean;
   successCreate: boolean;
   successUpdate: boolean;
+  successMessage?: string | null;
 }
 
 const initialState: TermAndAcademicYearState = {
@@ -42,6 +43,7 @@ const initialState: TermAndAcademicYearState = {
   loadingUpdate: false,
   successCreate: false,
   successUpdate: false,
+  successMessage: null,
 };
 
 export const fetchAcademicYears = createAsyncThunk(
@@ -291,6 +293,7 @@ const termAndAcademicYearSlice = createSlice({
         (state, action: PayloadAction<AcademicYear>) => {
           state.loadingCreate = false;
           state.successCreate = true;
+          state.successMessage = "Academic Year created successfully";
           state.academicYears.push(action.payload);
         }
       )
@@ -310,6 +313,7 @@ const termAndAcademicYearSlice = createSlice({
         (state, action: PayloadAction<AcademicYear>) => {
           state.loadingUpdate = false;
           state.successUpdate = true;
+          state.successMessage = "Academic Year updated successfully";
           state.academicYears = state.academicYears.map((academicYear) =>
             academicYear.id === action.payload.id
               ? action.payload
@@ -355,29 +359,37 @@ const termAndAcademicYearSlice = createSlice({
 
       .addCase(createTerm.pending, (state) => {
         state.loadingCreate = true;
+        state.successCreate = false;
         state.error = null;
       })
       .addCase(createTerm.fulfilled, (state, action: PayloadAction<Term>) => {
         state.loadingCreate = false;
+        state.successCreate = true;
+        state.successMessage = "Term created successfully";
         state.terms.push(action.payload);
       })
       .addCase(createTerm.rejected, (state, action) => {
         state.loadingCreate = false;
+        state.successCreate = false;
         state.error = action.payload as string;
       })
 
       .addCase(updateTerm.pending, (state) => {
         state.loadingUpdate = true;
+        state.successUpdate = false;
         state.error = null;
       })
       .addCase(updateTerm.fulfilled, (state, action: PayloadAction<Term>) => {
         state.loadingUpdate = false;
+        state.successUpdate = true;
+        state.successMessage = "Term updated successfully";
         state.terms = state.terms.map((term) =>
           term.id === action.payload.id ? action.payload : term
         );
       })
       .addCase(updateTerm.rejected, (state, action) => {
         state.loadingUpdate = false;
+        state.successUpdate = false;
         state.error = action.payload as string;
       })
 

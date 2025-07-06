@@ -49,6 +49,7 @@ const Admission: React.FC = () => {
     successUpdate,
     loadingCreate,
     loadingUpdate,
+    successMessage,
   } = useAppSelector((state) => state.getTermsAndAcademicYears);
   console.log(error);
   const { classLevels, loading: classLevelLoading } = useAppSelector(
@@ -59,7 +60,6 @@ const Admission: React.FC = () => {
     errorCreate,
     successCreate: studentSuccessCreate,
   } = useAppSelector((state) => state.getStudents);
-  console.log("Academic Years:", academicYears);
 
   const [form] = Form.useForm();
   const [editingTerm, setEditingTerm] = useState<any>(null);
@@ -86,7 +86,7 @@ const Admission: React.FC = () => {
 
   useEffect(() => {
     if (successCreate || successUpdate) {
-      message.success("Saved successfully!");
+      message.success(successMessage || "Operation successful!");
       setIsYearModalOpen(false);
       setIsTermModalOpen(false);
       form.resetFields();
@@ -104,39 +104,48 @@ const Admission: React.FC = () => {
     dispatch(createStudent(payload));
   };
 
+  // safeDateRange with error handling
   const safeDateRange = (
     start: string | null | undefined,
     end?: string | null | undefined
   ) => {
-    console.log("🔍 safeDateRange called with:", { start, end });
+    try {
+      const startDate = dayjs(start);
+      const endDate = dayjs(end);
 
-    const startDate = dayjs(start);
-    const endDate = dayjs(end);
+      if (!startDate.isValid()) {
+        throw new Error("Invalid start date");
+      }
 
-    if (!startDate.isValid()) {
+      if (!endDate.isValid()) {
+        return [startDate, startDate];
+      }
+
+      return [startDate, endDate];
+    } catch (err) {
+      console.error("Date parsing error:", err);
+      message.error("Invalid date range. Please review your dates.");
       const fallback = dayjs();
-      return [fallback, endDate.isValid() ? endDate : fallback];
+      return [fallback, fallback];
     }
-
-    if (!endDate.isValid()) {
-      return [startDate, startDate];
-    }
-
-    return [startDate, endDate];
   };
 
   // === TERM ===
   const openTermModal = (record?: any) => {
     setEditingTerm(record || null);
     setIsTermModalOpen(true);
-    form.setFieldsValue(
-      record
-        ? {
-            ...record,
-            date_range: safeDateRange(record.start_date, record.end_date),
-          }
-        : {}
-    );
+    if (record) {
+      try {
+        form.setFieldsValue({
+          ...record,
+          date_range: safeDateRange(record.start_date, record.end_date),
+        });
+      } catch (err) {
+        message.error("Unable to load term data for editing.");
+      }
+    } else {
+      form.resetFields();
+    }
   };
 
   const handleTermSubmit = async () => {
@@ -166,14 +175,18 @@ const Admission: React.FC = () => {
   const openYearModal = (record?: any) => {
     setEditingYear(record || null);
     setIsYearModalOpen(true);
-    form.setFieldsValue(
-      record
-        ? {
-            ...record,
-            date_range: safeDateRange(record.start_date, record.end_date),
-          }
-        : {}
-    );
+    if (record) {
+      try {
+        form.setFieldsValue({
+          ...record,
+          date_range: safeDateRange(record.start_date, record.end_date),
+        });
+      } catch (err) {
+        message.error("Unable to load academic year data.");
+      }
+    } else {
+      form.resetFields();
+    }
   };
 
   const handleYearSubmit = async () => {
@@ -201,6 +214,22 @@ const Admission: React.FC = () => {
 
   return (
     <div className="p-4">
+      {error && (
+        <div style={{ marginBottom: 16 }}>
+          <Message variant="danger">{String(error)}</Message>
+        </div>
+      )}
+      {errorCreate && (
+        <div style={{ marginBottom: 16 }}>
+          <Message variant="danger">{String(errorCreate)}</Message>
+        </div>
+      )}
+      {successCreate && (
+        <div style={{ marginBottom: 16 }}>
+          <Message variant="success">{successMessage}</Message>
+        </div>
+      )}
+
       <Space style={{ marginBottom: 16 }}>
         <Button
           icon={<PlusOutlined />}
@@ -230,8 +259,22 @@ const Admission: React.FC = () => {
             rowKey="id"
             columns={[
               { title: "Name", dataIndex: "name" },
-              { title: "Start Date", dataIndex: "start_date" },
-              { title: "End Date", dataIndex: "end_date" },
+              {
+                title: "Start Date",
+                dataIndex: "start_date",
+                render: (val) =>
+                  val && typeof val === "string" && dayjs(val).isValid()
+                    ? dayjs(val).format("YYYY-MM-DD")
+                    : "N/A",
+              },
+              {
+                title: "End Date",
+                dataIndex: "end_date",
+                render: (val) =>
+                  val && typeof val === "string" && dayjs(val).isValid()
+                    ? dayjs(val).format("YYYY-MM-DD")
+                    : "N/A",
+              },
               {
                 title: "Active",
                 dataIndex: "active_year",
@@ -269,8 +312,22 @@ const Admission: React.FC = () => {
             columns={[
               { title: "Name", dataIndex: "name" },
               { title: "Academic Year", dataIndex: "academic_year_name" },
-              { title: "Start Date", dataIndex: "start_date" },
-              { title: "End Date", dataIndex: "end_date" },
+              {
+                title: "Start Date",
+                dataIndex: "start_date",
+                render: (val) =>
+                  val && typeof val === "string" && dayjs(val).isValid()
+                    ? dayjs(val).format("YYYY-MM-DD")
+                    : "N/A",
+              },
+              {
+                title: "End Date",
+                dataIndex: "end_date",
+                render: (val) =>
+                  val && typeof val === "string" && dayjs(val).isValid()
+                    ? dayjs(val).format("YYYY-MM-DD")
+                    : "N/A",
+              },
               {
                 title: "Actions",
                 render: (_, record) => (

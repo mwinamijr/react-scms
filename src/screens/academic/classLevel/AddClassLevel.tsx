@@ -1,51 +1,61 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import { createClassLevel } from "../../../features/academic/classLevelSlice";
+import {
+  createClassLevel,
+  resetCreateState,
+} from "../../../features/academic/classLevelSlice";
 import { useNavigate, Link } from "react-router-dom";
 import type { RootState } from "../../../app/store"; // Adjust path as needed strong form typing
 import { useAppDispatch } from "../../../app/hooks";
+import Message from "../../../components/Message";
 
 const AddClassLevel: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { loadingCreate } = useSelector(
+  const { loadingCreate, successCreate, errorCreate } = useSelector(
     (state: RootState) => state.getClassLevels
   );
 
-  const onFinish = (values: { name: string; order_rank: number }) => {
-    dispatch(createClassLevel(values)).then(() => {
+  useEffect(() => {
+    if (successCreate) {
       message.success("ClassLevel created successfully!");
       navigate("/academic/classLevels");
-    });
+    }
+    dispatch(resetCreateState());
+  }, [successCreate, navigate, dispatch]);
+
+  const onFinish = (values: { name: string; id: number }) => {
+    dispatch(createClassLevel(values));
   };
 
   return (
     <div>
       <Link to="/academic/classLevels">
-        <Button type="default" icon={<ArrowLeftOutlined />}>
+        <Button className="mb-4" type="default" icon={<ArrowLeftOutlined />}>
           Back to ClassLevels
         </Button>
       </Link>
 
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+
       <Card title="Add ClassLevel" className="mt-4">
         <Form layout="vertical" onFinish={onFinish}>
+          <Form.Item
+            label="Id"
+            name="id"
+            rules={[{ required: true, message: "Enter classLevel id" }]}
+          >
+            <Input type="number" />
+          </Form.Item>
           <Form.Item
             label="Name"
             name="name"
             rules={[{ required: true, message: "Enter classLevel name" }]}
           >
             <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Order"
-            name="order_rank"
-            rules={[{ required: true, message: "Enter classLevel rank" }]}
-          >
-            <Input type="number" />
           </Form.Item>
 
           <Button type="primary" htmlType="submit" loading={loadingCreate}>

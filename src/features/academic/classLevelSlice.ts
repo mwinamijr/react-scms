@@ -2,14 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import type { RootState } from "../../app/store"; // Adjust the import path as necessary
-
-const djangoUrl = "http://127.0.0.1:8000";
+import { djangoUrl, getErrorMessage } from "../utils";
 
 // Type Definitions
 interface ClassLevel {
   id: number;
   name: string;
-  [key: string]: any;
 }
 
 interface ClassLevelState {
@@ -22,22 +20,6 @@ interface ClassLevelState {
   loadingCreate: boolean;
   errorCreate: string | null;
 }
-
-// Error message handler
-const getErrorMessage = (error: any): string => {
-  if (error.response) {
-    if (error.response.data) {
-      if (typeof error.response.data === "string") {
-        return error.response.data;
-      } else if (error.response.data.detail) {
-        return error.response.data.detail;
-      } else {
-        return JSON.stringify(error.response.data);
-      }
-    }
-  }
-  return error.message || "An unknown error occurred";
-};
 
 // Async Thunks
 export const getClassLevelDetails = createAsyncThunk<
