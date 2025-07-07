@@ -51,11 +51,7 @@ const AddReceiptAllocation: React.FC = () => {
         <Form.Item label="Name" name="name" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Short Name"
-          name="short_name"
-          rules={[{ required: true }]}
-        >
+        <Form.Item label="Short Name" name="abbr" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
         <Button

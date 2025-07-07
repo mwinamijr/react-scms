@@ -343,8 +343,170 @@ const financeSlice = createSlice({
       .addCase(listReceiptAllocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Error loading receipt allocations";
+      })
+      .addCase(receiptAllocationDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        receiptAllocationDetails.fulfilled,
+        (state, action: PayloadAction<Allocation>) => {
+          state.loading = false;
+          state.receiptAllocation = action.payload;
+        }
+      )
+      .addCase(receiptAllocationDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error loading receipt allocation";
+      })
+      .addCase(createReceiptAllocation.pending, (state) => {
+        state.loadingCreate = true;
+        state.errorCreate = null;
+      })
+      .addCase(
+        createReceiptAllocation.fulfilled,
+        (state, action: PayloadAction<Allocation>) => {
+          state.loadingCreate = false;
+          state.successCreate = true;
+          state.receiptAllocations.push(action.payload);
+        }
+      )
+      .addCase(createReceiptAllocation.rejected, (state, action) => {
+        state.loadingCreate = false;
+        state.errorCreate =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Error creating receipt allocation";
+      })
+      .addCase(updateReceiptAllocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        updateReceiptAllocation.fulfilled,
+        (state, action: PayloadAction<Allocation>) => {
+          state.loading = false;
+          const index = state.receiptAllocations.findIndex(
+            (allocation) => allocation.id === action.payload.id
+          );
+          if (index !== -1) {
+            state.receiptAllocations[index] = action.payload;
+          }
+          state.receiptAllocation = action.payload;
+        }
+      )
+      .addCase(updateReceiptAllocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error updating receipt allocation";
+      })
+      .addCase(deleteReceiptAllocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteReceiptAllocation.fulfilled,
+        (state, action: PayloadAction<{ id: number }>) => {
+          state.loading = false;
+          state.receiptAllocations = state.receiptAllocations.filter(
+            (allocation) => allocation.id !== action.payload.id
+          );
+          if (state.receiptAllocation?.id === action.payload.id) {
+            state.receiptAllocation = null;
+          }
+        }
+      )
+      .addCase(deleteReceiptAllocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error deleting receipt allocation";
+      })
+      .addCase(listPaymentAllocations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        listPaymentAllocations.fulfilled,
+        (state, action: PayloadAction<Allocation[]>) => {
+          state.loading = false;
+          state.paymentAllocations = action.payload;
+        }
+      )
+      .addCase(listPaymentAllocations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error loading payment allocations";
+      })
+      .addCase(paymentAllocationDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        paymentAllocationDetails.fulfilled,
+        (state, action: PayloadAction<Allocation>) => {
+          state.loading = false;
+          state.paymentAllocation = action.payload;
+        }
+      )
+      .addCase(paymentAllocationDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error loading payment allocation";
+      })
+      .addCase(createPaymentAllocation.pending, (state) => {
+        state.loadingCreate = true;
+        state.errorCreate = null;
+      })
+      .addCase(
+        createPaymentAllocation.fulfilled,
+        (state, action: PayloadAction<Allocation>) => {
+          state.loadingCreate = false;
+          state.successCreate = true;
+          state.paymentAllocations.push(action.payload);
+        }
+      )
+      .addCase(createPaymentAllocation.rejected, (state, action) => {
+        state.loadingCreate = false;
+        state.errorCreate =
+          action.payload ?? "Error creating payment allocation";
+      })
+      .addCase(updatePaymentAllocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        updatePaymentAllocation.fulfilled,
+        (state, action: PayloadAction<Allocation>) => {
+          state.loading = false;
+          const index = state.paymentAllocations.findIndex(
+            (allocation) => allocation.id === action.payload.id
+          );
+          if (index !== -1) {
+            state.paymentAllocations[index] = action.payload;
+          }
+          state.paymentAllocation = action.payload;
+        }
+      )
+      .addCase(updatePaymentAllocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error updating payment allocation";
+      })
+      .addCase(deletePaymentAllocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deletePaymentAllocation.fulfilled,
+        (state, action: PayloadAction<{ id: number }>) => {
+          state.loading = false;
+          state.paymentAllocations = state.paymentAllocations.filter(
+            (allocation) => allocation.id !== action.payload.id
+          );
+          if (state.paymentAllocation?.id === action.payload.id) {
+            state.paymentAllocation = null;
+          }
+        }
+      )
+      .addCase(deletePaymentAllocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Error deleting payment allocation";
       });
-    // ... continue handling all other thunks similarly
   },
 });
 

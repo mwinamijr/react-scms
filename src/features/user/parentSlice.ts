@@ -79,7 +79,7 @@ export const listParents = createAsyncThunk<
       `${djangoUrl}/api/users/parents/`,
       config
     );
-    return response.data.results; // return only the array of parents
+    return response.data; // return only the array of parents
   } catch (error) {
     return rejectWithValue(getErrorMessage(error));
   }
@@ -100,7 +100,7 @@ export const deleteParent = createAsyncThunk<
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    await axios.delete(`${djangoUrl}/api/users/users/delete/${id}/`, config);
+    await axios.delete(`${djangoUrl}/api/users/parents/delete/${id}/`, config);
     return id;
   } catch (error) {
     return rejectWithValue(getErrorMessage(error));
