@@ -377,6 +377,9 @@ const financeSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(listStudentReceipts.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         listStudentReceipts.fulfilled,
         (state, action: PayloadAction<Receipt[]>) => {
@@ -384,6 +387,13 @@ const financeSlice = createSlice({
           state.studentReceipts = action.payload;
         }
       )
+      .addCase(listStudentReceipts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(receiptDetails.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         receiptDetails.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -391,6 +401,15 @@ const financeSlice = createSlice({
           state.receipt = action.payload;
         }
       )
+      .addCase(receiptDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createReceipt.pending, (state) => {
+        state.loading = true;
+        state.successCreate = false;
+        state.createdReceipt = null;
+      })
       .addCase(
         createReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -399,6 +418,14 @@ const financeSlice = createSlice({
           state.successCreate = true;
         }
       )
+      .addCase(createReceipt.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.successCreate = false;
+      })
+      .addCase(updateReceipt.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         updateReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -406,6 +433,13 @@ const financeSlice = createSlice({
           state.receipt = action.payload;
         }
       )
+      .addCase(updateReceipt.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deleteReceipt.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         deleteReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -415,8 +449,14 @@ const financeSlice = createSlice({
           );
         }
       )
-
+      .addCase(deleteReceipt.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       // Payments
+      .addCase(listPayments.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         listPayments.fulfilled,
         (state, action: PayloadAction<Payment[]>) => {
@@ -424,6 +464,13 @@ const financeSlice = createSlice({
           state.payments = action.payload;
         }
       )
+      .addCase(listPayments.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(paymentDetails.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         paymentDetails.fulfilled,
         (state, action: PayloadAction<Payment>) => {
@@ -431,6 +478,15 @@ const financeSlice = createSlice({
           state.payment = action.payload;
         }
       )
+      .addCase(paymentDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createPayment.pending, (state) => {
+        state.loading = true;
+        state.successCreate = false;
+        state.createdPayment = null;
+      })
       .addCase(
         createPayment.fulfilled,
         (state, action: PayloadAction<Payment>) => {
@@ -439,6 +495,14 @@ const financeSlice = createSlice({
           state.successCreate = true;
         }
       )
+      .addCase(createPayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.successCreate = false;
+      })
+      .addCase(updatePayment.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         updatePayment.fulfilled,
         (state, action: PayloadAction<Payment>) => {
@@ -446,6 +510,13 @@ const financeSlice = createSlice({
           state.payment = action.payload;
         }
       )
+      .addCase(updatePayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deletePayment.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         deletePayment.fulfilled,
         (state, action: PayloadAction<Payment>) => {
@@ -454,24 +525,11 @@ const financeSlice = createSlice({
             (payment) => payment.id !== action.payload.id
           );
         }
-      );
-
-    // Rejection/loading states (generic)
-    builder
-      .addMatcher(
-        (action) => action.type.endsWith("/pending"),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
       )
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state, action: PayloadAction<string>) => {
-          state.loading = false;
-          state.error = action.payload;
-        }
-      );
+      .addCase(deletePayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

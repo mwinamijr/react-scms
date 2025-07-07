@@ -52,6 +52,7 @@ const AddReceipt: React.FC = () => {
   const { loading, error, successCreate } = useSelector(
     (state: RootState) => state.getFinance
   );
+
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
   const { loading: loadStudents, students } = useSelector(
     (state: RootState) => state.getStudents
