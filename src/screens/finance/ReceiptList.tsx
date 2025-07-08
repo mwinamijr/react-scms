@@ -13,7 +13,12 @@ import {
   message,
   Popconfirm,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UploadOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import type { Moment } from "moment";
 import type { ColumnsType } from "antd/es/table";
 
@@ -178,9 +183,43 @@ const Receipts: React.FC = () => {
           <>
             <h1 className="text-center">Receipts</h1>
 
-            <Link to="/finance/receipts/add" className="btn btn-light my-3">
-              Add Receipt
-            </Link>
+            <Row
+              gutter={[16, 16]}
+              className="mb-4"
+              align="middle"
+              justify="start"
+            >
+              <Col xs={24} sm={12} lg={6}>
+                <Button type="default" block>
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <PlusOutlined />
+                    <Link to="/finance/receipts/add">Add Receipt</Link>
+                  </span>
+                </Button>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <Button type="default" block>
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <UploadOutlined />
+                    <Link to="/finance/receipts/upload">Bulk Upload</Link>
+                  </span>
+                </Button>
+              </Col>
+            </Row>
 
             <Row gutter={16} className="mb-4">
               <Col xs={24} md={8}>

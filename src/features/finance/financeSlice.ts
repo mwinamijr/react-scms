@@ -47,6 +47,24 @@ interface Payment {
   paid_by: User;
 }
 
+interface ReceiptUploadError {
+  payer: string;
+  amount: number;
+  error: string;
+}
+
+interface UpdatedReceipt {
+  receipt_number: string;
+  payer: string;
+  reasons: string;
+}
+
+interface SkippedReceipt {
+  receipt_number: string;
+  payer: string;
+  reason: string;
+}
+
 interface FinanceState {
   receipts: Receipt[];
   studentReceipts: Receipt[];
@@ -58,6 +76,13 @@ interface FinanceState {
   successCreate: boolean;
   createdReceipt: Receipt | null;
   createdPayment: Payment | null;
+  uploadingReceipts: boolean;
+  successBulkUpload: boolean;
+  bulkUploadError: string | null;
+  uploadMessage: string | null;
+  notCreatedReceipts: ReceiptUploadError[];
+  updatedReceipts: UpdatedReceipt[];
+  skippedReceipts: SkippedReceipt[];
 }
 
 // Receipts
@@ -221,6 +246,35 @@ export const deleteReceipt = createAsyncThunk<Receipt, number>(
   }
 );
 
+export const bulkUploadReceipts = createAsyncThunk(
+  "receipt/bulkUploadReceipts",
+  async (formData: FormData, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        `${djangoUrl}/api/finance/receipts/bulk-upload/`,
+        formData,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
 // Payments
 export const listPayments = createAsyncThunk<Payment[]>(
   "payment/list",
@@ -367,6 +421,13 @@ const initialState: FinanceState = {
   successCreate: false,
   createdReceipt: null,
   createdPayment: null,
+  uploadingReceipts: false,
+  successBulkUpload: false,
+  bulkUploadError: null,
+  uploadMessage: null,
+  notCreatedReceipts: [],
+  updatedReceipts: [],
+  skippedReceipts: [],
 };
 
 const financeSlice = createSlice({
@@ -384,6 +445,9 @@ const financeSlice = createSlice({
       state.successCreate = false;
       state.createdReceipt = null;
       state.createdPayment = null;
+      state.uploadingReceipts = false;
+      state.successBulkUpload = false;
+      state.bulkUploadError = null;
     },
   },
   extraReducers: (builder) => {
@@ -480,6 +544,25 @@ const financeSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(bulkUploadReceipts.pending, (state) => {
+        state.uploadingReceipts = true;
+        state.successBulkUpload = false;
+        state.bulkUploadError = null;
+      })
+      .addCase(bulkUploadReceipts.fulfilled, (state, action) => {
+        state.uploadingReceipts = false;
+        state.successBulkUpload = true;
+        state.uploadMessage = action.payload.message;
+        state.notCreatedReceipts = action.payload.not_created || [];
+        state.updatedReceipts = action.payload.updated || [];
+        state.skippedReceipts = action.payload.skipped || [];
+      })
+      .addCase(bulkUploadReceipts.rejected, (state, action) => {
+        state.uploadingReceipts = false;
+        state.successBulkUpload = false;
+        state.bulkUploadError = action.payload as string;
+      })
+
       // Payments
       .addCase(listPayments.pending, (state) => {
         state.loading = true;
