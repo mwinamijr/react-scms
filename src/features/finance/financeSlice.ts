@@ -13,14 +13,27 @@ interface PaidFor {
   name: string;
 }
 
+interface Term {
+  id: number;
+  name: string;
+  academic_year_name: string;
+  start_date: string;
+  end_date: string;
+}
+
 interface Receipt {
   id: number;
   date: string;
   amount: number;
-  status: "pending" | "paid" | string;
-  paid_for_details?: {
-    name: string;
+  term?: Term | null;
+  receipt_number: string;
+  student_details?: {
+    full_name: string;
   };
+  payer?: string;
+  paid_for_details?: PaidFor;
+  status: "pending" | "paid" | string;
+  paid_through: string;
 }
 
 interface Payment {
@@ -359,7 +372,20 @@ const initialState: FinanceState = {
 const financeSlice = createSlice({
   name: "finance",
   initialState,
-  reducers: {},
+  reducers: {
+    resetFinanceState: (state) => {
+      state.receipts = [];
+      state.studentReceipts = [];
+      state.receipt = null;
+      state.payments = [];
+      state.payment = null;
+      state.loading = false;
+      state.error = null;
+      state.successCreate = false;
+      state.createdReceipt = null;
+      state.createdPayment = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Receipts
@@ -430,6 +456,7 @@ const financeSlice = createSlice({
         updateReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
           state.loading = false;
+          state.successCreate = true;
           state.receipt = action.payload;
         }
       )
@@ -507,6 +534,7 @@ const financeSlice = createSlice({
         updatePayment.fulfilled,
         (state, action: PayloadAction<Payment>) => {
           state.loading = false;
+          state.successCreate = true;
           state.payment = action.payload;
         }
       )
@@ -533,4 +561,5 @@ const financeSlice = createSlice({
   },
 });
 
+export const { resetFinanceState } = financeSlice.actions;
 export default financeSlice.reducer;

@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Card, Table } from "react-bootstrap";
 import { Breadcrumb } from "antd";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { receiptDetails } from "../../features/finance/financeSlice";
 import type { RootState } from "../../app/store";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 // Define receipt type
 interface ReceiptDetails {
@@ -23,6 +22,10 @@ interface ReceiptDetails {
   paid_for_details: {
     name: string;
   };
+  term?: {
+    name: string;
+    academic_year_name: string;
+  };
   received_by_details: {
     first_name: string;
     last_name: string;
@@ -33,14 +36,10 @@ const ReceiptsDetails: React.FC = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
 
-  const { loading, error, receipt } = useSelector(
-    (state: RootState) =>
-      state.getFinance as {
-        loading: boolean;
-        error: string | null;
-        receipt: ReceiptDetails | null;
-      }
+  const { loading, error, receipt } = useAppSelector(
+    (state: RootState) => state.getFinance
   );
+  console.log("Receipt Details:", receipt);
 
   useEffect(() => {
     if (id) {
@@ -103,6 +102,13 @@ const ReceiptsDetails: React.FC = () => {
                     <tr>
                       <td>Paid through</td>
                       <td>{receipt?.paid_through}</td>
+                    </tr>
+                    <tr>
+                      <td>Term</td>
+                      <td>
+                        {receipt?.term_details?.name} -{" "}
+                        {receipt?.term_details?.academic_year_name}
+                      </td>
                     </tr>
                     <tr>
                       <td>Amount</td>

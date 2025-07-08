@@ -60,6 +60,7 @@ import UpdateReceiptAllocation from "../screens/finance/allocations/UpdateReceip
 import SchoolEvents from "../screens/academic/SchoolEvents";
 import SchoolEventsCalendar from "../screens/academic/SchoolCalendar";
 import Admission from "../screens/academic/Admission";
+import UpdateReceipt from "../screens/finance/UpdateReceipt";
 
 const MainRoutes = {
   path: "/",
@@ -101,6 +102,7 @@ const MainRoutes = {
           children: [
             { path: "receipts/", element: <Receipts /> },
             { path: "receipts/:id", element: <ReceiptsDetails /> },
+            { path: "receipts/edit/:id", element: <UpdateReceipt /> },
             { path: "receipts/add/", element: <AddReceipt /> },
             { path: "payments/", element: <Payments /> },
             { path: "payments/:id", element: <PaymentDetails /> },
