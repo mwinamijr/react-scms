@@ -1,4 +1,4 @@
-export const djangoUrl = "http://127.0.0.1:8000";
+export const djangoUrl = "";
 
 export const getErrorMessage = (error: any): string => {
   if (error?.response?.data) {
