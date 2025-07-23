@@ -5,26 +5,15 @@ import { Card, Breadcrumb, Table } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import type { RootState } from "../../app/store"; // Update with your actual store paths
-import { paymentDetails } from "../../features/finance/financeSlice";
+import { paymentDetails } from "../../features/finance/paymentSlice";
 import { useAppDispatch } from "../../app/hooks";
-
-// Define the shape of the payment object
-interface Payment {
-  date: string;
-  payment_no: string;
-  paid_to: string;
-  user: string;
-  paid_for: string;
-  amount: number;
-  paid_by: string;
-}
 
 const PaymentsDetails: React.FC = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
 
   const { loading, error, payment } = useSelector(
-    (state: RootState) => state.getFinance
+    (state: RootState) => state.getPayments
   );
 
   useEffect(() => {

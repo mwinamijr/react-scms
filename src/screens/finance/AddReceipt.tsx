@@ -14,7 +14,7 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import type { SelectProps } from "antd";
-import { createReceipt } from "../../features/finance/financeSlice";
+import { createReceipt } from "../../features/finance/receiptSlice";
 import { listStudents } from "../../features/students/studentSlice";
 import { listReceiptAllocations } from "../../features/finance/allocationSlice";
 import Message from "../../components/Message";
@@ -50,7 +50,7 @@ const AddReceipt: React.FC = () => {
   const navigate = useNavigate();
 
   const { loading, error, successCreate } = useSelector(
-    (state: RootState) => state.getFinance
+    (state: RootState) => state.getReceipts
   );
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
   const { loading: loadStudents, students } = useSelector(

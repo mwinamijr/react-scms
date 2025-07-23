@@ -5,7 +5,7 @@ import type { RootState } from "../../app/store"; // adjust path to your store
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { studentDetails } from "../../features/students/studentSlice";
-import { listStudentReceipts } from "../../features/finance/financeSlice";
+import { listStudentReceipts } from "../../features/finance/receiptSlice";
 
 import {
   Card,

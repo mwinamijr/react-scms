@@ -5,7 +5,7 @@ import { Breadcrumb, Table } from "antd";
 import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
-import { listPayments } from "../../features/finance/financeSlice";
+import { listPayments } from "../../features/finance/paymentSlice";
 import Message from "../../components/Message";
 import type { RootState } from "../../app/store"; // Replace with your actual store type paths
 import { useAppDispatch } from "../../app/hooks";
@@ -35,7 +35,7 @@ const Payments: React.FC = () => {
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
 
   const { loading, error, payments } = useSelector(
-    (state: RootState) => state.getFinance
+    (state: RootState) => state.getPayments
   );
 
   useEffect(() => {

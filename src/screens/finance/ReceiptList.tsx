@@ -20,7 +20,7 @@ import type { ColumnsType } from "antd/es/table";
 import {
   listReceipts,
   deleteReceipt,
-} from "../../features/finance/financeSlice";
+} from "../../features/finance/receiptSlice";
 import Message from "../../components/Message";
 import type { RootState } from "../../app/store";
 import { useAppDispatch } from "../../app/hooks";
@@ -63,7 +63,7 @@ const Receipts: React.FC = () => {
 
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
   const { receipts, loading, error } = useSelector(
-    (state: RootState) => state.getFinance
+    (state: RootState) => state.getReceipts
   );
 
   const [filters, setFilters] = useState<Filters>({

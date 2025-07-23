@@ -8,6 +8,7 @@ import Message from "../../../components/Message";
 import { bulkCreateSubjects } from "../../../features/academic/subjectSlice";
 import type { RootState } from "../../../app/store";
 import { useAppDispatch } from "../../../app/hooks";
+import { djangoUrl } from "../../../features/utils";
 
 // Define the structure for subjects that failed to be created
 interface NotCreatedSubject {
@@ -68,6 +69,16 @@ const BulkUpload: React.FC = () => {
           {uploadMessage && (
             <Message variant="success">{uploadMessage}</Message>
           )}
+
+          <div className="text-end mb-3">
+            <a
+              href={`${djangoUrl}/api/academic/subjects/template/`}
+              className="btn btn-success"
+              download
+            >
+              Download Template
+            </a>
+          </div>
 
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="bulkUpload" className="mb-3">

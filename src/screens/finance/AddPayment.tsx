@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { createPayment } from "../../features/finance/financeSlice";
+import { createPayment } from "../../features/finance/paymentSlice";
 import { listTeachers } from "../../features/user/teacherSlice";
 import { listPaymentAllocations } from "../../features/finance/allocationSlice";
 import type { RootState } from "../../app/store";
@@ -35,7 +35,7 @@ const AddPayment: React.FC = () => {
   const navigate = useNavigate();
 
   const { loading, error, successCreate } = useSelector(
-    (state: RootState) => state.getFinance
+    (state: RootState) => state.getPayments
   );
 
   const { loading: loadTeachers, teachers } = useSelector(

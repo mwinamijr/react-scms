@@ -5,7 +5,7 @@ import { Card, Table } from "react-bootstrap";
 import { Breadcrumb } from "antd";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { receiptDetails } from "../../features/finance/financeSlice";
+import { receiptDetails } from "../../features/finance/receiptSlice";
 import type { RootState } from "../../app/store";
 import { useAppDispatch } from "../../app/hooks";
 
@@ -34,12 +34,7 @@ const ReceiptsDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const { loading, error, receipt } = useSelector(
-    (state: RootState) =>
-      state.getFinance as {
-        loading: boolean;
-        error: string | null;
-        receipt: ReceiptDetails | null;
-      }
+    (state: RootState) => state.getReceipts
   );
 
   useEffect(() => {
