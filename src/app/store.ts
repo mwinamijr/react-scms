@@ -4,6 +4,8 @@ import teacherReducer from "../features/user/teacherSlice";
 import accountantReducer from "../features/user/accountantSlice";
 import receiptReducer from "../features/finance/receiptSlice";
 import paymentReducer from "../features/finance/paymentSlice";
+import bankSlipReducer from "../features/finance/bankSlipSlice";
+import slipUsageReducer from "../features/finance/slipUsageSlice";
 import studentReducer from "../features/students/studentSlice";
 import parentReducer from "../features/user/parentSlice";
 import subjectReducer from "../features/academic/subjectSlice";
@@ -23,6 +25,8 @@ export const store = configureStore({
     getAccountants: accountantReducer,
     getReceipts: receiptReducer,
     getPayments: paymentReducer,
+    getBankSlips: bankSlipReducer,
+    getSlipUsages: slipUsageReducer,
     getAllocations: allocationReducer,
     getStudents: studentReducer,
     getParents: parentReducer,
