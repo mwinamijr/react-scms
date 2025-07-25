@@ -152,7 +152,21 @@ const Dashboard: React.FC = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <Title level={2}>Dashboard</Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
+        <Col>
+          <Title level={2}>Dashboard</Title>
+        </Col>
+        <Col>
+          <Link to="/finance/verify-slips">
+            <Button type="primary" size="large">
+              Verify Slips
+            </Button>
+          </Link>
+        </Col>
+      </Row>
+
+      <Divider />
+      <Title level={4}>Welcome to the School Management System</Title>
 
       <Row gutter={[16, 16]}>
         {[
@@ -222,9 +236,7 @@ const Dashboard: React.FC = () => {
           </Col>
         ))}
       </Row>
-
       <Divider />
-
       <Card title="Debt Management">
         <Space direction="vertical">
           <Button

@@ -16,7 +16,8 @@ import type { MenuProps } from "antd";
 import NotificationSection from "./header/NotificationSection";
 import ProfileSection from "./header/ProfileSection";
 import logo from "../assets/hayatul-logo.svg";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { fetchAcademicYears } from "../features/administration/termAndAcademicYearSlice";
 
 const { Content, Header, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
@@ -40,6 +41,7 @@ function getItem(
 }
 
 const DashboardLayout: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const location = useLocation();
@@ -49,6 +51,10 @@ const DashboardLayout: React.FC = () => {
     (state) => state.getTermsAndAcademicYears
   );
   const currentAcademicYear = academicYears.find((year) => year.active_year);
+
+  useEffect(() => {
+    dispatch(fetchAcademicYears());
+  }, [dispatch]);
 
   const items: MenuItem[] = [
     getItem(

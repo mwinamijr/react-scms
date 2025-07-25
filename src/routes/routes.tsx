@@ -60,6 +60,7 @@ import UpdateReceiptAllocation from "../screens/finance/allocations/UpdateReceip
 import SchoolEvents from "../screens/academic/SchoolEvents";
 import SchoolEventsCalendar from "../screens/academic/SchoolCalendar";
 import Admission from "../screens/academic/Admission";
+import VerifySlips from "../screens/finance/VerifySlip";
 
 const MainRoutes = {
   path: "/",
@@ -102,10 +103,12 @@ const MainRoutes = {
             { path: "receipts/", element: <Receipts /> },
             { path: "receipts/:id", element: <ReceiptsDetails /> },
             { path: "receipts/add/", element: <AddReceipt /> },
+            { path: "verify-slips", element: <VerifySlips /> },
             { path: "payments/", element: <Payments /> },
             { path: "payments/:id", element: <PaymentDetails /> },
             { path: "payments/add/", element: <AddPayment /> },
             { path: "payroll/", element: <Payroll /> },
+
             { path: "reports/", element: <Reports /> },
             {
               path: "allocations",
