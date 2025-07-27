@@ -1,4 +1,4 @@
-export const djangoUrl = "";
+export const djangoUrl = import.meta.env.VITE_DJANGO_URL;
 
 export const getErrorMessage = (error: any): string => {
   if (error?.response?.data) {
