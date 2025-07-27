@@ -50,3 +50,74 @@
   border: 1px solid #ddd;
   text-align: left;
 }
+
+/* receipt styles */
+.receipt-container {
+  width: 80mm;
+  max-width: 302px;
+  margin: auto;
+  font-family: monospace;
+  font-size: 12px;
+  color: #000;
+  background: #fff;
+  padding: 8px;
+}
+
+.receipt {
+  border: 1px dashed #000;
+  padding: 8px;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.details {
+  margin-top: 10px;
+}
+
+.details div {
+  margin-bottom: 5px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .receipt-container, .receipt-container * {
+    visibility: visible;
+  }
+
+  .receipt-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+  }
+
+  .no-print {
+    display: none;
+  }
+}
+
+@media print {
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+
+  .container {
+    margin: 0;
+    padding: 0;
+  }
+}

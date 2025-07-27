@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
             const res = await dispatch(action(params));
             if (res.error) throw new Error(res.error.message);
           } catch (e: any) {
-            message.error(`Failed to load ${name}: ${e.message}`);
+            // message.error(`Failed to load ${name}: ${e.message}`);
           } finally {
             setLoadingStates((prev) => ({ ...prev, [name]: false }));
           }

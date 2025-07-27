@@ -240,7 +240,7 @@ const DashboardLayout: React.FC = () => {
       >
         {/* Left side: Logo + Title */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <img src={logo} alt="techdometz" style={{ height: 40 }} />
+          <img src={logo} alt="hayatul islamiya" style={{ height: 40 }} />
           <h1
             style={{
               color: "#fff",
@@ -250,7 +250,7 @@ const DashboardLayout: React.FC = () => {
               letterSpacing: "0.5px",
             }}
           >
-            Tech HMS
+            Hayatul SIMS
           </h1>
           <span
             style={{
@@ -258,8 +258,10 @@ const DashboardLayout: React.FC = () => {
               fontSize: "16px",
               fontWeight: 500,
               backgroundColor: "#1e3c72",
-              padding: "4px 12px",
+              padding: "2px 8px",
+              margin: 0,
               borderRadius: "16px",
+              letterSpacing: "0.5px",
             }}
           >
             Academic Year:{" "}

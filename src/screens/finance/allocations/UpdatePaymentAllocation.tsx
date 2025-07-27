@@ -36,7 +36,13 @@ const UpdatePaymentAllocation: React.FC = () => {
 
   const handleSubmit = (values: { name: string; abbr: string }) => {
     if (!id) return;
-    dispatch(updatePaymentAllocation({ id: Number(id), ...values }))
+    console.log("Submitting values:", values);
+    dispatch(
+      updatePaymentAllocation({
+        id: Number(id),
+        paymentAllocationData: { ...values, id: Number(id) },
+      })
+    )
       .unwrap()
       .then(() => {
         message.success("Updated successfully");

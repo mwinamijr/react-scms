@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import {
   Breadcrumb,
   Table,
@@ -26,7 +25,7 @@ import {
   listReceiptAllocations,
 } from "../../../features/finance/allocationSlice";
 import type { RootState } from "../../../app/store";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import type { ColumnsType } from "antd/es/table";
 
 const { Title } = Typography;
@@ -41,7 +40,7 @@ const Allocation: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { loading, error, receiptAllocations, paymentAllocations } =
-    useSelector((state: RootState) => state.getAllocations);
+    useAppSelector((state: RootState) => state.getAllocations);
 
   useEffect(() => {
     dispatch(listPaymentAllocations());

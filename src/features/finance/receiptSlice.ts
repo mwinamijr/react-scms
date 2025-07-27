@@ -4,17 +4,41 @@ import axios from "axios";
 import { getErrorMessage } from "../utils";
 import { djangoUrl } from "../utils";
 
+interface User {
+  first_name: string;
+  last_name: string;
+}
+
+interface PaidFor {
+  name: string;
+}
+
+interface Term {
+  id: number;
+  name: string;
+  academic_year_name: string;
+  start_date: string;
+  end_date: string;
+}
+
 interface Receipt {
   id: number;
   date: string;
   amount: number;
+  term?: Term | null;
+  receipt_number: string;
+  student_details?: {
+    full_name: string;
+  };
+  payer?: string;
+  paid_for_details?: PaidFor;
   status: "pending" | "paid" | string;
   paid_for_details?: {
     name: string;
   };
 }
 
-interface ReceiptState {
+interface Payment {
   receipts: Receipt[];
   studentReceipts: Receipt[];
   receipt: Receipt | null;
@@ -185,6 +209,35 @@ export const deleteReceipt = createAsyncThunk<Receipt, number>(
   }
 );
 
+export const bulkUploadReceipts = createAsyncThunk(
+  "receipt/bulkUploadReceipts",
+  async (formData: FormData, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const {
+        getUsers: { userInfo },
+      } = getState() as { getUsers: { userInfo: { token: string } } };
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        `${djangoUrl}/api/finance/receipts/bulk-upload/`,
+        formData,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
 const initialState: ReceiptState = {
   receipts: [],
   studentReceipts: [],
@@ -198,7 +251,23 @@ const initialState: ReceiptState = {
 const receiptSlice = createSlice({
   name: "receipt",
   initialState,
-  reducers: {},
+  reducers: {
+    resetFinanceState: (state) => {
+      state.receipts = [];
+      state.studentReceipts = [];
+      state.receipt = null;
+      state.payments = [];
+      state.payment = null;
+      state.loading = false;
+      state.error = null;
+      state.successCreate = false;
+      state.createdReceipt = null;
+      state.createdPayment = null;
+      state.uploadingReceipts = false;
+      state.successBulkUpload = false;
+      state.bulkUploadError = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Receipts
@@ -216,6 +285,9 @@ const receiptSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(listStudentReceipts.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         listStudentReceipts.fulfilled,
         (state, action: PayloadAction<Receipt[]>) => {
@@ -223,6 +295,13 @@ const receiptSlice = createSlice({
           state.studentReceipts = action.payload;
         }
       )
+      .addCase(listStudentReceipts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(receiptDetails.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         receiptDetails.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -230,6 +309,15 @@ const receiptSlice = createSlice({
           state.receipt = action.payload;
         }
       )
+      .addCase(receiptDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createReceipt.pending, (state) => {
+        state.loading = true;
+        state.successCreate = false;
+        state.createdReceipt = null;
+      })
       .addCase(
         createReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -238,13 +326,29 @@ const receiptSlice = createSlice({
           state.successCreate = true;
         }
       )
+      .addCase(createReceipt.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.successCreate = false;
+      })
+      .addCase(updateReceipt.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         updateReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
           state.loading = false;
+          state.successCreate = true;
           state.receipt = action.payload;
         }
       )
+      .addCase(updateReceipt.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deleteReceipt.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         deleteReceipt.fulfilled,
         (state, action: PayloadAction<Receipt>) => {
@@ -263,13 +367,10 @@ const receiptSlice = createSlice({
           state.error = null;
         }
       )
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state, action: PayloadAction<string>) => {
-          state.loading = false;
-          state.error = action.payload;
-        }
-      );
+      .addCase(deletePayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

@@ -30,7 +30,12 @@ const UpdateReceiptAllocation: React.FC = () => {
   }, [receiptAllocation, form]);
 
   const handleSubmit = (values: { name: string; abbr: string }) => {
-    dispatch(updateReceiptAllocation({ id: Number(id), ...values }))
+    dispatch(
+      updateReceiptAllocation({
+        id: Number(id),
+        receiptAllocationData: { ...values, id: Number(id) },
+      })
+    )
       .unwrap()
       .then(() => {
         message.success("Updated successfully");

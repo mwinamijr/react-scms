@@ -1,41 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Card, Table } from "react-bootstrap";
-import { Breadcrumb } from "antd";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { receiptDetails } from "../../features/finance/receiptSlice";
 import type { RootState } from "../../app/store";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Breadcrumb, Button, Space } from "antd";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
-// Define receipt type
-interface ReceiptDetails {
-  id: number;
-  date: string;
-  receipt_number: string;
-  payer: string;
-  paid_through: string;
-  amount: number;
-  student_details: {
-    full_name: string;
-  };
-  paid_for_details: {
-    name: string;
-  };
-  received_by_details: {
-    first_name: string;
-    last_name: string;
-  };
-}
-
-const ReceiptsDetails: React.FC = () => {
+const ReceiptDetailsPrint: React.FC = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-
-  const { loading, error, receipt } = useSelector(
+  const { loading, error, receipt } = useAppSelector(
     (state: RootState) => state.getReceipts
   );
+
+  const receiptRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (id) {
@@ -43,8 +24,29 @@ const ReceiptsDetails: React.FC = () => {
     }
   }, [dispatch, id]);
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownloadPDF = async () => {
+    const input = receiptRef.current;
+    if (input) {
+      const canvas = await html2canvas(input, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: [80, canvas.height / 4.5], // match 80mm width and auto height
+      });
+
+      pdf.addImage(imgData, "PNG", 0, 0, 80, 0); // auto height
+      pdf.save(`receipt-${receipt?.student_details?.full_name || "print"}.pdf`);
+    }
+  };
+
   return (
-    <div>
+    <div className="container">
       <Breadcrumb>
         <Breadcrumb.Item>
           <Link to="/dashboard">Dashboard</Link>
@@ -55,65 +57,70 @@ const ReceiptsDetails: React.FC = () => {
         <Breadcrumb.Item>Receipt Details</Breadcrumb.Item>
       </Breadcrumb>
 
-      <div>
+      <Space style={{ margin: "16px 0" }} className="no-print">
+        <Button type="primary" onClick={handlePrint}>
+          🖨️ Print
+        </Button>
+        <Button onClick={handleDownloadPDF}>📄 Download PDF</Button>
+      </Space>
+
+      <div className="receipt-container">
         {loading ? (
           <Loader />
         ) : error ? (
           <Message variant="danger">{error}</Message>
         ) : (
-          <div className="p-4 p-md-5 mb-4 text-black rounded bg-light">
-            <Card>
-              <Card.Header className="text-center">
-                <div className="receipt-bg">
-                  <h3>
-                    Hayatul Islamiya Secondary <br />
-                    P.O. Box 507, Babati - Manyara; <br />
-                    Phone: 0788 030052, 0752 506523 <br />
-                    A/C Number:- NMB: , NBC:, CRDB:
-                  </h3>
-                </div>
-              </Card.Header>
-              <Card.Body className="text-left col-md-8">
-                <Card.Title className="pb-3">PAYMENT RECEIPT</Card.Title>
-                <Table>
-                  <tbody>
-                    <tr>
-                      <td>Date</td>
-                      <td>{receipt?.date}</td>
-                      <td>Receipt number</td>
-                      <td>{receipt?.receipt_number}</td>
-                    </tr>
-                    <tr>
-                      <td>Payer</td>
-                      <td>{receipt?.payer}</td>
-                    </tr>
-                    <tr>
-                      <td>Student</td>
-                      <td>{receipt?.student_details?.full_name}</td>
-                    </tr>
-                    <tr>
-                      <td>Paid for</td>
-                      <td>{receipt?.paid_for_details?.name}</td>
-                    </tr>
-                    <tr>
-                      <td>Paid through</td>
-                      <td>{receipt?.paid_through}</td>
-                    </tr>
-                    <tr>
-                      <td>Amount</td>
-                      <td>{receipt?.amount}</td>
-                    </tr>
-                    <tr>
-                      <td>Received by</td>
-                      <td>
-                        {receipt?.received_by_details?.first_name}{" "}
-                        {receipt?.received_by_details?.last_name}
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
+          <div className="receipt" ref={receiptRef}>
+            <div className="header">
+              <h4>Hayatul Islamiya Secondary</h4>
+              <p>P.O. Box 507, Babati - Manyara</p>
+              <p>Phone: 0788 030052 / 0752 506523</p>
+              <p>
+                A/C: NMB: 40702300280, NBC: 072137000011, CRDB: 0150684295500
+              </p>
+              <hr />
+            </div>
+
+            <h5 className="text-center">PAYMENT RECEIPT</h5>
+
+            <div className="details">
+              <div>
+                <strong>Date:</strong> {receipt?.date}
+              </div>
+              <div>
+                <strong>Receipt No:</strong> {receipt?.receipt_number}
+              </div>
+              <div>
+                <strong>Payer:</strong> {receipt?.payer}
+              </div>
+              <div>
+                <strong>Student:</strong> {receipt?.student_details?.full_name}
+              </div>
+              <div>
+                <strong>Paid For:</strong> {receipt?.paid_for_details?.name}
+              </div>
+              <div>
+                <strong>Paid Through:</strong> {receipt?.paid_through}
+              </div>
+              <div>
+                <strong>Paid On:</strong> {receipt?.payment_date}
+              </div>
+              <div>
+                <strong>Term:</strong> {receipt?.term_details?.name} -{" "}
+                {receipt?.term_details?.academic_year_name}
+              </div>
+              <div>
+                <strong>Amount:</strong> {receipt?.amount} TZS
+              </div>
+              <div>
+                <strong>Received By:</strong>{" "}
+                {receipt?.received_by_details?.first_name}{" "}
+                {receipt?.received_by_details?.last_name}
+              </div>
+            </div>
+
+            <hr />
+            <p className="text-center">Thank you!</p>
           </div>
         )}
       </div>
@@ -121,4 +128,4 @@ const ReceiptsDetails: React.FC = () => {
   );
 };
 
-export default ReceiptsDetails;
+export default ReceiptDetailsPrint;

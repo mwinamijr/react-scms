@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Card,
   Form,
@@ -13,12 +13,16 @@ import {
   message as AntMessage,
 } from "antd";
 import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-dayjs.extend(isBetween);
 import type { SelectProps } from "antd";
-import { createReceipt } from "../../features/finance/receiptSlice";
+
+import {
+  receiptDetails,
+  updateReceipt,
+  resetFinanceState,
+} from "../../features/finance/financeSlice";
 import { listStudents } from "../../features/students/studentSlice";
 import { listReceiptAllocations } from "../../features/finance/allocationSlice";
+
 import Message from "../../components/Message";
 import type { RootState } from "../../app/store";
 import { useAppDispatch } from "../../app/hooks";
@@ -34,30 +38,19 @@ interface ReceiptFormValues {
   paid_through: string;
   payment_date: any;
   amount: number;
-  term: number | null;
+  term: number;
 }
 
-interface Student {
-  id: number;
-  first_name: string;
-  last_name: string;
-}
-
-interface ReceiptAllocation {
-  id: number;
-  name: string;
-}
-
-const AddReceipt: React.FC = () => {
+const UpdateReceipt: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, successCreate } = useSelector(
-    (state: RootState) => state.getReceipts
-  );
-
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
+  const { loading, error, successCreate, receipt } = useSelector(
+    (state: RootState) => state.getFinance
+  );
   const { loading: loadStudents, students } = useSelector(
     (state: RootState) => state.getStudents
   );
@@ -68,74 +61,55 @@ const AddReceipt: React.FC = () => {
     (state: RootState) => state.getTermsAndAcademicYears
   );
 
+  // Load initial data
   useEffect(() => {
-    dispatch(listStudents({}))
-      .unwrap()
-      .catch((error: any) => {
-        console.error("Error fetching students:", error);
-        AntMessage.error("Failed to load students list");
-      });
+    if (id) {
+      dispatch(receiptDetails(Number(id)))
+        .unwrap()
+        .then((data) => {
+          form.setFieldsValue({
+            payer: data.payer,
+            student: data.student_details.id,
+            paid_for: data.paid_for_details.id,
+            paid_through: data.paid_through,
+            payment_date: dayjs(data.date),
+            amount: data.amount,
+            term: data.term_details?.id,
+          });
+        })
+        .catch((err) => {
+          AntMessage.error("Failed to load receipt details");
+        });
+    }
 
-    dispatch(listReceiptAllocations())
-      .unwrap()
-      .catch((error: any) => {
-        console.error("Error fetching receipt allocations:", error);
-        AntMessage.error("Failed to load payment categories");
-      });
-
-    dispatch(fetchTerms())
-      .unwrap()
-      .then((fetchedTerms) => {
-        const today = dayjs();
-
-        const currentTerm = fetchedTerms.find((term) =>
-          today.isBetween(
-            dayjs(term.start_date),
-            dayjs(term.end_date),
-            null,
-            "[]"
-          )
-        );
-
-        if (currentTerm) {
-          form.setFieldsValue({ term: currentTerm.id });
-        }
-      })
-      .catch((error: any) => {
-        console.error("Error fetching terms:", error);
-        AntMessage.error("Failed to load academic terms");
-      });
-  }, [dispatch, form]);
-
-  const submitHandler = (values: ReceiptFormValues) => {
-    const formattedData = {
-      ...values,
-      received_by: userInfo?.id,
-      amount: Number(values.amount),
-      payment_date: dayjs(values.payment_date).format("YYYY-MM-DD"),
-      term: values.term ? Number(values.term) : null,
-    };
-    dispatch(createReceipt(formattedData));
-  };
+    dispatch(listStudents({}));
+    dispatch(listReceiptAllocations());
+    dispatch(fetchTerms());
+  }, [dispatch, id, form]);
 
   useEffect(() => {
     if (successCreate) {
-      navigate("/finance/receipts");
-      AntMessage.success("Receipt created successfully!");
+      navigate(`/finance/receipts/${id}`);
+      AntMessage.success("Receipt updated successfully!");
       dispatch(resetFinanceState());
     }
   }, [navigate, successCreate]);
 
+  const submitHandler = (values: ReceiptFormValues) => {
+    const formattedData = {
+      ...values,
+      amount: Number(values.amount),
+      payment_date: dayjs(values.payment_date).format("YYYY-MM-DD"),
+    };
+    if (id) {
+      dispatch(updateReceipt({ id: Number(id), receiptData: formattedData }));
+    }
+  };
+
   const filterStudentOption: SelectProps["filterOption"] = (input, option) => {
     if (!option || !option.children) return false;
-
-    if (typeof option.children === "string") {
-      return (option.children as string)
-        .toLowerCase()
-        .includes(input.toLowerCase());
-    }
-
-    const studentLabel = (option as any).title || option["data-label"] || "";
+    const studentLabel =
+      (option as any).title || option["data-label"] || option.children;
     return (
       typeof studentLabel === "string" &&
       studentLabel.toLowerCase().includes(input.toLowerCase())
@@ -151,7 +125,7 @@ const AddReceipt: React.FC = () => {
         <Breadcrumb.Item>
           <Link to="/finance/receipts/">Receipts</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>Add Receipt</Breadcrumb.Item>
+        <Breadcrumb.Item>Update Receipt</Breadcrumb.Item>
       </Breadcrumb>
 
       {userInfo?.isAccountant || userInfo?.isAdmin ? (
@@ -162,7 +136,8 @@ const AddReceipt: React.FC = () => {
             Phone: 0788 030052, 0752 506523 <br />
             A/C Number: NMB, NBC
           </Title>
-          <Card title="Payment Receipt" bordered className="mt-3">
+
+          <Card title="Update Payment Receipt" bordered className="mt-3">
             {error && <Message variant="danger">{error}</Message>}
 
             <Form
@@ -170,20 +145,15 @@ const AddReceipt: React.FC = () => {
               form={form}
               onFinish={submitHandler}
               className="mt-3"
-              initialValues={
-                {
-                  payment_date: dayjs(),
-                } as ReceiptFormValues
-              }
             >
               <Form.Item
                 label="Payer"
                 name="payer"
                 rules={[
-                  { required: true, message: "Please input Payer name!" },
+                  { required: true, message: "Please input payer name!" },
                 ]}
               >
-                <Input placeholder="Enter the name of the payer" />
+                <Input placeholder="Enter payer name" />
               </Form.Item>
 
               <Form.Item
@@ -195,15 +165,11 @@ const AddReceipt: React.FC = () => {
               >
                 <Select
                   showSearch
-                  placeholder="Search and select a student"
-                  optionFilterProp="children"
+                  placeholder="Select a student"
                   filterOption={filterStudentOption}
                   loading={loadStudents}
-                  notFoundContent={
-                    loadStudents ? "Loading students..." : "No student found"
-                  }
                 >
-                  {students?.map((student: Student) => (
+                  {students?.map((student) => (
                     <Option
                       key={student.id}
                       value={student.id}
@@ -219,20 +185,10 @@ const AddReceipt: React.FC = () => {
               <Form.Item
                 label="Paid For"
                 name="paid_for"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select a reason for payment!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please select category!" }]}
               >
-                <Select
-                  placeholder="Select Paid For"
-                  loading={
-                    !receiptAllocations || receiptAllocations.length === 0
-                  }
-                >
-                  {receiptAllocations?.map((allocation: ReceiptAllocation) => (
+                <Select placeholder="Select category">
+                  {receiptAllocations?.map((allocation) => (
                     <Option key={allocation.id} value={allocation.id}>
                       {allocation.name}
                     </Option>
@@ -243,42 +199,30 @@ const AddReceipt: React.FC = () => {
               <Form.Item
                 label="Paid Through"
                 name="paid_through"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select a method for payment!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please select method!" }]}
               >
                 <Select placeholder="Select Payment Method">
-                  <Option key="NMB" value="NMB">
-                    NMB
-                  </Option>
-                  <Option key="NBC" value="NBC">
-                    NBC
-                  </Option>
-                  <Option key="CRDB" value="CRDB">
-                    CRDB
-                  </Option>
-                  <Option key="HATI MALIPO" value="HATI MALIPO">
-                    HATI MALIPO
-                  </Option>
+                  <Option value="NMB">NMB</Option>
+                  <Option value="NBC">NBC</Option>
+                  <Option value="CRDB">CRDB</Option>
+                  <Option value="HATI MALIPO">HATI MALIPO</Option>
                 </Select>
               </Form.Item>
+
+              <Form.Item
+                label="Payment Date"
+                name="payment_date"
+                rules={[{ required: true, message: "Select payment date!" }]}
+              >
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+
               <Form.Item
                 label="Term"
                 name="term"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select an academic term!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please select a term!" }]}
               >
-                <Select
-                  placeholder="Select Term"
-                  loading={!terms || terms.length === 0}
-                >
+                <Select placeholder="Select Term">
                   {terms?.map((term) => (
                     <Option key={term.id} value={term.id}>
                       {term.name} - {term.academic_year_name}
@@ -288,46 +232,25 @@ const AddReceipt: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label="Payment Date"
-                name="payment_date"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select a date for payment!",
-                  },
-                ]}
-              >
-                <DatePicker
-                  placeholder="Payment Date"
-                  style={{ width: "100%" }}
-                />
-              </Form.Item>
-
-              <Form.Item
                 label="Amount"
                 name="amount"
                 rules={[
-                  { required: true, message: "Please input the amount!" },
+                  { required: true, message: "Enter amount!" },
                   {
                     validator: (_, value) => {
                       const numValue = Number(value);
                       if (isNaN(numValue)) {
-                        return Promise.reject("Please enter a valid number");
+                        return Promise.reject("Enter valid number");
                       }
                       if (numValue <= 0) {
-                        return Promise.reject("Amount must be greater than 0");
+                        return Promise.reject("Must be greater than 0");
                       }
                       return Promise.resolve();
                     },
                   },
                 ]}
               >
-                <Input
-                  type="number"
-                  placeholder="Enter the payment amount"
-                  min={1}
-                  step="0.01"
-                />
+                <Input type="number" min={1} step="0.01" />
               </Form.Item>
 
               <Form.Item>
@@ -337,7 +260,7 @@ const AddReceipt: React.FC = () => {
                   loading={loading}
                   disabled={loading}
                 >
-                  {loading ? "Submitting Receipt..." : "Submit Receipt"}
+                  {loading ? "Updating Receipt..." : "Update Receipt"}
                 </Button>
               </Form.Item>
             </Form>
@@ -346,8 +269,7 @@ const AddReceipt: React.FC = () => {
       ) : (
         <Card>
           <Text type="danger">
-            You are not authorized to view this page. Please contact the Admin
-            for further details.
+            You are not authorized to view this page. Please contact the Admin.
           </Text>
         </Card>
       )}
@@ -355,4 +277,4 @@ const AddReceipt: React.FC = () => {
   );
 };
 
-export default AddReceipt;
+export default UpdateReceipt;

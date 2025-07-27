@@ -61,6 +61,8 @@ import SchoolEvents from "../screens/academic/SchoolEvents";
 import SchoolEventsCalendar from "../screens/academic/SchoolCalendar";
 import Admission from "../screens/academic/Admission";
 import VerifySlips from "../screens/finance/VerifySlip";
+import UpdateReceipt from "../screens/finance/UpdateReceipt";
+import UploadReceipts from "../screens/finance/UploadReceipts";
 
 const MainRoutes = {
   path: "/",
@@ -102,8 +104,10 @@ const MainRoutes = {
           children: [
             { path: "receipts/", element: <Receipts /> },
             { path: "receipts/:id", element: <ReceiptsDetails /> },
+            { path: "receipts/edit/:id", element: <UpdateReceipt /> },
             { path: "receipts/add/", element: <AddReceipt /> },
             { path: "verify-slips", element: <VerifySlips /> },
+            { path: "receipts/upload", element: <UploadReceipts /> },
             { path: "payments/", element: <Payments /> },
             { path: "payments/:id", element: <PaymentDetails /> },
             { path: "payments/add/", element: <AddPayment /> },

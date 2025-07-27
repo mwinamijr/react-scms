@@ -78,7 +78,9 @@ const Login: React.FC = () => {
             <Title level={2} style={{ marginTop: "16px" }}>
               Hi, Welcome Back
             </Title>
-            <Text type="secondary">Enter your credentials to continue</Text>
+            <Text type="secondary">
+              Enter your credentials to continue <br />
+            </Text>
 
             {error && <Text type="danger">{error}</Text>}
 
