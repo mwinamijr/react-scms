@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Alert, Select, Spin } from "antd";
 import type { RootState } from "../../../app/store";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { listSlipUsages } from "../../../features/finance/slipUsageSlice";
 
 interface Props {
   form: any;
@@ -9,6 +10,7 @@ interface Props {
   onBack: () => void;
   students: any[];
   loading: boolean;
+  onReset: () => void;
 }
 
 const AttachSlipForm: React.FC<Props> = ({
@@ -18,11 +20,21 @@ const AttachSlipForm: React.FC<Props> = ({
   slipFound,
   students,
   loading,
+  onReset,
 }) => {
   const { slipUsages } = useAppSelector(
     (state: RootState) => state.getSlipUsages
   );
-  const slipUsage = slipUsages.find((usage) => usage.id === slipFound?.id);
+  const slipUsage = slipUsages.filter(
+    (usage) => usage.slip_ref === slipFound?.reference_number
+  );
+  console.log(slipUsage);
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(listSlipUsages());
+  }, [dispatch]);
+
   return (
     <>
       {loading ? (
@@ -38,6 +50,8 @@ const AttachSlipForm: React.FC<Props> = ({
             />
           )}
 
+          <p>{slipFound.payment_date}</p>
+
           {slipFound.used && (
             <>
               {" "}
@@ -47,16 +61,28 @@ const AttachSlipForm: React.FC<Props> = ({
                 showIcon
                 style={{ marginBottom: 16 }}
               />
-              <Alert
-                message={`Amount Used: ${slipUsage?.amount_used} \n Used By: ${
-                  slipUsage?.used_by || "Unknown"
-                } \n Date Used: ${new Date(
-                  slipUsage?.date_used
-                ).toLocaleDateString()}`}
-                type="info"
-                showIcon
-                style={{ marginBottom: 16 }}
-              />
+              {slipUsage.length > 0 && (
+                <Alert
+                  message={
+                    <div>
+                      <strong>Slip Usage:</strong>
+                      <ul style={{ marginLeft: 16 }}>
+                        {slipUsage.map((usage, index) => (
+                          <li key={index}>
+                            Amount Used: {usage.amount_used} <br />
+                            Used By: {usage.used_by || "Unknown"} <br />
+                            Date Used:{" "}
+                            {new Date(usage.date_used).toLocaleDateString()}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  }
+                  type="info"
+                  showIcon
+                  style={{ marginBottom: 16 }}
+                />
+              )}
             </>
           )}
 
@@ -107,6 +133,9 @@ const AttachSlipForm: React.FC<Props> = ({
               </Button>
             </Form.Item>
           </Form>
+          <Button type="default" onClick={onReset} style={{ marginLeft: 8 }}>
+            Start Over
+          </Button>
         </>
       ) : (
         <>

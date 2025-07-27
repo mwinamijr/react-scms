@@ -146,6 +146,7 @@ const VerifySlips: React.FC = () => {
           students={students}
           slipFound={selectedSlip}
           onBack={prev}
+          onReset={handleReset}
         />
       ),
     },
@@ -159,7 +160,7 @@ const VerifySlips: React.FC = () => {
           <Step key={step.title} title={step.title} icon={step.icon} />
         ))}
       </Steps>
-      <div>{steps[current].content}</div>
+      <div>{steps[current] && steps[current].content}</div>
     </div>
   );
 };
