@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   bulkUploadReceipts,
   resetFinanceState,
-} from "../../features/finance/financeSlice";
+} from "../../features/finance/receiptSlice";
 import Message from "../../components/Message";
 import { djangoUrl } from "../../features/utils";
 
@@ -23,7 +23,7 @@ const UploadReceipt: React.FC = () => {
     notCreatedReceipts,
     updatedReceipts,
     skippedReceipts,
-  } = useAppSelector((state) => state.getFinance);
+  } = useAppSelector((state) => state.getReceipts);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -42,7 +42,7 @@ const UploadReceipt: React.FC = () => {
       setFile(null);
       dispatch(resetFinanceState());
     }
-  });
+  }, [dispatch, successBulkUpload]);
 
   return (
     <Container className="mt-4">

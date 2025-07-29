@@ -359,19 +359,15 @@ const receiptSlice = createSlice({
         }
       );
     // Rejection/loading states (generic)
-    builder
-      .addMatcher(
-        (action) => action.type.endsWith("/pending"),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addCase(deletePayment.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+    builder.addMatcher(
+      (action) => action.type.endsWith("/pending"),
+      (state) => {
+        state.loading = true;
+        state.error = null;
+      }
+    );
   },
 });
 
+export const { resetFinanceState } = receiptSlice.actions;
 export default receiptSlice.reducer;

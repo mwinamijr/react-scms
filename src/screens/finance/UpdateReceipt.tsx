@@ -19,7 +19,7 @@ import {
   receiptDetails,
   updateReceipt,
   resetFinanceState,
-} from "../../features/finance/financeSlice";
+} from "../../features/finance/receiptSlice";
 import { listStudents } from "../../features/students/studentSlice";
 import { listReceiptAllocations } from "../../features/finance/allocationSlice";
 
@@ -48,8 +48,8 @@ const UpdateReceipt: React.FC = () => {
   const navigate = useNavigate();
 
   const { userInfo } = useSelector((state: RootState) => state.getUsers);
-  const { loading, error, successCreate, receipt } = useSelector(
-    (state: RootState) => state.getFinance
+  const { loading, error, successCreate } = useSelector(
+    (state: RootState) => state.getReceipts
   );
   const { loading: loadStudents, students } = useSelector(
     (state: RootState) => state.getStudents
