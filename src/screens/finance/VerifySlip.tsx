@@ -85,7 +85,7 @@ const VerifySlips: React.FC = () => {
       message.success("Slip successfully attached to student");
       next();
     } catch (error) {
-      message.error("Failed to attach slip to student");
+      message.error(`Failed to attach slip to student. ${error}`);
       console.error("Attach Slip Error:", error);
     }
   };
