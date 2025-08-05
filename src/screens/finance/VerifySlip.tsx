@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Steps, Typography } from "antd";
+import { Steps, Typography, Form, message, Result, Spin } from "antd";
 import {
   FileAddOutlined,
   FileSearchOutlined,
@@ -18,9 +18,7 @@ import VerifySlipForm from "./verifySteps/VerifySlipForm";
 import AddSlipForm from "./verifySteps/AddSlipForm";
 import AttachSlipForm from "./verifySteps/AttachSlipForm";
 import type { RootState } from "../../app/store";
-import { Form, message } from "antd";
 
-const { Step } = Steps;
 const { Title } = Typography;
 
 const VerifySlips: React.FC = () => {
@@ -29,6 +27,7 @@ const VerifySlips: React.FC = () => {
   const dispatch = useAppDispatch();
   const [addError, setAddError] = useState<string | null>(null);
   const [catchRefNumber, setCatchRefNumber] = useState<string | null>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const { selectedSlip, slipStatus, slipError, slipMessage } = useAppSelector(
     (state: RootState) => state.getBankSlips
@@ -51,6 +50,7 @@ const VerifySlips: React.FC = () => {
     try {
       const payload = {
         ...values,
+        payment_date: values.payment_date.format("YYYY-MM-DD"),
         uploaded_by_id: userInfo?.id,
       };
 
@@ -58,8 +58,6 @@ const VerifySlips: React.FC = () => {
 
       if (result) {
         message.success("Bank slip added successfully");
-
-        // Optional: Wait for the bank slip to be refetched by reference number
         try {
           await dispatch(
             fetchBankSlipByNumber(values.reference_number)
@@ -67,11 +65,10 @@ const VerifySlips: React.FC = () => {
         } catch (fetchError) {
           console.warn("Failed to fetch slip by reference:", fetchError);
         }
-
-        next(); // move to next step
+        next();
       }
     } catch (error: any) {
-      setAddError(error?.message || "Failed to add bank slip");
+      setAddError(error || "Failed to add bank slip");
     }
   };
 
@@ -83,7 +80,7 @@ const VerifySlips: React.FC = () => {
       };
       await dispatch(createSlipUsage(payload)).unwrap();
       message.success("Slip successfully attached to student");
-      next();
+      setIsCompleted(true); // Show completion message
     } catch (error) {
       message.error(`Failed to attach slip to student. ${error}`);
       console.error("Attach Slip Error:", error);
@@ -91,12 +88,13 @@ const VerifySlips: React.FC = () => {
   };
 
   const handleReset = () => {
-    form.resetFields(); // clear form fields
-    dispatch(clearSelectedSlip()); // clear slip from Redux
+    form.resetFields();
+    dispatch(clearSelectedSlip());
     dispatch(clearSlipMessages());
-    setCurrent(0); // return to step 0
+    setCurrent(0);
     setAddError(null);
     setCatchRefNumber(null);
+    setIsCompleted(false);
   };
 
   useEffect(() => {
@@ -104,6 +102,16 @@ const VerifySlips: React.FC = () => {
       dispatch(listStudents({}));
     }
   }, [selectedSlip, dispatch]);
+
+  // Auto reset after completion
+  useEffect(() => {
+    if (isCompleted) {
+      const timer = setTimeout(() => {
+        handleReset();
+      }, 2000); // 2 seconds delay
+      return () => clearTimeout(timer);
+    }
+  }, [isCompleted]);
 
   const steps = [
     {
@@ -155,12 +163,25 @@ const VerifySlips: React.FC = () => {
   return (
     <div style={{ padding: 24 }}>
       <Title level={3}>Verify Bank Slips</Title>
-      <Steps current={current} style={{ marginBottom: 32 }}>
-        {steps.map((step) => (
-          <Step key={step.title} title={step.title} icon={step.icon} />
-        ))}
-      </Steps>
-      <div>{steps[current] && steps[current].content}</div>
+      <Steps
+        current={current}
+        items={steps.map((step) => ({
+          key: step.title,
+          title: step.title,
+          icon: step.icon,
+        }))}
+        style={{ marginBottom: 32 }}
+      />
+
+      {isCompleted ? (
+        <Result
+          status="success"
+          title="Slip Process Completed Successfully!"
+          subTitle="The form will reset shortly..."
+        />
+      ) : (
+        <div>{steps[current] && steps[current].content}</div>
+      )}
     </div>
   );
 };

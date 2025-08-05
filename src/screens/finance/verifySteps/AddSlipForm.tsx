@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Alert, Select } from "antd";
+import { Form, Input, Button, Alert, Select, DatePicker } from "antd";
 
 const { Option } = Select;
 
@@ -78,7 +78,11 @@ const AddSlipForm: React.FC<Props> = ({
           name="payment_date"
           rules={[{ required: true }]}
         >
-          <Input type="date" />
+          <DatePicker
+            format="DD/MM/YYYY"
+            style={{ width: "100%" }}
+            placeholder="Select payment date"
+          />
         </Form.Item>
         <Form.Item
           label="Total Amount"
