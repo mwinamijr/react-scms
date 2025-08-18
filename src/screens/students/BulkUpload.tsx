@@ -14,6 +14,7 @@ import Message from "../../components/Message";
 import type { RootState } from "../../app/store";
 import { bulkCreateStudents } from "../../features/students/studentSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { djangoUrl } from "../../features/utils";
 
 // Types for not created/updated/skipped students
 interface NotCreatedStudent {
@@ -80,6 +81,7 @@ const StudentBulkUpload: React.FC = () => {
         <Card.Header className="text-white text-center bg-primary">
           <h5>Bulk Upload Students</h5>
         </Card.Header>
+
         <Card.Body>
           {uploadError && <Message variant="danger">{uploadError}</Message>}
           {uploadMessage && (
@@ -103,6 +105,16 @@ const StudentBulkUpload: React.FC = () => {
               className="mb-3"
             />
           )}
+
+          <div className="text-end mb-3">
+            <a
+              href={`${djangoUrl}/api/sis/students/bulk-upload/template/`}
+              className="btn btn-success"
+              download
+            >
+              Download Template
+            </a>
+          </div>
 
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="bulkUpload" className="mb-3">
