@@ -88,6 +88,9 @@ const ReceiptDetailsPrint: React.FC = () => {
                 <strong>Date:</strong> {receipt?.date}
               </div>
               <div>
+                <strong>Slip Ref:</strong> {receipt?.used_slip_details.slip_ref}
+              </div>
+              <div>
                 <strong>Receipt No:</strong> {receipt?.receipt_number}
               </div>
               <div>
@@ -100,10 +103,12 @@ const ReceiptDetailsPrint: React.FC = () => {
                 <strong>Paid For:</strong> {receipt?.paid_for_details?.name}
               </div>
               <div>
-                <strong>Paid Through:</strong> {receipt?.paid_through}
+                <strong>Paid Through:</strong>{" "}
+                {receipt?.used_slip_details.paid_through}
               </div>
               <div>
-                <strong>Paid On:</strong> {receipt?.payment_date}
+                <strong>Paid On:</strong>{" "}
+                {receipt?.used_slip_details.payment_date}
               </div>
               <div>
                 <strong>Term:</strong> {receipt?.term_details?.name} -{" "}
