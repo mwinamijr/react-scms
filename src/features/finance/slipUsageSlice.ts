@@ -18,6 +18,7 @@ interface SlipUsage {
   id: number;
   slip: number; // or full object if you prefer
   amount_used: number;
+  used: boolean;
   used_by?: string;
   date_used: string;
 }

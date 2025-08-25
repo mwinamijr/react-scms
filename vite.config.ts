@@ -1,11 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: "../static/dist", // make sure this matches Django's static folder
+    outDir: "../static/dist", // compiled files go to Django's static folder
+    assetsDir: "assets", // assets inside static/dist/assets
     emptyOutDir: true,
   },
+  base: "/static/dist/", // 👈 all URLs in index.html will start with /static/dist/
 });

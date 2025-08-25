@@ -1,8 +1,21 @@
 import React, { useEffect } from "react";
-import { Form, Input, Button, Alert, Select, Spin } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Alert,
+  Select,
+  message as AntMessage,
+} from "antd";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 import type { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { listSlipUsages } from "../../../features/finance/slipUsageSlice";
+import { fetchTerms } from "../../../features/administration/termAndAcademicYearSlice";
+import { listReceiptAllocations } from "../../../features/finance/allocationSlice";
+
+dayjs.extend(isBetween);
 
 interface Props {
   form: any;
@@ -30,10 +43,47 @@ const AttachSlipForm: React.FC<Props> = ({
     (usage) => usage.slip_ref === slipFound?.reference_number
   );
 
+  const { terms } = useAppSelector(
+    (state: RootState) => state.getTermsAndAcademicYears
+  );
+  const { receiptAllocations } = useAppSelector(
+    (state: RootState) => state.getAllocations
+  );
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(listSlipUsages());
-  }, [dispatch]);
+
+    dispatch(listReceiptAllocations())
+      .unwrap()
+      .catch((error: any) => {
+        console.error("Error fetching receipt allocations:", error);
+        AntMessage.error("Failed to load payment categories");
+      });
+
+    dispatch(fetchTerms())
+      .unwrap()
+      .then((fetchedTerms) => {
+        const today = dayjs();
+
+        const currentTerm = fetchedTerms.find((term) =>
+          today.isBetween(
+            dayjs(term.start_date),
+            dayjs(term.end_date),
+            null,
+            "[]"
+          )
+        );
+
+        if (currentTerm) {
+          form.setFieldsValue({ term: currentTerm.id });
+        }
+      })
+      .catch((error: any) => {
+        console.error("Error fetching terms:", error);
+        AntMessage.error("Failed to load academic terms");
+      });
+  }, [dispatch, form]);
 
   return (
     <>
@@ -91,6 +141,11 @@ const AttachSlipForm: React.FC<Props> = ({
             showIcon
           />
         )}
+        <br />
+
+        <p>
+          <i>Paid Through: </i> <b>{slipFound.bank_name}</b>
+        </p>
 
         <Form
           form={form}
@@ -125,6 +180,50 @@ const AttachSlipForm: React.FC<Props> = ({
           >
             <Input type="number" />
           </Form.Item>
+          <Form.Item
+            label="Term"
+            name="term"
+            rules={[
+              {
+                required: true,
+                message: "Please select an academic term!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Select Term"
+              loading={!terms || terms.length === 0}
+            >
+              {terms?.map((term) => (
+                <Option key={term.id} value={term.id}>
+                  {term.name} - {term.academic_year_name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Paid For"
+            name="paid_for"
+            rules={[
+              {
+                required: true,
+                message: "Please select a reason for payment!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Select Paid For"
+              loading={!receiptAllocations || receiptAllocations.length === 0}
+            >
+              {receiptAllocations?.map((allocation: ReceiptAllocation) => (
+                <Option key={allocation.id} value={allocation.id}>
+                  {allocation.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Attach Slip

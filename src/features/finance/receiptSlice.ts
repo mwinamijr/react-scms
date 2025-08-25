@@ -4,11 +4,6 @@ import axios from "axios";
 import { getErrorMessage } from "../utils";
 import { djangoUrl } from "../utils";
 
-interface User {
-  first_name: string;
-  last_name: string;
-}
-
 interface PaidFor {
   name: string;
 }
@@ -33,19 +28,6 @@ interface Receipt {
   payer?: string;
   paid_for_details?: PaidFor;
   status: "pending" | "paid" | string;
-  paid_for_details?: {
-    name: string;
-  };
-}
-
-interface Payment {
-  receipts: Receipt[];
-  studentReceipts: Receipt[];
-  receipt: Receipt | null;
-  loading: boolean;
-  error: string | null;
-  successCreate: boolean;
-  createdReceipt: Receipt | null;
 }
 
 // Receipts
@@ -238,6 +220,18 @@ export const bulkUploadReceipts = createAsyncThunk(
   }
 );
 
+interface ReceiptState {
+  receipts: Receipt[];
+  studentReceipts: Receipt[];
+  receipt: Receipt | null;
+  loading: boolean;
+  error: string | null;
+  successCreate: boolean;
+  createdReceipt: Receipt | null;
+  successBulkUpload: boolean;
+  bulkUploadError: string | null;
+}
+
 const initialState: ReceiptState = {
   receipts: [],
   studentReceipts: [],
@@ -246,6 +240,8 @@ const initialState: ReceiptState = {
   error: null,
   successCreate: false,
   createdReceipt: null,
+  successBulkUpload: false,
+  bulkUploadError: null,
 };
 
 const receiptSlice = createSlice({
@@ -256,14 +252,10 @@ const receiptSlice = createSlice({
       state.receipts = [];
       state.studentReceipts = [];
       state.receipt = null;
-      state.payments = [];
-      state.payment = null;
       state.loading = false;
       state.error = null;
       state.successCreate = false;
       state.createdReceipt = null;
-      state.createdPayment = null;
-      state.uploadingReceipts = false;
       state.successBulkUpload = false;
       state.bulkUploadError = null;
     },
@@ -357,15 +349,11 @@ const receiptSlice = createSlice({
             (receipt) => receipt.id !== action.payload.id
           );
         }
-      );
-    // Rejection/loading states (generic)
-    builder.addMatcher(
-      (action) => action.type.endsWith("/pending"),
-      (state) => {
-        state.loading = true;
-        state.error = null;
-      }
-    );
+      )
+      .addCase(deleteReceipt.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

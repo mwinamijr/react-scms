@@ -53,34 +53,6 @@ interface Receipt {
   };
 }
 
-interface Student {
-  id: number;
-  full_name: string;
-  admission_number: string;
-  gender: string;
-  date_of_birth: string;
-  religion?: string;
-  blood_group?: string;
-  class_level_display: string;
-  class_of_year_display?: string;
-  admission_date?: string;
-  graduation_date?: string;
-  date_dismissed?: string;
-  reason_left?: string;
-  parent_guardian_display: string;
-  parent_contact?: string;
-  email?: string;
-  region: string;
-  city: string;
-  street?: string;
-  debt: number;
-  cache_gpa?: string;
-  image?: string;
-  siblings: Sibling[];
-  attendance_count?: number;
-  exam_score?: number;
-}
-
 function getFullName(person: PersonName): string {
   return [person.first_name, person.middle_name, person.last_name]
     .filter(Boolean)
@@ -99,7 +71,7 @@ const StudentDetailsScreen: React.FC = () => {
     loading: receiptLoading,
     error: receiptError,
     studentReceipts,
-  } = useSelector((state: RootState) => state.getFinance);
+  } = useSelector((state: RootState) => state.getReceipts);
 
   useEffect(() => {
     if (id) {
@@ -136,10 +108,12 @@ const StudentDetailsScreen: React.FC = () => {
               />
               <Title level={3}>
                 {student.first_name} {student.middle_name} {student.last_name}
-              </Title>
+              </Title>{" "}
               <Text type="secondary">
                 Admission #: {student.admission_number}
               </Text>
+              <br />
+              <Text type="secondary">PREMS #: {student.prems_number}</Text>
               <Row justify="center" className="profile-actions">
                 <Col>
                   <Space>
@@ -166,6 +140,25 @@ const StudentDetailsScreen: React.FC = () => {
               </Descriptions.Item>
               <Descriptions.Item label="Religion">
                 {student.religion || "N/A"}
+              </Descriptions.Item>
+            </Descriptions>
+
+            <Descriptions
+              title="Previous Academic Information"
+              bordered
+              column={2}
+            >
+              <Descriptions.Item label="Primary School">
+                {student.primary_school_name || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Graduation Year">
+                {student.primary_school_completion_year || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Primary School Number">
+                {student.primary_school_number || "N/A"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Grade">
+                {student.primary_school_grade || "N/A"}
               </Descriptions.Item>
             </Descriptions>
 

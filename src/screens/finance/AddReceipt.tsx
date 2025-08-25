@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
@@ -14,15 +13,19 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-dayjs.extend(isBetween);
 import type { SelectProps } from "antd";
-import { createReceipt } from "../../features/finance/receiptSlice";
-import { listStudents } from "../../features/students/studentSlice";
+import {
+  createReceipt,
+  resetFinanceState,
+} from "../../features/finance/receiptSlice";
 import { listReceiptAllocations } from "../../features/finance/allocationSlice";
 import Message from "../../components/Message";
 import type { RootState } from "../../app/store";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchTerms } from "../../features/administration/termAndAcademicYearSlice";
+import { listSlipUsages } from "../../features/finance/slipUsageSlice";
+
+dayjs.extend(isBetween);
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -37,10 +40,14 @@ interface ReceiptFormValues {
   term: number | null;
 }
 
-interface Student {
+interface SlipUsage {
   id: number;
-  first_name: string;
-  last_name: string;
+  slip: number;
+  student_name: string;
+  amount_used: number;
+  used: boolean;
+  used_by?: string;
+  date_used: string;
 }
 
 interface ReceiptAllocation {
@@ -53,34 +60,40 @@ const AddReceipt: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, successCreate } = useSelector(
+  const { loading, error, successCreate } = useAppSelector(
     (state: RootState) => state.getReceipts
   );
 
-  const { userInfo } = useSelector((state: RootState) => state.getUsers);
-  const { loading: loadStudents, students } = useSelector(
-    (state: RootState) => state.getStudents
+  const { userInfo } = useAppSelector((state: RootState) => state.getUsers);
+
+  const { slipUsages, loading: slipUsageLoading } = useAppSelector(
+    (state: RootState) => state.getSlipUsages
   );
-  const { receiptAllocations } = useSelector(
+  console.log("Slip Usages from Redux:", slipUsages);
+  const availableSlipUsages = slipUsages?.filter(
+    (slip: SlipUsage) => !slip.used
+  );
+
+  const { receiptAllocations } = useAppSelector(
     (state: RootState) => state.getAllocations
   );
-  const { terms } = useSelector(
+  const { terms } = useAppSelector(
     (state: RootState) => state.getTermsAndAcademicYears
   );
 
   useEffect(() => {
-    dispatch(listStudents({}))
-      .unwrap()
-      .catch((error: any) => {
-        console.error("Error fetching students:", error);
-        AntMessage.error("Failed to load students list");
-      });
-
     dispatch(listReceiptAllocations())
       .unwrap()
       .catch((error: any) => {
         console.error("Error fetching receipt allocations:", error);
         AntMessage.error("Failed to load payment categories");
+      });
+
+    dispatch(listSlipUsages())
+      .unwrap()
+      .catch((error: any) => {
+        console.error("Error fetching slip usages:", error);
+        AntMessage.error("Failed to load slip usages");
       });
 
     dispatch(fetchTerms())
@@ -107,7 +120,7 @@ const AddReceipt: React.FC = () => {
       });
   }, [dispatch, form]);
 
-  const submitHandler = (values: ReceiptFormValues) => {
+  const submitHandler = (values: ReceiptFormValues & { used_slip: number }) => {
     const formattedData = {
       ...values,
       received_by: userInfo?.id,
@@ -124,7 +137,7 @@ const AddReceipt: React.FC = () => {
       AntMessage.success("Receipt created successfully!");
       dispatch(resetFinanceState());
     }
-  }, [navigate, successCreate]);
+  }, [dispatch, navigate, successCreate]);
 
   const filterStudentOption: SelectProps["filterOption"] = (input, option) => {
     if (!option || !option.children) return false;
@@ -140,6 +153,24 @@ const AddReceipt: React.FC = () => {
       typeof studentLabel === "string" &&
       studentLabel.toLowerCase().includes(input.toLowerCase())
     );
+  };
+
+  // when student is selected, auto fill the form
+  const handleStudentChange = (studentId: number) => {
+    const slip = availableSlipUsages.find((s: any) => s.student === studentId);
+
+    if (slip) {
+      form.setFieldsValue({
+        used_slip: slip.id,
+        payer: slip.student_name,
+        student: slip.student,
+        amount: slip.amount_allocated,
+        term: slip.term_details.id,
+        payment_date: dayjs(slip.payment_date),
+        paid_through: slip.paid_through,
+        paid_for: slip.paid_for_details.id,
+      });
+    }
   };
 
   return (
@@ -176,6 +207,10 @@ const AddReceipt: React.FC = () => {
                 } as ReceiptFormValues
               }
             >
+              <Form.Item name="used_slip" hidden>
+                <Input type="hidden" />
+              </Form.Item>
+
               <Form.Item
                 label="Payer"
                 name="payer"
@@ -198,19 +233,22 @@ const AddReceipt: React.FC = () => {
                   placeholder="Search and select a student"
                   optionFilterProp="children"
                   filterOption={filterStudentOption}
-                  loading={loadStudents}
+                  loading={slipUsageLoading}
+                  onChange={handleStudentChange} // 🔑 trigger prefill
                   notFoundContent={
-                    loadStudents ? "Loading students..." : "No student found"
+                    slipUsageLoading
+                      ? "Loading students..."
+                      : "No student found"
                   }
                 >
-                  {students?.map((student: Student) => (
+                  {availableSlipUsages?.map((slip: any) => (
                     <Option
-                      key={student.id}
-                      value={student.id}
-                      title={`${student.first_name} ${student.last_name}`}
-                      data-label={`${student.first_name} ${student.last_name}`}
+                      key={slip.student}
+                      value={slip.student}
+                      title={slip.student_name}
+                      data-label={slip.student_name}
                     >
-                      {student.first_name} {student.last_name}
+                      {slip.student_name}
                     </Option>
                   ))}
                 </Select>
