@@ -16,12 +16,11 @@ const UploadReceipt: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const {
-    uploadingReceipts,
+    loading,
     successBulkUpload,
-    bulkUploadError,
+    uploadError,
     uploadMessage,
     notCreatedReceipts,
-    updatedReceipts,
     skippedReceipts,
   } = useAppSelector((state) => state.getReceipts);
 
@@ -69,9 +68,7 @@ const UploadReceipt: React.FC = () => {
           <h5>Bulk Upload Receipts</h5>
         </Card.Header>
         <Card.Body>
-          {bulkUploadError && (
-            <Message variant="danger">{bulkUploadError}</Message>
-          )}
+          {uploadError && <Message variant="danger">{uploadError}</Message>}
           {uploadMessage && (
             <Message variant="success">{uploadMessage}</Message>
           )}
@@ -95,33 +92,35 @@ const UploadReceipt: React.FC = () => {
                 type="submit"
                 variant="primary"
                 className="w-50"
-                disabled={uploadingReceipts}
+                disabled={loading}
               >
-                {uploadingReceipts ? "Uploading..." : "Upload"}
+                {loading ? "Uploading..." : "Upload"}
               </Button>
             </div>
           </Form>
 
-          {notCreatedReceipts.length > 0 && (
+          {notCreatedReceipts?.length > 0 && (
             <Card className="mt-4">
               <Card.Header className="bg-danger text-white">
-                <h6>{notCreatedReceipts.length} Receipts Failed</h6>
+                <h6>{notCreatedReceipts?.length} Receipts Failed</h6>
               </Card.Header>
               <Card.Body>
                 <Table striped bordered hover responsive>
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Payer</th>
+                      <th>Description</th>
+                      <th>EFD Amount</th>
                       <th>Amount</th>
                       <th>Error</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {notCreatedReceipts.map((r, i) => (
+                    {notCreatedReceipts?.map((r, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
-                        <td>{r.payer}</td>
+                        <td>{r.description}</td>
+                        <td>{r.efd_amount}</td>
                         <td>{r.amount}</td>
                         <td>{r.error}</td>
                       </tr>
@@ -132,38 +131,10 @@ const UploadReceipt: React.FC = () => {
             </Card>
           )}
 
-          {updatedReceipts.length > 0 && (
-            <Card className="mt-4">
-              <Card.Header className="bg-success text-white">
-                <h6>{updatedReceipts.length} Receipts Updated</h6>
-              </Card.Header>
-              <Card.Body>
-                <Table striped bordered hover responsive>
-                  <thead>
-                    <tr>
-                      <th>Receipt Number</th>
-                      <th>Payer</th>
-                      <th>Reason(s)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {updatedReceipts.map((r, i) => (
-                      <tr key={i}>
-                        <td>{r.receipt_number}</td>
-                        <td>{r.payer}</td>
-                        <td>{r.reasons}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          )}
-
-          {skippedReceipts.length > 0 && (
+          {skippedReceipts?.length > 0 && (
             <Card className="mt-4">
               <Card.Header className="bg-warning text-white">
-                <h6>{skippedReceipts.length} Receipts Skipped</h6>
+                <h6>{skippedReceipts?.length} Receipts Skipped</h6>
               </Card.Header>
               <Card.Body>
                 <Table striped bordered hover responsive>
@@ -175,7 +146,7 @@ const UploadReceipt: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {skippedReceipts.map((r, i) => (
+                    {skippedReceipts?.map((r, i) => (
                       <tr key={i}>
                         <td>{r.receipt_number}</td>
                         <td>{r.payer}</td>

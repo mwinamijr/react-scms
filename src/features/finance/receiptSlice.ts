@@ -30,6 +30,12 @@ interface Receipt {
   status: "pending" | "paid" | string;
 }
 
+interface BulkUploadResponse {
+  message: string;
+  not_created?: Receipt[];
+  skipped_receipts?: Receipt[];
+}
+
 // Receipts
 export const listReceipts = createAsyncThunk<Receipt[], Record<string, any>>(
   "receipt/list",
@@ -229,7 +235,10 @@ interface ReceiptState {
   successCreate: boolean;
   createdReceipt: Receipt | null;
   successBulkUpload: boolean;
-  bulkUploadError: string | null;
+  uploadError: string | null;
+  uploadMessage?: string;
+  notCreatedReceipts?: Receipt[];
+  skippedReceipts?: Receipt[];
 }
 
 const initialState: ReceiptState = {
@@ -241,7 +250,10 @@ const initialState: ReceiptState = {
   successCreate: false,
   createdReceipt: null,
   successBulkUpload: false,
-  bulkUploadError: null,
+  uploadError: null,
+  uploadMessage: "",
+  notCreatedReceipts: [],
+  skippedReceipts: [],
 };
 
 const receiptSlice = createSlice({
@@ -257,7 +269,10 @@ const receiptSlice = createSlice({
       state.successCreate = false;
       state.createdReceipt = null;
       state.successBulkUpload = false;
-      state.bulkUploadError = null;
+      state.uploadError = null;
+      state.uploadMessage = "";
+      state.notCreatedReceipts = [];
+      state.skippedReceipts = [];
     },
   },
   extraReducers: (builder) => {
@@ -322,6 +337,24 @@ const receiptSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.successCreate = false;
+      })
+      .addCase(bulkUploadReceipts.pending, (state) => {
+        state.loading = true;
+        state.uploadError = null;
+      })
+      .addCase(
+        bulkUploadReceipts.fulfilled,
+        (state, action: PayloadAction<BulkUploadResponse>) => {
+          state.loading = false;
+          state.uploadMessage = action.payload.message;
+          state.notCreatedReceipts = action.payload.not_created || [];
+          state.skippedReceipts = action.payload.skipped_receipts || [];
+        }
+      )
+      .addCase(bulkUploadReceipts.rejected, (state, action) => {
+        state.loading = false;
+        state.uploadError =
+          action.payload || "Upload failed. Please try again.";
       })
       .addCase(updateReceipt.pending, (state) => {
         state.loading = true;
