@@ -70,7 +70,6 @@ const Receipts: React.FC = () => {
   const { receipts, loading, error } = useSelector(
     (state: RootState) => state.getReceipts
   );
-  console.log("Receipts:", receipts);
 
   const [filters, setFilters] = useState<Filters>({
     from_date: null,
@@ -132,8 +131,8 @@ const Receipts: React.FC = () => {
     },
     {
       title: "Through",
-      dataIndex: "paid_through",
-      key: "paid_through",
+      dataIndex: "pmt_method",
+      key: "pmt_method",
     },
     {
       title: "Amount",

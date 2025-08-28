@@ -33,7 +33,7 @@ interface Receipt {
 interface BulkUploadResponse {
   message: string;
   not_created?: Receipt[];
-  skipped_receipts?: Receipt[];
+  skipped?: Receipt[];
 }
 
 // Receipts
@@ -348,7 +348,7 @@ const receiptSlice = createSlice({
           state.loading = false;
           state.uploadMessage = action.payload.message;
           state.notCreatedReceipts = action.payload.not_created || [];
-          state.skippedReceipts = action.payload.skipped_receipts || [];
+          state.skippedReceipts = action.payload.skipped || [];
         }
       )
       .addCase(bulkUploadReceipts.rejected, (state, action) => {

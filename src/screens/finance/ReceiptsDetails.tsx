@@ -88,7 +88,8 @@ const ReceiptDetailsPrint: React.FC = () => {
                 <strong>Date:</strong> {receipt?.date}
               </div>
               <div>
-                <strong>Slip Ref:</strong> {receipt?.used_slip_details.slip_ref}
+                <strong>Slip Ref:</strong>{" "}
+                {receipt?.used_slip_details?.slip_ref || "N/A"}
               </div>
               <div>
                 <strong>Receipt No:</strong> {receipt?.receipt_number}
@@ -104,15 +105,16 @@ const ReceiptDetailsPrint: React.FC = () => {
               </div>
               <div>
                 <strong>Paid Through:</strong>{" "}
-                {receipt?.used_slip_details.paid_through}
+                {receipt?.used_slip_details?.paid_through ||
+                  receipt?.pmt_method}
               </div>
               <div>
                 <strong>Paid On:</strong>{" "}
-                {receipt?.used_slip_details.payment_date}
+                {receipt?.used_slip_details?.payment_date ||
+                  receipt?.payment_date}
               </div>
               <div>
-                <strong>Term:</strong> {receipt?.term_details?.name} -{" "}
-                {receipt?.term_details?.academic_year_name}
+                <strong>Term:</strong> {receipt?.term}
               </div>
               <div>
                 <strong>Amount:</strong> {receipt?.amount} TZS
