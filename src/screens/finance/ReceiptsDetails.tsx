@@ -85,7 +85,12 @@ const ReceiptDetailsPrint: React.FC = () => {
 
             <div className="details">
               <div>
-                <strong>Date:</strong> {receipt?.date}
+                <strong>Date:</strong>{" "}
+                {receipt?.efd_receipt_details?.date
+                  ? new Date(receipt.efd_receipt_details.date)
+                      .toISOString()
+                      .split("T")[0]
+                  : ""}
               </div>
               <div>
                 <strong>Slip Ref:</strong>{" "}

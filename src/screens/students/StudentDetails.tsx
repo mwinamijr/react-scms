@@ -250,8 +250,14 @@ const StudentDetailsScreen: React.FC = () => {
                   columns={[
                     {
                       title: "Date",
-                      dataIndex: "date",
                       key: "date",
+                      render: (_, record: Receipt) => {
+                        record?.efd_receipt_details?.date
+                          ? new Date(record.efd_receipt_details.date)
+                              .toISOString()
+                              .split("T")[0]
+                          : "";
+                      },
                     },
                     {
                       title: "Description",
