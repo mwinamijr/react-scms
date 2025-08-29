@@ -251,13 +251,12 @@ const StudentDetailsScreen: React.FC = () => {
                     {
                       title: "Date",
                       key: "date",
-                      render: (_, record: Receipt) => {
+                      render: (_, record: Receipt) =>
                         record?.efd_receipt_details?.date
                           ? new Date(record.efd_receipt_details.date)
                               .toISOString()
                               .split("T")[0]
-                          : "";
-                      },
+                          : "",
                     },
                     {
                       title: "Description",
