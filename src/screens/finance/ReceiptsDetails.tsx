@@ -119,7 +119,8 @@ const ReceiptDetailsPrint: React.FC = () => {
                   receipt?.payment_date}
               </div>
               <div>
-                <strong>Term:</strong> {receipt?.term}
+                <strong>Term:</strong> {receipt?.term_details?.name || "N/A"} -{" "}
+                {receipt?.term_details?.academic_year_name}
               </div>
               <div>
                 <strong>Amount:</strong> {receipt?.amount} TZS
