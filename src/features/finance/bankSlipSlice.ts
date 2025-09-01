@@ -45,11 +45,11 @@ export const listBankSlips = createAsyncThunk<BankSlip[]>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const { data } = await axios.get(`${djangoUrl}/api/finance/bank-slips/`, {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       });
       return data;
@@ -66,12 +66,12 @@ export const fetchBankSlipByNumber = createAsyncThunk<
   try {
     const {
       getUsers: { userInfo },
-    } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+    } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
     const res = await axios.get(
       `${djangoUrl}/api/finance/bank-slips/slip/${referenceNumber}/`,
       {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
+        headers: { Authorization: `Bearer ${userInfo.access}` },
       }
     );
     return res.data;
@@ -90,14 +90,14 @@ export const createBankSlip = createAsyncThunk<BankSlip, Record<string, any>>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const { data } = await axios.post(
         `${djangoUrl}/api/finance/bank-slips/`,
         payload,
         {
           headers: {
-            Authorization: `Bearer ${userInfo.token}`,
+            Authorization: `Bearer ${userInfo.access}`,
           },
         }
       );
@@ -115,14 +115,14 @@ export const updateBankSlip = createAsyncThunk<
   try {
     const {
       getUsers: { userInfo },
-    } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+    } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
     const res = await axios.put(
       `${djangoUrl}/api/finance/bank-slips/${id}/`,
       data,
       {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       }
     );
@@ -138,13 +138,13 @@ export const deleteBankSlip = createAsyncThunk<BankSlip, number>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const res = await axios.delete(
         `${djangoUrl}/api/finance/bank-slips/${id}/`,
         {
           headers: {
-            Authorization: `Bearer ${userInfo.token}`,
+            Authorization: `Bearer ${userInfo.access}`,
           },
         }
       );

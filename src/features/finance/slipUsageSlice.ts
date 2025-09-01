@@ -55,12 +55,12 @@ export const listSlipUsages = createAsyncThunk<SlipUsage[]>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const { data } = await axios.get(
         `${djangoUrl}/api/finance/slip-usages/`,
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.access}` },
         }
       );
       return data;
@@ -76,13 +76,13 @@ export const createSlipUsage = createAsyncThunk<SlipUsage, Record<string, any>>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const { data } = await axios.post(
         `${djangoUrl}/api/finance/slip-usages/`,
         payload,
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.access}` },
         }
       );
       return data;
@@ -98,12 +98,12 @@ export const deleteSlipUsage = createAsyncThunk<SlipUsage, number>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const res = await axios.delete(
         `${djangoUrl}/api/finance/slip-usages/${id}/`,
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.access}` },
         }
       );
       return res.data;
@@ -120,12 +120,12 @@ export const listPaymentMethods = createAsyncThunk<PaymentMethod[]>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const { data } = await axios.get(
         `${djangoUrl}/api/finance/payment-methods/`,
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.access}` },
         }
       );
       return data;
@@ -142,13 +142,13 @@ export const createPaymentMethod = createAsyncThunk<
   try {
     const {
       getUsers: { userInfo },
-    } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+    } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
     const { data } = await axios.post(
       `${djangoUrl}/api/finance/payment-methods/`,
       payload,
       {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
+        headers: { Authorization: `Bearer ${userInfo.access}` },
       }
     );
     return data;
@@ -163,12 +163,12 @@ export const deletePaymentMethod = createAsyncThunk<PaymentMethod, number>(
     try {
       const {
         getUsers: { userInfo },
-      } = thunkAPI.getState() as { getUsers: { userInfo: { token: string } } };
+      } = thunkAPI.getState() as { getUsers: { userInfo: { access: string } } };
 
       const res = await axios.delete(
         `${djangoUrl}/api/finance/payment-methods/${id}/`,
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: { Authorization: `Bearer ${userInfo.access}` },
         }
       );
       return res.data;

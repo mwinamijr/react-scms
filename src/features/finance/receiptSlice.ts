@@ -44,12 +44,12 @@ export const listReceipts = createAsyncThunk<Receipt[], Record<string, any>>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
         params: filters,
       };
@@ -72,12 +72,12 @@ export const listStudentReceipts = createAsyncThunk<Receipt[], number>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.get(
@@ -98,12 +98,12 @@ export const receiptDetails = createAsyncThunk<Receipt, number>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.get(
@@ -124,12 +124,12 @@ export const createReceipt = createAsyncThunk<Receipt, Record<string, any>>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.post(
@@ -152,12 +152,12 @@ export const updateReceipt = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.put(
@@ -178,12 +178,12 @@ export const deleteReceipt = createAsyncThunk<Receipt, number>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.delete(
@@ -204,12 +204,12 @@ export const bulkUploadReceipts = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
 

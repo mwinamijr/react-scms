@@ -35,12 +35,12 @@ export const fetchEvents = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.get(
@@ -61,12 +61,12 @@ export const createEvent = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.post(
@@ -91,12 +91,12 @@ export const updateEvent = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.put(
@@ -118,12 +118,12 @@ export const deleteEvent = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       await axios.delete(
@@ -147,12 +147,12 @@ export const uploadExcel = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "multipart/form-data",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.post(

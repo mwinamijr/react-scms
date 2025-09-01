@@ -48,12 +48,12 @@ export const getTeacherDetails = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.get<Teacher>(
@@ -73,12 +73,12 @@ export const listTeachers = createAsyncThunk<Teacher[], Record<string, any>>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.get<Teacher[]>(
@@ -99,12 +99,12 @@ export const createTeacher = createAsyncThunk<Teacher, Partial<Teacher>>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.post<Teacher>(
@@ -127,7 +127,7 @@ export const bulkCreateTeachers = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const formData = new FormData();
     formData.append("file", file);
@@ -135,7 +135,7 @@ export const bulkCreateTeachers = createAsyncThunk<
     const config = {
       headers: {
         "Content-type": "multipart/form-data",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.post(
@@ -157,12 +157,12 @@ export const deleteTeacher = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     await axios.delete(`${djangoUrl}/api/users/teachers/${id}/`, config);
@@ -184,12 +184,12 @@ export const updateTeacher = createAsyncThunk<Teacher, UpdateTeacherPayload>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.put<Teacher>(

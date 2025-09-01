@@ -41,12 +41,12 @@ export const listPayments = createAsyncThunk<Payment[]>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.get(
@@ -67,12 +67,12 @@ export const paymentDetails = createAsyncThunk<Payment, number>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.get(
@@ -93,12 +93,12 @@ export const createPayment = createAsyncThunk<Payment, Record<string, any>>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.post(
@@ -121,12 +121,12 @@ export const updatePayment = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.put(
@@ -147,12 +147,12 @@ export const deletePayment = createAsyncThunk<Payment, number>(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.delete(

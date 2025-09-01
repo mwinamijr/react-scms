@@ -54,12 +54,12 @@ export const getDepartmentDetails = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.get(
@@ -81,12 +81,12 @@ export const listDepartments = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.get(
@@ -108,12 +108,12 @@ export const createDepartment = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.post(
@@ -136,12 +136,12 @@ export const deleteDepartment = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     await axios.delete(`${djangoUrl}/api/academic/departments/${id}/`, config);
@@ -160,12 +160,12 @@ export const updateDepartment = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.put(

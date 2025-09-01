@@ -73,12 +73,12 @@ export const listStudents = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
       params: filters,
     };
@@ -99,12 +99,12 @@ export const studentDetails = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
 
@@ -127,12 +127,12 @@ export const createStudent = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
 
@@ -156,7 +156,7 @@ export const bulkCreateStudents = createAsyncThunk<
     const { getState, dispatch } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const formData = new FormData();
     formData.append("file", file);
@@ -164,7 +164,7 @@ export const bulkCreateStudents = createAsyncThunk<
     const config = {
       headers: {
         "Content-type": "multipart/form-data",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
       onUploadProgress: (e: ProgressEvent) => {
         const percent = Math.round((e.loaded * 100) / e.total);
@@ -192,12 +192,12 @@ export const deleteStudent = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
 
@@ -217,12 +217,12 @@ export const updateStudent = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
 
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
 

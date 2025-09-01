@@ -53,12 +53,12 @@ export const fetchAcademicYears = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.get(
@@ -79,12 +79,12 @@ export const createAcademicYear = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.post(
@@ -109,12 +109,12 @@ export const updateAcademicYear = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.put(
@@ -136,12 +136,12 @@ export const deleteAcademicYear = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       await axios.delete(
@@ -162,12 +162,12 @@ export const fetchTerms = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.get(
@@ -188,12 +188,12 @@ export const createTerm = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.post(
@@ -215,12 +215,12 @@ export const updateTerm = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const res = await axios.put(
@@ -242,12 +242,12 @@ export const deleteTerm = createAsyncThunk(
       const { getState } = thunkAPI;
       const {
         getUsers: { userInfo },
-      } = getState() as { getUsers: { userInfo: { token: string } } };
+      } = getState() as { getUsers: { userInfo: { access: string } } };
 
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       await axios.delete(

@@ -45,7 +45,7 @@ export const parentDetails = createAsyncThunk<
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     const { data } = await axios.get<Parent>(
@@ -71,7 +71,7 @@ export const listParents = createAsyncThunk<
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
       params: filters,
     };
@@ -97,7 +97,7 @@ export const deleteParent = createAsyncThunk<
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
     await axios.delete(`${djangoUrl}/api/users/parents/delete/${id}/`, config);

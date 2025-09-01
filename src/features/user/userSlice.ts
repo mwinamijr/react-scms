@@ -8,7 +8,7 @@ import { getErrorMessage } from "../utils";
 interface UserInfo {
   id: number;
   email: string;
-  token: string;
+  access: string;
   first_name?: string;
   last_name?: string;
   isAdmin?: boolean;
@@ -82,11 +82,11 @@ export const getUserDetails = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo?.token}`,
+        Authorization: `Bearer ${userInfo?.access}`,
       },
     };
     const { data } = await axios.get(
@@ -108,11 +108,11 @@ export const listUsers = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo?.token}`,
+        Authorization: `Bearer ${userInfo?.access}`,
       },
       params: filters,
     };
@@ -132,11 +132,11 @@ export const deleteUser = createAsyncThunk<
     const { getState } = thunkAPI;
     const {
       getUsers: { userInfo },
-    } = getState() as { getUsers: { userInfo: { token: string } } };
+    } = getState() as { getUsers: { userInfo: { access: string } } };
     const config = {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${userInfo?.token}`,
+        Authorization: `Bearer ${userInfo?.access}`,
       },
     };
     await axios.delete(`${djangoUrl}/api/users/users/${id}/`, config);
