@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import type { RootState } from "../../app/store";
-import { djangoUrl } from "../utils";
-import { getErrorMessage } from "../utils";
+import { djangoUrl, getErrorMessage } from "../utils";
 
 // Types
 interface Accountant {

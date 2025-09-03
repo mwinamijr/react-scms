@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import type { RootState } from "../../app/store";
-
-const djangoUrl = "http://127.0.0.1:8000";
+import { djangoUrl, getErrorMessage } from "../utils";
 
 // Interfaces
 interface Department {
@@ -27,22 +26,6 @@ interface UpdateDepartmentPayload {
   id: number;
   [key: string]: any;
 }
-
-// Utility function to extract error messages
-const getErrorMessage = (error: any): string => {
-  if (error.response) {
-    if (error.response.data) {
-      if (typeof error.response.data === "string") {
-        return error.response.data;
-      } else if (error.response.data.detail) {
-        return error.response.data.detail;
-      } else {
-        return JSON.stringify(error.response.data);
-      }
-    }
-  }
-  return error.message || "An unknown error occurred";
-};
 
 // Thunks
 export const getDepartmentDetails = createAsyncThunk<

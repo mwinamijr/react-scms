@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { djangoUrl } from "../utils";
-import { getErrorMessage } from "../utils";
+import { djangoUrl, getErrorMessage } from "../utils";
 import axios from "axios";
 
 // Interfaces for Teacher and State

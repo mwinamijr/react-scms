@@ -239,7 +239,7 @@ const Students: React.FC = () => {
         columns={columns}
         rowKey="id"
         bordered
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 40 }}
         loading={loading}
         onRow={(record) => ({
           onClick: () => navigate(`/sis/students/${record.id}`),

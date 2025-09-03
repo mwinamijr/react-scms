@@ -255,7 +255,7 @@ const Receipts: React.FC = () => {
               dataSource={receipts}
               rowKey="id"
               loading={loading}
-              pagination={{ pageSize: 10 }}
+              pagination={{ pageSize: 50 }}
               onRow={(record) => ({
                 onClick: () => navigate(`/finance/receipts/${record.id}`),
                 style: { cursor: "pointer" },

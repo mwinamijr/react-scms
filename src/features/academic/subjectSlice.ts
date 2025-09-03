@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import type { RootState } from "../../app/store";
-
-const djangoUrl = "http://127.0.0.1:8000";
+import { djangoUrl, getErrorMessage } from "../utils";
 
 interface Subject {
   id: number;
@@ -29,17 +28,6 @@ interface SubjectState {
 interface UpdateSubjectPayload {
   id: number;
 }
-
-const getErrorMessage = (error: any): string => {
-  const err = error as AxiosError<any>;
-  if (err.response) {
-    const data = err.response.data;
-    if (typeof data === "string") return data;
-    if (data.detail) return data.detail;
-    return JSON.stringify(data);
-  }
-  return err.message || "An unknown error occurred";
-};
 
 export const getSubjectDetails = createAsyncThunk<
   Subject,

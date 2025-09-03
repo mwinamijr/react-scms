@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getErrorMessage } from "../utils";
-import { djangoUrl } from "../utils";
+import { djangoUrl, getErrorMessage } from "../utils";
 import type { RootState } from "../../app/store";
 
 // === Types ===

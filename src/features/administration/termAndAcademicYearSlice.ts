@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { djangoUrl } from "../utils";
-import { getErrorMessage } from "../utils";
+import { djangoUrl, getErrorMessage } from "../utils";
 
 export interface AcademicYear {
   id: number;
