@@ -256,6 +256,7 @@ const Receipts: React.FC = () => {
               rowKey="id"
               loading={loading}
               pagination={{ pageSize: 50 }}
+              scroll={{ x: "max-content" }}
               onRow={(record) => ({
                 onClick: () => navigate(`/finance/receipts/${record.id}`),
                 style: { cursor: "pointer" },

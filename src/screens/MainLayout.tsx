@@ -99,6 +99,10 @@ const DashboardLayout: React.FC = () => {
         "/finance/allocations"
       ),
       getItem(<Link to="/finance/payroll">Payroll</Link>, "/finance/payroll"),
+      getItem(
+        <Link to="/finance/student-debts">Student Debts</Link>,
+        "/finance/student-debts"
+      ),
       getItem("Reports", "finance/reports", undefined, [
         getItem(
           <Link to="/finance/reports/collections">Collections</Link>,

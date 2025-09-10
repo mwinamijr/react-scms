@@ -121,3 +121,14 @@
     padding: 0;
   }
 }
+
+
+@media (max-width: 576px) {
+  .ant-descriptions-item-label {
+    width: 120px; /* reduce label width */
+    font-size: 13px;
+  }
+  .ant-descriptions-item-content {
+    font-size: 13px;
+  }
+}

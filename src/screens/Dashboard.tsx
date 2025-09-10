@@ -66,17 +66,10 @@ const Dashboard: React.FC = () => {
     terms: false,
   });
 
-  const [bulkLoading, setBulkLoading] = useState(false);
-  const [pastLoading] = useState(false);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
-  const [updatedStudents, setUpdatedStudents] = useState<string[]>([]);
-
   const allStudents = useSelector(
     (state: RootState) => state.getStudents?.students
   );
-  const allTerms = useSelector(
-    (state: RootState) => state.getTermsAndAcademicYears?.terms
-  ); // Ensure terms are loaded
+  // Ensure terms are loaded
   const studentCount = allStudents?.length || 0;
   const teacherCount = useSelector(
     (state: RootState) => state.getTeachers?.teachers?.length || 0
@@ -125,30 +118,6 @@ const Dashboard: React.FC = () => {
     };
     fetchData();
   }, [dispatch]);
-
-  const runUpdate = async (action: any, forPastTerm: boolean = false) => {
-    setBulkLoading(true);
-    setUpdatedStudents([]);
-    try {
-      const payload =
-        forPastTerm && selectedTermId
-          ? await dispatch(updatePastTermDebts([selectedTermId])).unwrap()
-          : forPastTerm
-          ? await dispatch(updateAllMissingDebts()).unwrap()
-          : await dispatch(updateCurrentTermDebts()).unwrap();
-
-      message.success(payload);
-      // Optionally re-fetch student debt overview to get updated list
-      if (selectedTermId && allStudents.length) {
-        // Mock behavior: list of students updated could come from backend
-        setUpdatedStudents(allStudents.map((s) => s.full_name ?? s.first_name));
-      }
-    } catch (e: any) {
-      message.error(`Error: ${e}`);
-    } finally {
-      setBulkLoading(false);
-    }
-  };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -237,57 +206,6 @@ const Dashboard: React.FC = () => {
         ))}
       </Row>
       <Divider />
-      <Card title="Debt Management">
-        <Space direction="vertical">
-          <Button
-            type="primary"
-            onClick={() => runUpdate(updateCurrentTermDebts)}
-            loading={bulkLoading}
-          >
-            Update Current Term Debts
-          </Button>
-
-          <Button
-            onClick={() => runUpdate(updateAllMissingDebts, true)}
-            loading={bulkLoading}
-          >
-            Update All Missing Debts
-          </Button>
-
-          <Space>
-            <Select
-              placeholder="Select past term"
-              style={{ width: 240 }}
-              onChange={(val) => setSelectedTermId(val)}
-              options={allTerms.map((t: Term) => ({
-                label: t.display_name,
-                value: t.id,
-              }))}
-              disabled={bulkLoading}
-            />
-            <Button
-              type="default"
-              onClick={() => runUpdate(updatePastTermDebts, true)}
-              disabled={!selectedTermId || pastLoading}
-              loading={pastLoading}
-            >
-              Update Selected Past Term
-            </Button>
-          </Space>
-        </Space>
-
-        {updatedStudents.length > 0 && (
-          <>
-            <Divider />
-            <Title level={4}>Students Updated:</Title>
-            <List
-              dataSource={updatedStudents}
-              renderItem={(name) => <List.Item>{name}</List.Item>}
-              size="small"
-            />
-          </>
-        )}
-      </Card>
     </div>
   );
 };

@@ -63,6 +63,7 @@ import Admission from "../screens/academic/Admission";
 import VerifySlips from "../screens/finance/VerifySlip";
 import UpdateReceipt from "../screens/finance/UpdateReceipt";
 import UploadReceipts from "../screens/finance/UploadReceipts";
+import StudentDebt from "../screens/students/StudentDebt";
 
 const MainRoutes = {
   path: "/",
@@ -112,6 +113,7 @@ const MainRoutes = {
             { path: "payments/:id", element: <PaymentDetails /> },
             { path: "payments/add/", element: <AddPayment /> },
             { path: "payroll/", element: <Payroll /> },
+            { path: "student-debts/", element: <StudentDebt /> },
 
             { path: "reports/", element: <Reports /> },
             {

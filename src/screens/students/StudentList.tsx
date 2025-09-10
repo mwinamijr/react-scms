@@ -241,6 +241,7 @@ const Students: React.FC = () => {
         bordered
         pagination={{ pageSize: 40 }}
         loading={loading}
+        scroll={{ x: "max-content" }}
         onRow={(record) => ({
           onClick: () => navigate(`/sis/students/${record.id}`),
           style: { cursor: "pointer" },

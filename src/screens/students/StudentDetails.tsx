@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../app/store"; // adjust path to your store
+import type { RootState } from "../../app/store";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { studentDetails } from "../../features/students/studentSlice";
@@ -51,6 +51,9 @@ interface Receipt {
   paid_for_details?: {
     name: string;
   };
+  efd_receipt_details?: {
+    date: string;
+  };
 }
 
 function getFullName(person: PersonName): string {
@@ -99,22 +102,26 @@ const StudentDetailsScreen: React.FC = () => {
           <Message variant="danger">{error}</Message>
         ) : student ? (
           <div className="profile-container">
-            <div className="profile-header">
+            {/* Profile Header */}
+            <div
+              className="profile-header"
+              style={{ textAlign: "center", marginBottom: 24 }}
+            >
               <Avatar
                 size={120}
                 src={student?.image}
                 icon={!student?.image && <UserOutlined />}
                 className="profile-avatar"
               />
-              <Title level={3}>
+              <Title level={3} style={{ marginTop: 12 }}>
                 {student.first_name} {student.middle_name} {student.last_name}
-              </Title>{" "}
+              </Title>
               <Text type="secondary">
                 Admission #: {student.admission_number}
               </Text>
               <br />
               <Text type="secondary">PREMS #: {student.prems_number}</Text>
-              <Row justify="center" className="profile-actions">
+              <Row justify="center" style={{ marginTop: 16 }}>
                 <Col>
                   <Space>
                     <Link to={`/sis/students/${id}/edit`}>
@@ -128,9 +135,15 @@ const StudentDetailsScreen: React.FC = () => {
               </Row>
             </div>
 
-            <Descriptions title="Basic Information" bordered column={2}>
+            {/* Responsive Descriptions */}
+            <Descriptions
+              title="Basic Information"
+              bordered
+              column={{ xs: 1, sm: 1, md: 2 }}
+              style={{ marginBottom: 24 }}
+            >
               <Descriptions.Item label="Full Name">
-                {student.first_name} {student.middle_name} {student.last_name}
+                {getFullName(student)}
               </Descriptions.Item>
               <Descriptions.Item label="Gender">
                 {student.gender}
@@ -146,7 +159,8 @@ const StudentDetailsScreen: React.FC = () => {
             <Descriptions
               title="Previous Academic Information"
               bordered
-              column={2}
+              column={{ xs: 1, sm: 1, md: 2 }}
+              style={{ marginBottom: 24 }}
             >
               <Descriptions.Item label="Primary School">
                 {student.primary_school_name || "N/A"}
@@ -162,7 +176,12 @@ const StudentDetailsScreen: React.FC = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            <Descriptions title="Academic Information" bordered column={2}>
+            <Descriptions
+              title="Academic Information"
+              bordered
+              column={{ xs: 1, sm: 1, md: 2 }}
+              style={{ marginBottom: 24 }}
+            >
               <Descriptions.Item label="Class Level">
                 {student.class_level_display}
               </Descriptions.Item>
@@ -187,20 +206,42 @@ const StudentDetailsScreen: React.FC = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            <Descriptions title="Contact Information" bordered column={2}>
-              <Descriptions.Item label="Parent/Guardian">
+            <Descriptions
+              title="Contact Information"
+              bordered
+              column={{ xs: 1, sm: 1, md: 2 }}
+              style={{ marginBottom: 24 }}
+            >
+              <Descriptions.Item
+                label="Parent/Guardian"
+                contentStyle={{ whiteSpace: "normal", wordWrap: "break-word" }}
+              >
                 {student.parent_guardian_display}
               </Descriptions.Item>
-              <Descriptions.Item label="Parent Contact">
+
+              <Descriptions.Item
+                label="Parent Contact"
+                contentStyle={{ whiteSpace: "normal", wordWrap: "break-word" }}
+              >
                 <PhoneOutlined /> {student.parent_contact || "N/A"}
               </Descriptions.Item>
-              <Descriptions.Item label="Address">
+
+              <Descriptions.Item
+                label="Address"
+                span={2}
+                contentStyle={{ whiteSpace: "normal", wordWrap: "break-word" }}
+              >
                 <HomeOutlined /> {student.region}, {student.city},{" "}
                 {student.street || "N/A"}
               </Descriptions.Item>
             </Descriptions>
 
-            <Descriptions title="Financial Information" bordered column={2}>
+            <Descriptions
+              title="Financial Information"
+              bordered
+              column={{ xs: 1, sm: 1, md: 2 }}
+              style={{ marginBottom: 24 }}
+            >
               <Descriptions.Item label="Debt">
                 <DollarCircleOutlined
                   style={{ color: student?.debt > 0 ? "red" : "green" }}
@@ -212,10 +253,13 @@ const StudentDetailsScreen: React.FC = () => {
               </Descriptions.Item>
             </Descriptions>
 
-            <Card title="Siblings" className="mt-3">
+            {/* Siblings Table */}
+            <Card title="Siblings" className="mt-3" bodyStyle={{ padding: 0 }}>
               {student.siblings && student.siblings.length > 0 ? (
                 <Table
                   dataSource={student.siblings}
+                  scroll={{ x: "max-content" }}
+                  size="small"
                   columns={[
                     {
                       title: "Full Name",
@@ -229,6 +273,7 @@ const StudentDetailsScreen: React.FC = () => {
                     },
                   ]}
                   rowKey="id"
+                  pagination={false}
                   onRow={(record) => ({
                     onClick: () =>
                       navigate(`/sis/students/${(record as Sibling).id}`),
@@ -236,17 +281,26 @@ const StudentDetailsScreen: React.FC = () => {
                   })}
                 />
               ) : (
-                <Text>No siblings available.</Text>
+                <Text style={{ padding: 16, display: "block" }}>
+                  No siblings available.
+                </Text>
               )}
             </Card>
 
-            <Card title="Payments History" className="mt-3">
+            {/* Payments History Table */}
+            <Card
+              title="Payments History"
+              className="mt-3"
+              bodyStyle={{ padding: 0 }}
+            >
               {receiptError && (
                 <Message variant="danger">{receiptError}</Message>
               )}
               {studentReceipts && studentReceipts.length > 0 ? (
                 <Table
                   dataSource={studentReceipts}
+                  scroll={{ x: "max-content" }}
+                  size="small"
                   columns={[
                     {
                       title: "Date",
@@ -261,6 +315,7 @@ const StudentDetailsScreen: React.FC = () => {
                     {
                       title: "Description",
                       key: "description",
+                      responsive: ["md"], // hide on mobile
                       render: (_, record: Receipt) =>
                         record.paid_for_details?.name || "N/A",
                     },
@@ -291,12 +346,23 @@ const StudentDetailsScreen: React.FC = () => {
                   })}
                 />
               ) : (
-                <Text>No payments found</Text>
+                <Text style={{ padding: 16, display: "block" }}>
+                  No payments found
+                </Text>
               )}
             </Card>
 
-            <Card title="Attendance & Examination Records" className="mt-3">
-              <Descriptions bordered column={2}>
+            {/* Attendance & Exam Records */}
+            <Card
+              title="Attendance & Examination Records"
+              className="mt-3"
+              bodyStyle={{ padding: 0 }}
+            >
+              <Descriptions
+                bordered
+                column={{ xs: 1, sm: 1, md: 2 }}
+                style={{ margin: 0 }}
+              >
                 <Descriptions.Item label="Total Attendance">
                   {"N/A"}
                 </Descriptions.Item>
