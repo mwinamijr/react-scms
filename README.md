@@ -25,22 +25,39 @@ then run
 OR
 `npm i` 
 
-# Apps
+## 🚀 Key Features
 
-##School Information System (SIS)
-This tracks the students’ information and their parent/guardian/contact information. This module also records, basic classes information, and school year information. This is the central module for django-scms and is required for use of any other module. All other modules are optional.
+- 🔐 **Authentication & Role-Based Access Control**:  
+  Supports authentication and permission control for:
+  - **Admins**
+  - **Teachers**
+  - **Accountants**
+  - **Parents**
 
-##Admissions
-This tracks potential students and their registration processes. It allows various admission levels to be added as well as steps that need to be completed before moving onto the next level. It also tracks any open houses a student has attended and how the student heard about the school.
+- 💸 **Finance Module** *(NEW)*:  
+  - Manage **Receipts**
+  - Track **Payments**
+  - Generate **Financial Reports**
 
-##Authentication
-.... in progress
+- 🧾 **School Information System (SIS)**:
+  - Tracks student records and their associated parent/guardian contacts.
+  - Manages class and academic year data.
+  - Required module for all other apps.
 
-##Attendance
-.... in progress
+- 📝 **Admissions**:
+  - Manages student admission pipeline and levels.
+  - Tracks marketing channels and open house participation.
 
-##Finance
-.... in progress
+---
+
+## 🔧 Upcoming Features
+
+- 📅 **Schedule Management**
+- 🧠 **Examinations and Grading**
+- 📚 **Digital Notes and Materials**
+- 📊 **Attendance Tracking**
+
+---
 
 ## To Contribute
 This is intended to be an Open Source project to anyone need to use and learn. Hence I welcome all of you to contribute in this project so as to help make this project better.

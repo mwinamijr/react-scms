@@ -1,0 +1,9 @@
+generate receipts list based on the student id for better loading in the frontend - done
+
+filter all receipts based on a specific date, start date - end date
+
+create school calender so that it can be used to detemine attendance and following teaching records
+
+update teachers debts monthly starting from january and add option for previous debts before this year
+
+ 
